@@ -2,7 +2,7 @@
 Rate my dorm
 
 ## Workflow
-As we are working on this app together we should use git branches to work simultaneously without interfering with each others changes.
+As we are working on this app together we should use git branches to work simultaneously without interfering with each others changes. #Develop# has been set as the default branch.
 
 ### Master Branch
 This branch should only contain code that is currently *live*. Our definition of live may be a bit different considering this is a school project, but ideally changes that are completed during a sprint should probably be merged here at the end of the sprint.
