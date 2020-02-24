@@ -16,8 +16,8 @@ import "../node_modules/bootstrap/dist/css/bootstrap.min.css";
           <Switch>
             <LandingPageWrapper path ="/" exact component={LandingPageWrapper}/> {/*Add some paths here when others get their pages done*/}
           </Switch>
-         <body class="bg-color"></body>
         </Router>
+        
       );
    }
 }

@@ -4,6 +4,7 @@ import '../navigation/Navbar.css';
 
 
  class Navbar extends Component {
+
   render() {
     return (
       
@@ -11,6 +12,9 @@ import '../navigation/Navbar.css';
         <Link class=" pl-3 custom-color my-text" to='/'>Rate My Dorm</Link>
         <button class="navbar-toggler test" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
         <span class="navbar-toggler-icon"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
         </button>
         <div class="collapse navbar-collapse justify-content-end " id="collapsibleNavbar">   
           <ul class="navbar-nav">
@@ -29,6 +33,7 @@ import '../navigation/Navbar.css';
           </ul>
         </div> 
       </nav> 
+      
     )
   }
 }
