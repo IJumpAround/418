@@ -4,9 +4,10 @@ import 'bootstrap/dist/js/bootstrap.bundle'
 import NavBar from './NavBar'
 import DynamicCards from './DynamicCards'
 import Login from './Login'
+import OpenMap from './OpenMap'
 import axios from 'axios'
-
-class App extends React.Component {
+import ScrollArea from 'react-scrollbar'
+class SearchPage extends React.Component {
 	constructor(props){
 		super(props);
 		this.state = { 
@@ -30,7 +31,18 @@ class App extends React.Component {
 				getWindowStatus = {this.getLoginWindowStatus}
 			/>
 			<Login />
-			<DynamicCards />
+			<ScrollArea
+					speed={0.8}
+					className="area"
+					contentClassName="content"
+					horizontal={false}
+				>
+				<div>
+					<DynamicCards />
+				</div>
+         	</ScrollArea>
+			 
+			<OpenMap />
 			</div>
 		</React.Fragment>
 	  )
@@ -38,4 +50,4 @@ class App extends React.Component {
 	
 };
 
-export default App;
+export default SearchPage;

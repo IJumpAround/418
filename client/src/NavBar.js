@@ -41,12 +41,12 @@ class NavBar extends React.Component {
 			<React.Fragment>
 			{/* Placeholder navbar with no functionality*/}
 			<div className="text-center" style={{String: "margin-bottom:0"}}>
-				<img src={require('./ratemydormplaceholderbanner.png')} width="50%" height="10%" alt/> 
+				<img src={require('./ratemydormplaceholderbanner.png')} width="50%" height="10%" alt="logo" /> 
 			</div>
 	      <div>
 	        	<nav className="navbar navbar-expand-sm bg-white navbar-light z-depth-4">
 		        	<a className="navbar-brand" href="#">
-	    				<img src={require('./uablogo.png')} width="40" height="40" alt="Logo" />
+	    				<img src={require('./uablogo.png')} width="40" height="40" alt="logo" />
 	    			</a>
 	    			
 	    			<button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
