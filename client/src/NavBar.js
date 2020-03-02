@@ -21,15 +21,6 @@ class NavBar extends React.Component {
 		this.setState({[out]: val});
 	}
 	
-	 profClickHandler = (event) =>  {
-	 	event.preventDefault();
-	 	var url = 'http://localhost:9000/profile'
-      fetch(url)
-        .then((result) => result.json())
-        .then(result => {
-       		this.setState({ servOutput : result})
-       	});
-       }
        
 	 getLoginWindowStatus = (loginWindowStatus) => {
         this.setState({showLogin: loginWindowStatus});
@@ -48,14 +39,14 @@ class NavBar extends React.Component {
 	  render() {
 	    return (
 			<React.Fragment>
-			<div className="text-left" style={{String: "margin-bottom:0"}}>
-				<img src={require('./p5wallpaper.png')} width="80%" height="10%" alt />
-				<img src={require('./p5morgana2.png')} width="15%" height="10%" alt />
+			{/* Placeholder navbar with no functionality*/}
+			<div className="text-center" style={{String: "margin-bottom:0"}}>
+				<img src={require('./ratemydormplaceholderbanner.png')} width="50%" height="10%" alt/> 
 			</div>
 	      <div>
-	        	<nav className="navbar navbar-expand-sm bg-dark navbar-dark">
+	        	<nav className="navbar navbar-expand-sm bg-white navbar-light z-depth-4">
 		        	<a className="navbar-brand" href="#">
-	    				<img src={require('./p5logo.png')} width="40" height="40" alt="Logo" />
+	    				<img src={require('./uablogo.png')} width="40" height="40" alt="Logo" />
 	    			</a>
 	    			
 	    			<button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
@@ -63,12 +54,10 @@ class NavBar extends React.Component {
 				   </button>
 	    			
 	    			{/* Collapsible navbar behavior*/}
-	    			<div className="collapse navbar-collapse" id="collapsibleNavbar">
-			  			<ul className="navbar-nav">
+					<div className="collapse navbar-collapse" id="collapsibleNavbar">
+						  <ul className="navbar-nav">
 				    		<li className="nav-item active">
-				      		<a className="nav-link" href="#" onClick={this.profClickHandler}>
-				      		
-				      		Profile</a>
+				      		<a className="nav-link" href="#">Profile</a>
 				    		</li>
 				    		<li className="nav-item active"> {/* Login Link toggles modal "login" component */}
 				     		 	<a className="nav-link" href="#" data-toggle="modal" data-target="#modalLoginForm"
@@ -78,9 +67,11 @@ class NavBar extends React.Component {
 				    		</li>
 			  			</ul>
 			  			</div>
-			  			<div className="container">
-							<div className="column"> <p > <font color="white" style={{String: "Arial"}}>Welcome to my page!</font></p> </div>
-							</div>
+			  			 <form className="form-inline my-2 my-lg-0">
+						  <input className="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search"/>
+						  <button className="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+							</form>
+							
 				</nav>
 	      </div>
 	      </React.Fragment>

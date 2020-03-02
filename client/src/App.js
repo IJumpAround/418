@@ -2,7 +2,7 @@ import React from 'react'
 import 'bootstrap/dist/js/bootstrap.bundle'
 //import { Router, Switch, Route, Link } from 'react-router-dom'
 import NavBar from './NavBar'
-import Profile from './Profile'
+import DynamicCards from './DynamicCards'
 import Login from './Login'
 import axios from 'axios'
 
@@ -30,7 +30,7 @@ class App extends React.Component {
 				getWindowStatus = {this.getLoginWindowStatus}
 			/>
 			<Login />
-			<Profile />
+			<DynamicCards />
 			</div>
 		</React.Fragment>
 	  )
