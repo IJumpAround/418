@@ -8,7 +8,7 @@ import '../navigation/Navbar.css';
   render() {
     return (
       
-      <nav class="navbar navbar-expand-sm navbar-custom transparent">
+      <nav class="navbar sticky-top navbar-expand-sm navbar-custom bg-transparent">
         <Link class=" pl-3 custom-color my-text" to='/'>Rate My Dorm</Link>
         <button class="navbar-toggler test" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
         <span class="navbar-toggler-icon"></span>
