@@ -7,12 +7,11 @@ class LandingPageWrapper extends Component {
 
   render(){
     return(
-
       <div>
         <Navbar />
         <LandingPage />
       </div>
-      
+
     )
   }
 }
