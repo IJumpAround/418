@@ -18,7 +18,7 @@ import '../navigation/Navbar.css';
         <div class="collapse navbar-collapse justify-content-end " id="collapsibleNavbar">   
           <ul class="navbar-nav">
             <li class="nav-item">
-              <Link class="nav-link custom-color" to='/'>Search</Link>
+              <Link class="nav-link custom-color" to={'/search'}>Search</Link>
             </li>
             <li class="nav-item">
               <Link class="nav-link custom-color" to='/'>Dashboard</Link>

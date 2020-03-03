@@ -20,10 +20,10 @@ import {
 	export default function AltCard() {
 		var classes = useStyles()
 		var data = [
-			{ Dorm: 1, Desc: "something", Tags: "Tag", Image: './ratemydormplaceholderbanner.png' },
-			{ Dorm: 2, Desc: "something", Tags: "Tag", Image: './ratemydormplaceholderbanner.png' },
-			{ Dorm: 3, Desc: "something", Tags: "Tag", Image: './ratemydormplaceholderbanner.png' },
-			{ Dorm: 4, Desc: "something", Tags: "Tag", Image: './ratemydormplaceholderbanner.png' },
+			{ Dorm: 1, Desc: "something", Tags: "Tag", Image: '' },
+			{ Dorm: 2, Desc: "something", Tags: "Tag", Image: '' },
+			{ Dorm: 3, Desc: "something", Tags: "Tag", Image: '' },
+			{ Dorm: 4, Desc: "something", Tags: "Tag", Image: '' },
 		]
 		return (
 				<div className={classes.root}>
@@ -43,7 +43,7 @@ import {
 									/>
 									<CardContent>
 										<Typography  gutterBottom>
-										<img src={require('./stockdormimage.jpg')} width="80%"  alt/>
+										<img src={require('../../img/stockdormimage.jpg')} width="80%"  alt/>
 										</Typography>
 									</CardContent>
 								</Card>
