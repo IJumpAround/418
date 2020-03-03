@@ -2,8 +2,8 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import {BrowserRouter} from 'react-router-dom';
 import './index.css';
-import SearchPage from './SearchPage';
-import * as serviceWorker from './serviceWorker';
+import SearchPage from './Components/searchComponents/SearchPage';
+import * as serviceWorker from './Components/searchComponents/serviceWorker';
 
 
 

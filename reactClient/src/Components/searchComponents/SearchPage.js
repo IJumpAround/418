@@ -1,12 +1,15 @@
-import React from 'react'
-import 'bootstrap/dist/js/bootstrap.bundle'
+import React from 'react';
+import 'bootstrap/dist/js/bootstrap.bundle';
 //import { Router, Switch, Route, Link } from 'react-router-dom'
-import NavBar from './NavBar'
+import NavBar from '../navComponents/navigation/Navbar';
 import DynamicCards from './DynamicCards'
 import Login from './Login'
 import OpenMap from './OpenMap'
 import axios from 'axios'
 import ScrollArea from 'react-scrollbar'
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+
+
 class SearchPage extends React.Component {
 	constructor(props){
 		super(props);
@@ -25,11 +28,10 @@ class SearchPage extends React.Component {
 	render(){
 		
 	return (
+		<Router>
+		<NavBar />
 		<React.Fragment>
 			<div>
-			<NavBar 
-				getWindowStatus = {this.getLoginWindowStatus}
-			/>
 			<Login />
 			<ScrollArea
 					speed={0.8}
@@ -45,6 +47,8 @@ class SearchPage extends React.Component {
 			<OpenMap />
 			</div>
 		</React.Fragment>
+
+		</Router>
 	  )
 	}
 	
