@@ -62,7 +62,7 @@ class NavBar extends React.Component {
 				    		<li className="nav-item active"> {/* Login Link toggles modal "login" component */}
 				     		 	<a className="nav-link" href="#" data-toggle="modal" data-target="#modalLoginForm"
 				     		 	onClick={this.clickChangeWindowStatus}>
-				     		 	{this.state.showLogin ? false:true}
+				     		 	{!this.state.showLogin}
 				     		 	Login</a>
 				    		</li>
 			  			</ul>
