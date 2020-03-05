@@ -31,7 +31,7 @@ function OpenLogin(props) {
     return (
      <div>
 
-       <nav class="navbar sticky-top navbar-expand-sm navbar-custom">
+       <nav class="navbar sticky-top navbar-expand-sm  bg-light navbar-custom">
          <Link class=" pl-3 custom-color my-text" to='/'>Rate My Dorm</Link>
          <button class="navbar-toggler test" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
          <span class="navbar-toggler-icon"></span>
