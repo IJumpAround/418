@@ -43,7 +43,7 @@ import {
 									/>
 									<CardContent>
 										<Typography  gutterBottom>
-										<img src={require('../../img/stockdormimage.jpg')} width="80%"  alt/>
+										<img src={require('../../img/stockdormimage.jpg')} width="80%"  alt=""/>
 										</Typography>
 									</CardContent>
 								</Card>

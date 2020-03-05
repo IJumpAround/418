@@ -1,7 +1,10 @@
 import React from 'react';
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-import HomePageWrapper from './Components/homePageWrapper/homePageWrapper';
 import 'bootstrap/dist/js/bootstrap.bundle';
+
+import HomePageWrapper from './Components/homePageWrapper/homePageWrapper';
+import LoginPage from './Components/login/loginPage'
+import RegistrationPage from "./Components/registration/registrationPage";
 import SearchPage from './Components/searchComponents/SearchPage';
 
 
@@ -24,7 +27,9 @@ class App extends React.Component {
 		<Router>
 			<Switch>
 				<HomePageWrapper path="/" exact component={HomePageWrapper}/>
-				<Route path="/search" component={SearchPage} />			
+				<Route path="/login" component={LoginPage}/>
+				<Route path='/register' component={RegistrationPage}/>
+				<Route path="/search" component={SearchPage} />
 			</Switch>
 		</Router>
 	  )
