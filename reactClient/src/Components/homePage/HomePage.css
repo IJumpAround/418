@@ -1,6 +1,16 @@
 .home {
-  height: 100vh;
-  background-color: #728587;
- /* background: url(/) no-repeat center center fixed; */
+
+  background: url('../../img/fountainslk1.jpg') no-repeat center center fixed; 
 
 }
+
+@media screen and (min-width: 0px){ 
+  .home {
+  background: url('../../img/fountainslk1.jpg') no-repeat center center fixed; 
+  background-size: cover;
+  height: 100vh;
+ }
+ 
+} 
+
+

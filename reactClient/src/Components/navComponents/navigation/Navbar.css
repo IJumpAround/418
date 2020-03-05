@@ -3,12 +3,13 @@
 
 .navbar-custom{
   background-color: #F5F9E9;
+  background-color: #564D80;
   box-shadow: 14px 10px 15px rgba(0, 0, 0, 0.19);
 }
 
 .custom-color {
   color: #f7f7f7;
-  color: #564D80;
+  /*color: #564D80; */
   font-family: 'Encode Sans Expanded';
 }
 

@@ -1,7 +1,6 @@
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
 import React from "react";
-
 import LoginForm from "./loginForm";
 
 
@@ -38,7 +37,7 @@ class LoginModal extends React.Component {
 
                     <Modal.Footer>
                         <Button variant="secondary"
-                        onClick={this.handleClose}>Close</Button>
+                        onClick={this.handleClose}>Close</Button> 
                         <Button variant="primary"
                         onClick={this.handleSubmit}>Log In</Button>
                     </Modal.Footer>

@@ -15,30 +15,34 @@ class RegistrationPage extends React.Component {
 
     render() {
         return (
-            <div>
-                <Navbar/>
-                <div className="container mt-2">
-                    <div className="row">
-                        <div className="col- col-sm-4 col-md-6">
+            <div className="home">
+                <Navbar />
+                <div className="container-fluid my-5 justify-content-center py-5 ">
+                    <div className="row align-items-center">
+                        <div className="col-lg-8 text-center pb-5">
                         <br/>
-                        <h3 className="text-muted">Find the dorm you deserve</h3>
+                      
+                        <h3 className="text-light h1 ">Find the dorm you deserve</h3>
                             <br/>
-                            <ul className='list-group text-muted pl-5'>
-                                <li className="list-inline-item">
+                            <ul className='list-group text-light greeting'>
+                              
+                                <li className="list-inline-item custom-icon-color">
                                     <FontAwesomeIcon icon={faBed}/>  Find a great dorm.
                                 </li>
-                                <li className="list-inline-item">
+                                <li className="list-inline-item custom-icon-color">
                                     <FontAwesomeIcon icon={faCommentDots}/>  Leave a review to help others.
                                 </li>
-                                <li className="list-inline-item">
+                                <li className="list-inline-item custom-icon-color">
                                     <FontAwesomeIcon icon={faPhotoVideo}/>  View images of potential dorms.
                                 </li>
-                                <li className='list-inline-item'>
+                                <li className='list-inline-item custom-icon-color'>
                                     <FontAwesomeIcon icon={faMap}/>  Check out the interactive campus map.
                                 </li>
+                              
                             </ul>
+                           
                         </div>
-                        <div className='col-12 col-sm-8 col-md-6'>
+                        <div className='col-12  col-md-3 py-4 rounded signUp'>
                             <form id='registrationForm'>
                                 <div className='row'>
                                     <div className='col-12'>
@@ -105,6 +109,7 @@ class RegistrationPage extends React.Component {
                                 </div>
                             </form>
                         </div>
+                   
 
 
                     </div>
