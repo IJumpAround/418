@@ -27,7 +27,7 @@ import '../navigation/Navbar.css';
               <Link class="nav-link custom-color" to={'/login'}>Login</Link>
             </li>
             <li class="nav-item">
-              <Link class="nav-link custom-color" to='/'>SignUp</Link>
+              <Link class="nav-link custom-color" to='/register'>SignUp</Link>
             </li>
           </ul>
         </div> 
