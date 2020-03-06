@@ -1,20 +1,20 @@
 import React, { Component } from 'react'
 import OpenMap from './OpenMap';
 import DynamicCards from './DynamicCards';
-import 'react-perfect-scrollbar/dist/css/styles.css';
-import PerfectScrollbar from 'react-perfect-scrollbar'
+
 
  class SearchPage extends Component {
   render() {
 	const mystyle = {
 		display: "flex",
-		height:"95vh",
+		height:"90vh",
 	  };
-	const scrollstyle = {
-
+	const textstyle = {
+		color: "grey"
 	};
     return (
 		<React.Fragment>
+		<div className="text-right"><div className = "h2" style = {textstyle}> ~Search on the map: The search-bar is in the top right. click to set a marker and find dorms nearby! ~ </div></div>
 		<div className="flex-container" style={mystyle}>
 			<DynamicCards/>
 			<OpenMap />

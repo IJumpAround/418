@@ -1,5 +1,6 @@
 import React from 'react'
 import { Map, Marker, Popup, TileLayer } from 'react-leaflet'
+import ReactLeafletSearch from "react-leaflet-search";
 
 
 class OpenMap extends React.Component {
@@ -19,6 +20,7 @@ class OpenMap extends React.Component {
 
   
 }
+
 setMarker = (e) => {
   this.setState({latlng: e.latlng})
   this.setState({proxPosition: [e.latlng.lat, e.latlng.lng]})
@@ -35,13 +37,20 @@ render(){
         height: "100%-44px",
         width: "100%",
         zindex: '1'
-      };
+      }
+
+
         return(
-          
-            <Map id="mymap" center={this.state.proxPosition} zoom={16} style={mystyle}
+           
+            <Map id="mymap" center={this.state.proxPosition} zoom={17} style={mystyle}
             onClick={this.setMarker}
-            
             >
+            <ReactLeafletSearch 
+              inputPlaceholder="input desired location"
+              zoom={15} 
+              showMarker={false}
+              showPopup={false}
+            />
                 <TileLayer
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 attribution="&copy; <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
