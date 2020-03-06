@@ -23,11 +23,10 @@ function OpenLogin(props) {
     }
     handleClick(e) {
       e.preventDefault();
-      this.setState({loginClicked: true});
+      this.setState({loginClicked: !this.state.loginClicked});
    }
 
   render() {
-    const loginClicked = this.state.loginClicked;
     return (
      <div>
 
@@ -48,13 +47,12 @@ function OpenLogin(props) {
                <Link class="nav-link custom-color" to='/'>Dashboard</Link>
              </li>
              <li class="nav-item">
-               <Link class="nav-link custom-color" to="/register"onClick={this.handleClick}>Login </Link>
-               <OpenLogin logIn= {loginClicked} ></OpenLogin>
+               <a className="nav-link custom-color" href="#" data-toggle="modal" data-target="#modalLogin">
+               Login</a>
              </li>   
            </ul>
          </div> 
        </nav> 
-      
      </div> 
       
     )

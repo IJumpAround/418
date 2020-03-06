@@ -7,61 +7,50 @@ import LoginForm from "./loginForm";
 class LoginModal extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {
-            showLogin: true
-        };
 
-        this.handleClose = this.handleClose.bind(this);
-        this.handleShow = this.handleShow.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
     }
 
     render() {
 
         return (
-            <div onClick={e => e.stopPropagation()}>
-                <Modal
-                    centered={true}
-                    show={this.state.showLogin}
-                    onHide={this.handleClose}>
-                    <form id="loginForm">
-                    <Modal.Header
-                        closeButton
-                    >
-                        <Modal.Title>Login</Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body>
-                        <LoginForm
-                        ref={this.loginForm}/>
-                    </Modal.Body>
+            <React.Fragment>
+					{/* Modal popup component for login , component rendering linked to login click*/}
+					<div href="#" className="modal fade" id="modalLogin" tabIndex="-1" role="dialog" aria-labelledby="myModalLabel"
+					  aria-hidden="true" >
+						  <div className="modal-dialog" role="document" show ={{String: "true"}}>
+						    <div className="modal-content">
+						      <div className="modal-header text-center">
+						        <h4 className="modal-title w-100 font-weight-bold">Sign in</h4>
+						        <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+						          <span aria-hidden="true">&times;</span>
+						        </button>
+						      </div>
+					      <div className="modal-body mx-3">
+					        <div className="md-form mb-5">
+					          <i className="fas fa-envelope prefix grey-text"></i>
+					          <input type="email" id="defaultForm-email" className="form-control validate"/>
+					          <label data-error="wrong" data-success="right" htmlFor="defaultForm-email">Your Username</label>
+					        </div>
 
-                    <Modal.Footer>
-                        <Button variant="secondary"
-                        onClick={this.handleClose}>Close</Button> 
-                        <Button variant="primary"
-                        onClick={this.handleSubmit}>Log In</Button>
-                    </Modal.Footer>
-                    </form>
-                </Modal>
-            </div>
+				        <div className="md-form mb-4">
+				          <i className="fas fa-lock prefix grey-text"></i>
+				          <input type="password" id="defaultForm-pass" className="form-control validate"/>
+				          <label data-error="wrong" data-success="right" htmlFor="defaultForm-pass">Your Password</label>
+				        </div>
+
+					      </div>
+					      <div className="modal-footer d-flex justify-content-center">
+					        <a href="#"  className="btn btn-default">Login</a>
+					      </div>
+					    </div>
+				  	</div>
+				</div>
+		</React.Fragment>
         )
 
 
     }
 
-
-    handleSubmit() {
-        alert('You clicked log in!')
-
-    }
-
-    handleClose() {
-        this.setState({showLogin: false})
-    }
-
-    handleShow() {
-        this.setState({showLogin: true})
-    }
 
 }
 
