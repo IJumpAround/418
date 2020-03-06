@@ -14,12 +14,14 @@ class OpenMap extends React.Component {
 
     render(){
       const mystyle = {
-        height: "100%",
-        width: "100%"
+        position: "relative",
+        height: "100%-44px",
+        width: "100%",
+        zindex: '1'
       };
         return(
-          <div className="container-left" >
-            <Map center={this.state.position} zoom={13} style={mystyle}>
+          
+            <Map center={this.state.position} zoom={16} style={mystyle}>
                 <TileLayer
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 attribution="&copy; <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
@@ -28,7 +30,7 @@ class OpenMap extends React.Component {
                 <popup /> {/*placeholder position until click functionality added*/}
                 </Marker>
             </Map>
-            </div>
+           
         )
     }
 }
