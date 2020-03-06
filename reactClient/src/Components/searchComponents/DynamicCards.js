@@ -10,6 +10,7 @@ import {
 		Typography,
 		CardHeader
 	} from '@material-ui/core/'
+	
 	var imagedesc= {
 		display: "flex"
 	}
