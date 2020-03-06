@@ -1,7 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import 'bootstrap/dist/js/bootstrap.bundle';
-import LoginPage from './Components/login/loginPage'
 import LoginModal from './Components/login/LoginModal'
 import RegistrationPage from "./Components/registration/registrationPage";
 import SearchPage from './Components/searchComponents/SearchPage';

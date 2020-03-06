@@ -1,8 +1,6 @@
-import Modal from "react-bootstrap/Modal";
-import Button from "react-bootstrap/Button";
 import React from "react";
-import LoginForm from "./loginForm";
-
+import 'bootstrap/dist/js/bootstrap.bundle.min.js'
+import 'bootstrap/dist/css/bootstrap.min.css'
 
 class LoginModal extends React.Component {
     constructor(props) {
@@ -14,6 +12,7 @@ class LoginModal extends React.Component {
 
         return (
             <React.Fragment>
+                    {/* structured based on: https://www.w3schools.com/bootstrap4/bootstrap_modal.asp */}
 					{/* Modal popup component for login , component rendering linked to login click*/}
 					<div href="#" className="modal fade" id="modalLogin" tabIndex="-1" role="dialog" aria-labelledby="myModalLabel"
 					  aria-hidden="true" >

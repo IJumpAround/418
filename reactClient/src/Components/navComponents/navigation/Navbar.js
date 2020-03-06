@@ -1,16 +1,7 @@
 import React, { Component } from 'react'
 import {Link} from 'react-router-dom';
-import LoginModal from '../../login/LoginModal';
 import '../navigation/Navbar.css';
 
-function OpenLogin(props) {
-  const logIn = props.logIn;
-
-  if(logIn) {
-    return <LoginModal />
-  } else 
-    return null;
-}
 
  class Navbar extends Component {
        constructor(props) {
