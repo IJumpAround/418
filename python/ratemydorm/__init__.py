@@ -14,8 +14,7 @@ global_config = {}
 global_config.update(app.config)
 
 # Import routes
-from . import auth
-from .routes import routes
+from .routes import routes, auth
 from .routes import example
 
 # Register routes

@@ -1,13 +1,14 @@
 from flask import Blueprint, request
 from python.ratemydorm.sql.db_connect import connector
-
+from mysql.connector import Error
 from datetime import datetime
 import logging
 
+# Used to register the route in the main app
 bp = Blueprint('example', __name__, url_prefix='/example')
 
 
-
+# Creates endpoint at baseurl/example/
 @bp.route('/', methods=['GET', 'POST'])
 def hello_world():
     """
@@ -28,7 +29,7 @@ def hello_world():
 
     return 'Hello World!'
 
-
+# Creates endpoint at baseurl/example/query
 @bp.route('/query', methods=['GET'])
 def example_query():
     """
@@ -73,3 +74,40 @@ def example_query():
     # Don't return None
     return {}
 
+
+@bp.route('/rollback', methods=['GET'])
+def example_rollback():
+    cursor = connector.cursor()
+
+    stmt = 'INSERT INTO example_table (data) VALUES (%(data)s)'
+    params = {'data': 'This will not be inserted'}
+
+    try:
+        cursor.execute(stmt, params)
+    except Error as e:
+        logging.error(f"Shouldn't see this {e}")
+        return(e)
+
+    # Imagine we've already run this insert, and now we decide we shouldn't have performed the insert.
+    # Since we are required to commit before changes are published in the database we can rollback the changes we've staged.
+    connector.rollback()
+    connector.commit()  # This commit does nothing after we've already rolled back
+
+    # Try to select the insert we rolled back
+    stmt = "SELECT * FROM example_table WHERE data='This will not be inserted'"
+    cursor.execute(stmt)
+
+    logging.info('The following line should show result=None')
+    logging.info(f'Result of cursor.fetchone(): {cursor.fetchone()}')
+
+    # Be careful to verify the cursor has returned anything from the query before performing operations on the data
+    try:
+        expected_string = cursor.fetchone()
+        substring =  expected_string[:5]
+    except TypeError as e:
+        logging.error(e)
+        logging.info('This causes an error because the query returned nothing.')
+        logging.info('normally it would be fine to slice a string like this.')
+
+
+    return {}
