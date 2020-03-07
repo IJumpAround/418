@@ -1,5 +1,5 @@
 from flask import Blueprint, request
-from python.ratemydorm.sql.db_connect import connector
+from python.ratemydorm.sql.db_connect import get_connection
 from mysql.connector import Error
 from datetime import datetime
 import logging
@@ -38,6 +38,7 @@ def example_query():
     """
 
     # Get a cursor from the database connection, this must be imported. See imports at top of file
+    connector = get_connection()
     cursor = connector.cursor()
 
     # Results are stored in the cursor object
@@ -77,6 +78,7 @@ def example_query():
 
 @bp.route('/rollback', methods=['GET'])
 def example_rollback():
+    connector = get_connection()
     cursor = connector.cursor()
 
     stmt = 'INSERT INTO example_table (data) VALUES (%(data)s)'
