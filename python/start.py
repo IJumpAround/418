@@ -1,7 +1,7 @@
 from flask import Flask
-from ratemydorm import create_app
+from ratemydorm import app
 
 
-app = create_app()
 
-app.run()
+if __name__ == '__main__':
+    app.run()
