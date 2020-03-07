@@ -1,16 +1,7 @@
 import React, { Component } from 'react'
 import {Link} from 'react-router-dom';
-import LoginModal from '../../login/LoginModal';
 import '../navigation/Navbar.css';
 
-function OpenLogin(props) {
-  const logIn = props.logIn;
-
-  if(logIn) {
-    return <LoginModal />
-  } else 
-    return null;
-}
 
  class Navbar extends Component {
        constructor(props) {
@@ -23,38 +14,36 @@ function OpenLogin(props) {
     }
     handleClick(e) {
       e.preventDefault();
-      this.setState({loginClicked: true});
+      this.setState({loginClicked: !this.state.loginClicked});
    }
 
   render() {
-    const loginClicked = this.state.loginClicked;
     return (
      <div>
 
-       <nav class="navbar sticky-top navbar-expand-sm  bg-light navbar-custom">
-         <Link class=" pl-3 custom-color my-text" to='/'>Rate My Dorm</Link>
-         <button class="navbar-toggler test" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
-         <span class="navbar-toggler-icon"></span>
-         <span class="icon-bar"></span>
-         <span class="icon-bar"></span>
-         <span class="icon-bar"></span>
+       <nav className="navbar sticky-top navbar-expand-sm  bg-light navbar-custom">
+         <Link className=" pl-3 custom-color my-text" to='/'>Rate My Dorm</Link>
+         <button className="navbar-toggler test" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+         <span className="navbar-toggler-icon"></span>
+         <span className="icon-bar"></span>
+         <span className="icon-bar"></span>
+         <span className="icon-bar"></span>
          </button>
-         <div class="collapse navbar-collapse justify-content-end " id="collapsibleNavbar">   
-           <ul class="navbar-nav">
-             <li class="nav-item">
-               <Link class="nav-link custom-color" to={'/search'}>Search</Link>
+         <div className="collapse navbar-collapse justify-content-end " id="collapsibleNavbar">   
+           <ul className="navbar-nav">
+             <li className="nav-item">
+               <Link className="nav-link custom-color" to={'/search'}>Search</Link>
              </li>
-             <li class="nav-item">
-               <Link class="nav-link custom-color" to='/'>Dashboard</Link>
+             <li className="nav-item">
+               <Link className="nav-link custom-color" to='/'>Dashboard</Link>
              </li>
-             <li class="nav-item">
-               <Link class="nav-link custom-color" to="/register"onClick={this.handleClick}>Login </Link>
-               <OpenLogin logIn= {loginClicked} ></OpenLogin>
+             <li className="nav-item">
+               <a classNameName="nav-link custom-color" href="#" data-toggle="modal" data-target="#modalLogin">
+               Login</a>
              </li>   
            </ul>
          </div> 
        </nav> 
-      
      </div> 
       
     )

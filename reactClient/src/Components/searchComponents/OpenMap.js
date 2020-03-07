@@ -1,35 +1,66 @@
 import React from 'react'
-import { render } from 'react-dom'
 import { Map, Marker, Popup, TileLayer } from 'react-leaflet'
-
+import ReactLeafletSearch from "react-leaflet-search";
 
 
 class OpenMap extends React.Component {
     constructor(props) {
        super(props);
        this.state = {
-       position: [51.505, -0.09],
-       }
-   };
+         proxPosition: [42.686063, -73.824688] , 
+         latlng: {
+          lat: 42.686063,
+          lng: -73.824688,
+          }
+      }
+       
+  
+       
 
-    render(){
+
+  
+}
+
+setMarker = (e) => {
+  this.setState({latlng: e.latlng})
+  this.setState({proxPosition: [e.latlng.lat, e.latlng.lng]})
+  };
+    
+render(){
+     
+  var proxMarker =  <Marker position = {this.state.latlng}>
+                     <popup></popup>
+                    </Marker>
+               
       const mystyle = {
-        height: "800px",
-        width: "1200px"
-      };
+        position: "relative",
+        height: "100%-44px",
+        width: "100%",
+        zindex: '1'
+      }
+
+
         return(
-          <div className="container-left" style={mystyle}>
-            <Map center={this.state.position} zoom={13} style={mystyle}>
+           
+            <Map id="mymap" center={this.state.proxPosition} zoom={17} style={mystyle}
+            onClick={this.setMarker}
+            >
+            <ReactLeafletSearch 
+              inputPlaceholder="input desired location"
+              zoom={15} 
+              showMarker={false}
+              showPopup={false}
+            />
                 <TileLayer
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 attribution="&copy; <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
                 />
-                <Marker position={this.state.position}> {/*placeholder position until click functionality added*/}
-                </Marker>
+                {proxMarker}
             </Map>
-            </div>
+           
         )
     }
+    
 }
 
 export default OpenMap;

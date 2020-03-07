@@ -1,5 +1,4 @@
 import React from 'react'
-import Navbar from "../navComponents/navigation/Navbar";
 import {faBed} from "@fortawesome/free-solid-svg-icons";
 import {faCommentDots} from "@fortawesome/free-solid-svg-icons";
 import {faMap} from "@fortawesome/free-solid-svg-icons";
@@ -16,7 +15,6 @@ class RegistrationPage extends React.Component {
     render() {
         return (
             <div className="home">
-                <Navbar />
                 <div className="container-fluid my-5 justify-content-center py-4 ">
                     <div className="row align-items-center">
                         <div className="col-lg-8 text-center pb-5">

@@ -13,13 +13,6 @@ class LoginPage extends React.Component {
     render() {
         return (
             <div>
-            <NavBar/>
-                <div className="row">
-                    <div className="col">
-                        <LoginModal
-                            showLogin={true}/>
-                    </div>
-                </div>
             </div>
         )
     }
