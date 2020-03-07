@@ -1,26 +1,18 @@
-import os
-
 from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
-
-# from . import auth
+from flask_cors import CORS
 
 
 app = Flask(__name__, instance_relative_config=True)
-app.config.from_object('ratemydorm.default_config.Config')
+CORS(app)
+
+app.config.from_object('python.ratemydorm.default_config.Config')
 app.config.from_pyfile('config.cfg', silent=True)
 
-db = SQLAlchemy(app)
+global_config = {}
+global_config.update(app.config)
 
 
-print(app.config)
+from . import auth, routes
 
-try:
-    os.makedirs(app.instance_path)
-except OSError:
-    pass
-
-db.init_app(app)
-with app.app_context():
-    from . import routes
-    db.create_all()
+app.register_blueprint(auth.bp)
+app.register_blueprint(routes.bp)
