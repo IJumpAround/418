@@ -9,3 +9,5 @@ class Config:
     MYSQL_DATABASE_HOST = '127.0.0.1'
     MYSQL_DATABASE_PORT = '3337'
     ENV='development'
+
+    LOG_LEVEL = 'DEBUG'

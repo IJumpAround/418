@@ -1,5 +1,5 @@
+# Yes this is dumb and shows up as an error, don't change it though.
 from ratemydorm import app
-from python.ratemydorm.sql.db_connect import connector
 
 
 if __name__ == '__main__':

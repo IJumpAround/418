@@ -8,9 +8,10 @@ bp = Blueprint('auth', __name__, url_prefix='/auth')
 from python.ratemydorm.sql.db_connect import connector
 from mysql.connector.errors import IntegrityError
 
+
 @bp.route('/register', methods=('GET', 'POST'))
 def register():
-    cursor = connector.cursor(buffered=True)
+    cursor = connector.cursor()
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
@@ -49,7 +50,7 @@ def register():
 
 @bp.route('/login', methods=('GET', 'POST'))
 def login():
-    cursor = connector.cursor(buffered=True)
+    cursor = connector.cursor()
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
