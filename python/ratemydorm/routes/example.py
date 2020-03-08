@@ -1,5 +1,5 @@
 from flask import Blueprint, request
-from python.ratemydorm.sql.db_connect import get_connection
+from ratemydorm.sql.db_connect import get_connection
 from mysql.connector import Error
 from datetime import datetime
 import logging

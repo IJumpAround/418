@@ -8,8 +8,11 @@ def create_app():
     CORS(app)
 
     # Load configuration from default_config.py, overwrite with instance/config.cfg if it exists
-    app.config.from_object('ratemydorm.default_config.Config')
-    app.config.from_pyfile('config.cfg')
+    try:
+        app.config.from_object('ratemydorm.default_config.Config')
+        app.config.from_pyfile('config.cfg')
+    except IOError:
+        print("instance/config.cfg was not found. Using default settings")
 
     # Import routes
     from .routes import routes, auth
