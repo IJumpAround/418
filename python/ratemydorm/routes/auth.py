@@ -3,7 +3,7 @@ from flask import (Blueprint, flash, redirect, render_template, request, session
 
 from werkzeug.security import check_password_hash, generate_password_hash
 from ratemydorm.sql.db_connect import get_connection
-from mysql.connector.errors import IntegrityError
+from mysql.connector.errors import IntegrityError, InterfaceError
 
 bp = Blueprint('auth', __name__, url_prefix='/auth')
 
@@ -77,7 +77,10 @@ def login():
 
 @bp.before_app_request
 def load_logged_in_user():
-    connection = get_connection()
+    try:
+        connection = get_connection()
+    except InterfaceError as e:
+        return(e.msg)
     cursor = connection.cursor()
     user_id = session.get('user_id')
 
