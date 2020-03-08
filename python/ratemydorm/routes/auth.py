@@ -39,7 +39,7 @@ def register():
                 )
 
                 cursor.commit()
-                return redirect(url_for('auth.login'))
+                return redirect(url_for('bp.login'))
             except IntegrityError:
                 return('Username already exists!')
 
@@ -72,10 +72,10 @@ def login():
 
         flash(error)
     connection.commit()
-    return render_template('auth/login.html')
+    return render_template('bp/login.html')
 
 
-@bp.before_app_request
+@bp.before_request
 def load_logged_in_user():
     try:
         connection = get_connection()
