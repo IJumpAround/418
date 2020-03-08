@@ -1,30 +1,38 @@
 import axios from './axiosInstance'
 
+class EndpointTest {
+    constructor(props) {
 
-export function testServerStatus(self) {
-    axios.get('/debug/status')
-        .then(function (response) {
-            console.log(response)
-            self.setState({'serverUp': true});
-            alert('Flask server running\nStatus' + response.data)
-        })
-        .catch(function (error) {
-            console.log(error);
-            self.setState({'serverUp': false});
-            alert('No response from server\n' + error.toString())
-        })
+    }
+    
+    static testServerStatus(self) {
+        axios.get('/debug/status')
+            .then(function (response) {
+                console.log(response)
+                self.setState({'serverStatus': 'Up',
+                                    'serverStatusMessage': response.data});
+
+            })
+            .catch(function (error) {
+                console.log(error);
+                self.setState({'serverStatus': 'Down',
+                                     'serverStatusMessage': error.response && error.response.data});
+            })
+    }
+
+    static testDatabaseConnection(self) {
+        axios.get('/debug/db')
+            .then(function (response) {
+                console.log(response)
+                self.setState({'dbStatus': response.status === 200 ? 'Up': 'Down',
+                                     'dbStatusMessage': response.data});
+            })
+            .catch(function (error) {
+                console.log(error);
+                self.setState({'dbStatus': 'Down',
+                                     'dbStatusMessage': error.response && error.response.data});
+            })
+    }
 }
 
-export function testDatabaseConnection(self) {
-    axios.get('/debug/db')
-        .then(function (response) {
-            console.log(response)
-            self.setState({'dbUp': true});
-            alert('Flask database running\nStatus' + response.data)
-        })
-        .catch(function (error) {
-            console.log(error);
-            self.setState({'dbUp': false});
-            alert('No response from database\n' + error.toString())
-        })
-}
+export default EndpointTest;
