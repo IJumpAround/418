@@ -7,17 +7,22 @@ import LoginPage from './Components/login/loginPage'
 import RegistrationPage from "./Components/registration/registrationPage";
 import SearchPage from './Components/searchComponents/SearchPage';
 
+import testServerConnection  from './utils/endpointTest';
 
 class App extends React.Component {
 	constructor(props){
 		super(props);
 		this.state = { 
-			showLogin: false 
-			
-		}
+			showLogin: false,
+			serverConnected: false
+		};
+
 	};
-	
-	 getLoginWindowStatus = (loginWindowStatus) => {
+	componentDidMount() {
+		testServerConnection(this)
+	}
+
+	getLoginWindowStatus = (loginWindowStatus) => {
         this.setState({showLogin : !loginWindowStatus});
     };
 	
