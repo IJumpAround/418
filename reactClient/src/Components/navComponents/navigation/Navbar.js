@@ -29,7 +29,7 @@ import '../navigation/Navbar.css';
          <span className="icon-bar"></span>
          <span className="icon-bar"></span>
          </button>
-         <div className="collapse navbar-collapse justify-content-end " id="collapsibleNavbar">   
+         <div className="collapse navbar-collapse justify-content-end " id="collapsibleNavbar">
            <ul className="navbar-nav">
              <li className="nav-item">
                <Link className="nav-link custom-color" to={'/search'}>Search</Link>
@@ -40,15 +40,18 @@ import '../navigation/Navbar.css';
              <li className="nav-item">
                <a classNameName="nav-link custom-color" href="#" data-toggle="modal" data-target="#modalLogin">
                Login</a>
-             </li>   
+             </li>
+             <li className="nav-item">
+                  <Link className="nav-link custom-color" to='/debug'>Debug</Link>
+              </li>
            </ul>
-         </div> 
-       </nav> 
-     </div> 
+         </div>
+       </nav>
+     </div>
       
     )
   }
 }
-  
+
 
 export default Navbar;
