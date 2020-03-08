@@ -1,17 +1,30 @@
 import axios from './axiosInstance'
 
-function testServerConnection(self) {
-    axios.get('/example')
+
+export function testServerStatus(self) {
+    axios.get('/debug/status')
         .then(function (response) {
             console.log(response)
-            self.setState({'serverConnected': true});
-            alert('Flask server connected\nStatus' + response)
+            self.setState({'serverUp': true});
+            alert('Flask server running\nStatus' + response.data)
         })
         .catch(function (error) {
             console.log(error);
-            self.setState({'serverConnected': false});
-            alert('Flask server not connected\n' + error)
+            self.setState({'serverUp': false});
+            alert('No response from server\n' + error.toString())
         })
 }
 
-export default testServerConnection;
+export function testDatabaseConnection(self) {
+    axios.get('/debug/db')
+        .then(function (response) {
+            console.log(response)
+            self.setState({'dbUp': true});
+            alert('Flask database running\nStatus' + response.data)
+        })
+        .catch(function (error) {
+            console.log(error);
+            self.setState({'dbUp': false});
+            alert('No response from database\n' + error.toString())
+        })
+}
