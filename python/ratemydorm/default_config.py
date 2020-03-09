@@ -7,6 +7,7 @@ class Config:
     MYSQL_DATABASE_DB = 'ratemydorm'
     MYSQL_DATABASE_HOST = '127.0.0.1'
     MYSQL_DATABASE_PORT = '3337'
+    HOST='localhost'
     ENV='production'
 
     LOG_LEVEL = 'INFO'
