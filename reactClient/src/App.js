@@ -26,7 +26,7 @@ class App extends React.Component {
 	render(){
 		
 	return (
-		<Router>
+		<Router basename={'/ratemydorm'}>
 		<Navbar />
 		<div className="row">
             <div className="col">
