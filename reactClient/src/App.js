@@ -25,10 +25,10 @@ class App extends React.Component {
     };
 	
 	render(){
-		
+		let base = '/' + (process.env.REACT_APP_SUB_FOLDER || '');
 	return (
 		// Set base route depending on if we are deployed to EC2 or local
-		<Router basename={('/'+  process.env.REACT_APP_SUB_FOLDER)}>
+		<Router basename={(base)}>
 		<Navbar />
 		<div className="row">
             <div className="col">
