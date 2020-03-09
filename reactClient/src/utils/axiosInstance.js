@@ -1,8 +1,7 @@
 import axios from 'axios'
-
 // This can be used to set defaults for all axios objects. baseURL will automatically be prepended to all endpoints
 // Just import this variable instead of importing from the base axios library
-let base = (process.env.REACT_APP_DEPLOY===true) ? process.env.REACT_APP_BASE_URL_DEPLOY: process.env.REACT_APP_BASE_URL_DEV;
+let base = (process.env.REACT_APP_DEPLOY==='true') ? process.env.REACT_APP_BASE_URL_DEPLOY: process.env.REACT_APP_BASE_URL_DEV;
 let port = process.env.REACT_APP_SERVER_PORT;
 const instance = axios.create({
     // Set address/port of flask server
