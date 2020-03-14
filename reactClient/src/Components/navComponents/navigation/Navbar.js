@@ -35,7 +35,7 @@ import '../navigation/Navbar.css';
                <Link className="nav-link custom-color" to={'/search'}>Search</Link>
              </li>
              <li className="nav-item">
-               <Link className="nav-link custom-color" to='/'>Dashboard</Link>
+               <Link className="nav-link custom-color" to='/dashboard'>Dashboard</Link>
              </li>
              <li className="nav-item">
                <a className="nav-link custom-color" href="#" data-toggle="modal" data-target="#modalLogin">
