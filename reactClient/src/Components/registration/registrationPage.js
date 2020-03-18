@@ -15,7 +15,7 @@ class RegistrationPage extends React.Component {
     render() {
         return (
             <div className="home">
-                <div className="container-fluid my-5 justify-content-center py-4 ">
+                <div className="container-fluid  justify-content-center py-4 ">
                     <div className="row align-items-center">
                         <div className="col-lg-8 text-center pb-5">
                         <br/>
