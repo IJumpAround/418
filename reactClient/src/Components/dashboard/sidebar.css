@@ -1,14 +1,17 @@
-.card {
-  width: 300px;
+@import url('https://fonts.googleapis.com/css?family=Roboto&display=swap');
+
+.sidebar {
+  width: 14rem;
+  height: 100vh;
+  background-image: linear-gradient(to bottom, rgba(228, 225, 225,.1), rgb(86, 77, 128,1));
+  font-family: 'Roboto', sans-serif;
 }
-.custom{
-  height:100vh
-}
-@media screen and (min-width: 1335px) {
-  .custom-container {
-   
-    margin-left: 200px;
-    margin-right: 200px;
-   
-    }
+
+hr {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  border-style: inset;
+  border-width: 1px;
+  color: black;
 }
