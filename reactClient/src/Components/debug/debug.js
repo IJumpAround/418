@@ -1,6 +1,7 @@
 import React from 'react'
 import EndpointTest from '../../utils/endpointTest'
 import StatusCard from "./statusCard";
+import config from 'react-global-configuration'
 import './debug.css'
 
 class DebugPage extends React.Component {
@@ -9,13 +10,13 @@ class DebugPage extends React.Component {
         super(props);
 
         this.state = {
-            serverStatus: 'Unknown',
-            serverStatusMessage: '',
             dbStatus: 'Unknown',
-            dbStatusMessage: ''
+            dbStatusMessage: '',
+            serverStatus: 'Unknown',
+            serverStatusMessage: ''
         };
-        this.test_db = this.test_db.bind(this)
-        this.test_server = this.test_server.bind(this)
+        this.test_db = this.test_db.bind(this);
+        this.test_server = this.test_server.bind(this);
     }
 
     render() {
@@ -43,6 +44,19 @@ class DebugPage extends React.Component {
                                 test_function={this.test_db}
                                 target_text="Database"
                             />
+                        </div>
+                        <div className="col- col-md-4">
+                            <div className={"card text-white bg-primary mb-3 max-width: 16rem;"}>
+                                <div className="card-header text-center">Settings</div>
+                                <div className="card-body border-top border-bottom border-dark">
+                                    <h5 className="card-title text-center">Config Info:</h5>
+                                    <p className="card-text text-center">env file present: {config.get('envFileExists')} <br/>
+                                    port: {config.get('port')} <br/>
+                                   baseUrl: {config.get('baseUrl')} <br/>
+                                    subfolder: {config.get('subfolder')} <br/>
+                                    </p>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div className='row'>
