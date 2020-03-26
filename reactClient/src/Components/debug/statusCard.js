@@ -8,9 +8,9 @@ class StatusCard extends React.Component {
     }
 
     render() {
-        const target = this.props.target_text
-        const status = this.props.status
-        const message = this.props.statusMessage
+        const target = this.props.target_text;
+        const status = this.props.status;
+        const message = this.props.statusMessage;
         return (
             <div className={this.choose_card(status)}>
                 <div className="card-header text-center">{target} Status</div>
