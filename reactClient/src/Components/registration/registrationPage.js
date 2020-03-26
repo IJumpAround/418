@@ -104,14 +104,16 @@ class RegistrationPage extends React.Component {
     }
 
     handleSubmit() {
-
-        const username = this.state.username;
-        const password = this.state.password;
-        const first_name = this.state.first_name;
-        const last_name = this.state.last_name;
-        const email = this.state.email
         alert('submitting');
-        axios.post('/auth/register')
+        axios.post('/auth/register',
+            {
+                'username': this.state.username,
+                'password': this.state.password,
+                'first_name': this.state.first_name,
+                'last_name': this.state.last_name,
+                'email': this.state.email
+            }
+            )
             .then(function (response) {
                 console.log(response);
                 alert(JSON.stringify(response))
