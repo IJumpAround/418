@@ -5,6 +5,7 @@ import {faMap} from "@fortawesome/free-solid-svg-icons";
 import {faPhotoVideo} from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import './registrationPage.css'
+import axios from '../../utils/axiosInstance'
 
 
 class RegistrationPage extends React.Component {
@@ -102,15 +103,23 @@ class RegistrationPage extends React.Component {
         )
     }
 
-    handleSubmit(event) {
+    handleSubmit() {
+
         const username = this.state.username;
         const password = this.state.password;
         const first_name = this.state.first_name;
         const last_name = this.state.last_name;
         const email = this.state.email
-
-
-
+        alert('submitting');
+        axios.post('/auth/register')
+            .then(function (response) {
+                console.log(response);
+                alert(JSON.stringify(response))
+            })
+            .catch(function (error) {
+                console.log(error);
+                alert(JSON.stringify(error))
+            })
     }
 
     handleChange(event) {
