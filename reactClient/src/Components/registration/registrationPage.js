@@ -10,6 +10,13 @@ import './registrationPage.css'
 class RegistrationPage extends React.Component {
     constructor(props) {
         super(props);
+        this.state = {
+            namePattern : '[a-zA-Z\\-]+',
+            passwordPattern: '[a-zA-Z0-9!@#$%^&*()\\-]+',
+            usernamePattern: '[a-zA-Z0-9\\-_]+'
+        };
+        this.handleChange = this.handleChange.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
     }
 
     render() {
@@ -40,8 +47,8 @@ class RegistrationPage extends React.Component {
                             </ul>
                            
                         </div>
-                        <div className='col-12  col-md-3 py-4 rounded signUp'>
-                            <form id='registrationForm'>
+                        <div className='col-12  col-md-3 py-2 rounded signUp'>
+                            <form id='registrationForm' onSubmit={this.handleSubmit}>
                                 <div className='row'>
                                     <div className='col-12'>
                                         <h1>Sign up</h1>
@@ -51,71 +58,63 @@ class RegistrationPage extends React.Component {
                                 </div>
                                 <div className='row'>
                                     <div className='col-6'>
-                                        <input className='input-group-text w-100' id="first_name" type='text' placeholder='First name'/>
+                                        <input className='input-group-text w-100' id="first_name" type='text' placeholder='First name' onChange={this.handleChange} required
+                                               pattern={this.state.namePattern} title={'only letters'}/>
                                     </div>
 
                                     <div className='col-6'>
-                                        <input className='input-group-text w-100' id="last_name" type='text' placeholder='Last name'/>
+                                        <input className='input-group-text w-100' id="last_name" type='text' placeholder='Last name' onChange={this.handleChange} required
+                                               pattern={this.state.namePattern}/>
                                     </div>
 
                                 </div>
                                 <div className='row mt-2'>
                                     <div className='col-12'>
-                                        <input className='input-group-text w-100'  id="email" type='email' placeholder='Email address'/>
+                                        <input className='input-group-text w-100' id='username' type='text' placeholder='Username' onChange={this.handleChange} required
+                                               pattern={this.state.usernamePattern}/>
                                     </div>
                                 </div>
                                 <div className='row mt-2'>
                                     <div className='col-12'>
-                                        <input className='input-group-text w-100' id='password' type='password' placeholder='Password'/>
+                                        <input className='input-group-text w-100'  id="email" type='email' placeholder='Email address' onChange={this.handleChange} required pattern='\w+@albany.edu' title='Email must be a valid UAlbany address.'/>
                                     </div>
                                 </div>
-                                <div className='row'>
-                                    <div className='col-12'><br/>
-                                        Enter your birthdate</div>
-                                </div>
-                                <div className='row'>
-                                    <div className='col-3'>
+                                <div className='row mt-2'>
+                                    <div className='col-12'>
+                                        <input className='input-group-text w-100' id='password' type='password' placeholder='Password' onChange={this.handleChange} required minLength={7}
+                                               pattern={this.state.passwordPattern}/>
 
-                                        <div className="dropdown " >
-                                            <button className="btn btn-outline-secondary dropdown-toggle" type="button"
-                                                    id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
-                                                    aria-expanded="false">
-                                                Month
-                                            </button>
-                                            <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                <button className="dropdown-item" type="button">January</button>
-                                                <button className="dropdown-item" type="button">February</button>
-                                                <button className="dropdown-item" type="button">March</button>
-                                                <button className="dropdown-item" type="button">April</button>
-                                                <button className="dropdown-item" type="button">May</button>
-                                                <button className="dropdown-item" type="button">June</button>
-                                                <button className="dropdown-item" type="button">July</button>
-                                                <button className="dropdown-item" type="button">August</button>
-                                                <button className="dropdown-item" type="button">September</button>
-                                                <button className="dropdown-item" type="button">October</button>
-                                                <button className="dropdown-item" type="button">November</button>
-                                                <button className="dropdown-item" type="button">December</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className='col-4'>
-                                        <input className="input-group-text w-100" id="day" type='number' min='1' max='31' placeholder='Day'/>
-                                    </div>
-                                    <div className='col-5'>
-                                        <input className="input-group-text w-100" id="year" type='number' min='1890' max='2020' placeholder='Year'/>
                                     </div>
                                 </div>
+                                <div className='row mt-1 text-right'>
+                                    <div className='col-12'>
+                                        <button type='submit'  className='btn btn-primary'>Register</button>
+                                    </div>
+                                </div>
+
                             </form>
                         </div>
-                   
-
-
                     </div>
                     <div className="col-2"/>
                 </div>
 
             </div>
         )
+    }
+
+    handleSubmit(event) {
+        const username = this.state.username;
+        const password = this.state.password;
+        const first_name = this.state.first_name;
+        const last_name = this.state.last_name;
+        const email = this.state.email
+
+
+
+    }
+
+    handleChange(event) {
+        this.setState({[event.target.id]: event.target.value})
     }
 }
 
