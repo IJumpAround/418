@@ -6,6 +6,7 @@ import config from 'react-global-configuration'
 const instance = axios.create({
     // Set address/port of target flask server
     baseURL: config.get('baseUrl') + ':' + config.get('port') + '/',
-    timeout: 5000,
+    timeout: 10000,
+    // withCredentials : true
 });
 export default instance

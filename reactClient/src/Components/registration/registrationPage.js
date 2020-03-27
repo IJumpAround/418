@@ -103,8 +103,8 @@ class RegistrationPage extends React.Component {
         )
     }
 
-    handleSubmit() {
-        alert('submitting');
+    handleSubmit(event) {
+        event.preventDefault();
         axios.post('/auth/register',
             {
                 'username': this.state.username,
@@ -112,15 +112,16 @@ class RegistrationPage extends React.Component {
                 'first_name': this.state.first_name,
                 'last_name': this.state.last_name,
                 'email': this.state.email
-            }
-            )
+            },
+            {headers: {'Content-Type': 'application/json',
+                }})
             .then(function (response) {
                 console.log(response);
-                alert(JSON.stringify(response))
+                alert(JSON.stringify(response.data))
             })
             .catch(function (error) {
                 console.log(error);
-                alert(JSON.stringify(error))
+                alert(JSON.stringify(error.data))
             })
     }
 
