@@ -38,18 +38,12 @@ import '../navigation/Navbar.css';
                <Link className="nav-link custom-color" to='/'>Dashboard</Link>
              </li>
              <li className="nav-item">
-<<<<<<< HEAD
-               <Link className="nav-link custom-color" href="#" data-toggle="modal" data-target="#modalLogin">
-               Login</Link>
-             </li>   
-=======
                <a className="nav-link custom-color" href="#" data-toggle="modal" data-target="#modalLogin">
                Login</a>
              </li>
              <li className="nav-item">
                   <Link className="nav-link custom-color" to='/debug'>Debug</Link>
               </li>
->>>>>>> c8a4029374f4930ad8fd67103f54960bb15651e5
            </ul>
          </div>
        </nav>
