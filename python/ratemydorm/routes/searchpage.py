@@ -5,6 +5,16 @@ from mysql.connector.errors import IntegrityError, InterfaceError
 
 bp = Blueprint('auth', __name__, url_prefix='/auth')
 
-@bp.route('/login', methods=('GET', 'POST'))
-def get_cards():
+@bp.route('/loadcards', methods=('GET', 'POST'))
+def load_cards():
     connection = get_connection()
+    cursor = connection.cursor()
+
+    if request.method == 'POST':
+        latitude = request.form['latitude']
+        longitude = request.form['longitude']
+        error = None
+        params = {
+            'latitude': latitude,
+            'longitude': longitude
+        }

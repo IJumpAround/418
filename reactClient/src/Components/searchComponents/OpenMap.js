@@ -11,19 +11,38 @@ class OpenMap extends React.Component {
          latlng: {
           lat: 42.686063,
           lng: -73.824688,
-          }
+          },
+
+          cardData: [
+            { Dorm: 1, Desc: "something", Tags: "Tag", Image: '' },
+            { Dorm: 2, Desc: "something", Tags: "Tag", Image: '' },
+            { Dorm: 3, Desc: "something", Tags: "Tag", Image: '' },
+            { Dorm: 4, Desc: "something", Tags: "Tag", Image: '' },
+            { Dorm: 4, Desc: "something", Tags: "Tag", Image: '' },
+          ]
       }
-       
-  
-       
-
-
   
 }
 
-setMarker = (e) => {
-  this.setState({latlng: e.latlng})
-  this.setState({proxPosition: [e.latlng.lat, e.latlng.lng]})
+outputHandler = (event) => {
+  let out= event.target.output;
+  let val = event.target.value;
+  this.setState({[out]: val});
+}
+
+ cardLoadHandler = () =>  {
+   var url = 'http://localhost:5001/loadcards'
+  fetch(url)
+  .then((result) => result.json())
+  .then(result => {
+       var manipResult = result
+       this.setState({ cardData : manipResult})
+     });
+   }
+
+setMarker = (event) => {
+  this.setState({latlng: event.latlng})
+  this.setState({proxPosition: [event.latlng.lat, event.latlng.lng]})
   };
     
 render(){
@@ -43,7 +62,12 @@ render(){
         return(
            
             <Map id="mymap" center={this.state.proxPosition} zoom={17} style={mystyle}
-            onClick={this.setMarker}
+            onClick={(event) =>
+              {
+              this.setMarker(event)
+              this.cardLoadHandler()
+              }
+            }
             >
             <ReactLeafletSearch 
               inputPlaceholder="input desired location"
