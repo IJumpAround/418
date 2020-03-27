@@ -7,6 +7,7 @@ import LoginModal from './Components/login/LoginModal'
 import RegistrationPage from "./Components/registration/registrationPage";
 import SearchPage from './Components/searchComponents/SearchPage';
 import Navbar from './Components/navComponents/navigation/Navbar';
+import DashBoardWrapper from './Components/dashboard/dashboardWrapper';
 import config from 'react-global-configuration'
 
 
@@ -38,6 +39,7 @@ class App extends React.Component {
 				<Route path='/register' component={RegistrationPage}/>
 				<Route path="/search" component={SearchPage} />
 				<Route path='/debug' component={DebugPage}/>
+				<Route path='/dashboard' component={DashBoardWrapper}/>
 			</Switch>
 		</Router>
 	  )
