@@ -1,7 +1,7 @@
 import React from "react";
 import 'bootstrap/dist/js/bootstrap.bundle.min.js'
 import 'bootstrap/dist/css/bootstrap.min.css'
-import axios from "axios";
+import axios from '../../utils/axiosInstance';
 
 class LoginModal extends React.Component {
 
