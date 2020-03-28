@@ -1,6 +1,5 @@
 import functools
-from flask import (Blueprint, flash, redirect, render_template, request, session, url_for, g)
-from flask_cors import CORS
+from flask import (Blueprint, flash, redirect, request, session, url_for, g)
 
 from werkzeug.security import check_password_hash, generate_password_hash
 from ratemydorm.sql.db_connect import get_connection
@@ -67,24 +66,6 @@ def register():
     return {}
 
 
-@bp.route('/passwordhash', methods=['POST'])
-def hash_test():
-    logging.info(f'/passwordhash {request.form}')
-    password = request.form['password']
-
-    value = generate_password_hash(password)
-
-    return {'hash': value}
-
-
-@bp.route('/hashcheck', methods=['POST'])
-def check_hash_test():
-    password = request.form['password']
-    hash = "pbkdf2:sha256:150000$28k4qheS$ac024a6a882fff20167946377fe8bd1f4c3cb70e9bdcfbd7a8a40e98a4c208ce"
-    value = check_password_hash(hash,password)
-    return {'value': value}
-
-
 @bp.route('/login', methods=['GET', 'POST'])
 def login():
     logging.debug(request.json)
@@ -110,14 +91,35 @@ def login():
         if error is None:
             session.clear()
             session['user_id'] = user.user_id
-            return f'Success: {session}'
+            return f'Success'
 
         return error
     connection.commit()
     return {}
 
 
-# @bp.before_request
+@bp.route('/user', methods=['GET'])
+def get_user_id_and_role():
+    logging.debug(request.json)
+
+    user_id = session.get('user_id')
+    admin = session.get('admin')
+    admin = True if admin else False
+
+
+@bp.route('/test_rendering', methods=['GET'])
+def test():
+    logging.debug(f'session value in test route: {session}')
+    logging.debug(f'g value in test route {g.get("user")}')
+    user = {
+        'user_id': session.get('user_id'),
+        'role': session.get('role'),
+    }
+
+    return user
+
+
+@bp.before_request
 def load_logged_in_user():
     logging.debug(request.json)
 
@@ -131,17 +133,18 @@ def load_logged_in_user():
         except InterfaceError as e:
             return (e.msg)
 
-        cursor = connection.cursor()
-        g.user = cursor.execute(
-            'SELECT * FROM user WHERE id = ?', (user_id,)
-        ).fetchone()
+        cursor = connection.cursor(buffered=True)
+        cursor.execute(
+            'SELECT * FROM users WHERE user_id = %(user_id)s', {'user_id': user_id}
+        )
+        g.user = cursor.fetchone()
 
-    logging.info(f"user: {g.user}")
-    logging.debug(f'user_id {session.get("user_id")}')
+    return '200'
 
 
 @bp.route('/logout')
 def logout():
+
     session.clear()
     return redirect(url_for('index'))
 

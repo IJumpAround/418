@@ -7,6 +7,7 @@ const instance = axios.create({
     // Set address/port of target flask server
     baseURL: config.get('baseUrl') + ':' + config.get('port') + '/',
     timeout: 10000,
-    // withCredentials : true
+    withCredentials: true
 });
+
 export default instance

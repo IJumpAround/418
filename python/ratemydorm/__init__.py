@@ -5,8 +5,10 @@ import logging
 
 def create_app():
     app = Flask(__name__, instance_relative_config=True)
-    CORS(app, resources=r"/*")
-    app.config['CORS_HEADERS'] = ['Access-Control-Allow-Origin','Content-Type']
+    CORS(app, resources=r"/*", supports_credentials=True)
+    # app.config['CORS_HEADERS'] = ['Access-Control-Allow-Origin','Content-Type']
+
+
     logging.getLogger('flask_cors').level = logging.DEBUG
 
     # Load configuration from default_config.py, overwrite with instance/config.cfg if it exists
@@ -20,6 +22,7 @@ def create_app():
     from .routes import auth
     from .routes import example
     from .routes import status
+
     # Register routes
     app.register_blueprint(auth.bp)
     app.register_blueprint(example.bp)

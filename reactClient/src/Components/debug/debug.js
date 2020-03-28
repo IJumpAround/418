@@ -3,6 +3,7 @@ import EndpointTest from '../../utils/endpointTest'
 import StatusCard from "./statusCard";
 import config from 'react-global-configuration'
 import './debug.css'
+import axios from '../../utils/axiosInstance'
 
 class DebugPage extends React.Component {
 
@@ -60,6 +61,11 @@ class DebugPage extends React.Component {
                         </div>
                     </div>
                     <div className='row'>
+                        <div className='col-4'>
+                            <button onClick={this.redirect_test}>Test redirection from back end</button>
+                        </div>
+                    </div>
+                    <div className='row'>
                         <div className='col-4'/>
                         <div className='col-4'/>
                         <div className='col-4'/>
@@ -68,6 +74,21 @@ class DebugPage extends React.Component {
             </div>
         )
     }
+
+    redirect_test = () => {
+        axios.get('/auth/test_rendering')
+            .then((result) =>{
+                this.render(result.data)
+                console.log('success')
+                console.log(result)
+                console.log(Cookies.get('session)'))
+            })
+            .catch((error) => {
+                console.log('error')
+                console.log(error.response)
+            })
+
+    };
 
     test_db() {
         this.setState({'dbStatus': spinner()})
