@@ -7,7 +7,8 @@ bp = Blueprint('user', __name__, url_prefix='/user')
 def user_logged_in():
     """
     Use session to quickly determine if the user is logged in
-    :return:
+    :return: 200 if user has session cookie
+             401 if user does not have session cookie
     """
     if not session['user_id']:
         return "nope", 401

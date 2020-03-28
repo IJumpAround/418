@@ -17,6 +17,18 @@ def exclude_from_before_request(func):
 
 @bp.route('/register', methods=['GET', 'POST'])
 def register():
+    """
+    Register endpoint accepts JSON POST of the form.
+    {
+    'username': value,
+    'password': value,
+    'email':    value,
+    'first_name': value,
+    'last_name': value
+    }
+    :return: 200 status if registration was successful
+             400 status plus error message if registration failed
+    """
     logging.info('Register route')
 
     connection = get_connection()
@@ -62,16 +74,25 @@ def register():
                 return 'user registered'
             except IntegrityError as e:
                 logging.error(f'User exists: {e}')
-                return 'Username already exists!'
+                return 'Username already exists!', 400
         logging.error(f'Error in input data {error}')
-        return error
+        return error, 400
 
     return 400
 
 
 @bp.route('/login', methods=['GET', 'POST'])
 def login():
-    """Set a session cookie for a valid user"""
+    """
+    Logs in a user and gives them a session cookie
+    Accepts POST request:
+    {
+        'email': value,
+        'password': value,
+    }
+    :return: 200 status if successfully logged in
+             401 if login failed
+    """
     logging.debug(request.json)
     data_response = {'success': False}
     connection = get_connection()
@@ -128,6 +149,11 @@ def test():
 
 @bp.before_request
 def load_logged_in_user():
+    """
+    Runs before other endpoints in this module. Loads the user's information into a variable for the duration of the
+    request
+    :return:
+    """
     logging.debug(request.json)
     user_id = session.get('user_id')
 
