@@ -8,11 +8,7 @@ import DynamicCards from './DynamicCards';
 		super(props);
 		this.state = { 
 			cardData: [
-				{ Dorm: 1, Desc: "something", Tags: "Tag", Image: '' },
-				{ Dorm: 2, Desc: "something", Tags: "Tag", Image: '' },
-				{ Dorm: 3, Desc: "something", Tags: "Tag", Image: '' },
-				{ Dorm: 4, Desc: "something", Tags: "Tag", Image: '' },
-				{ Dorm: 4, Desc: "something", Tags: "Tag", Image: '' },
+			
 			]
 		};
 
@@ -21,9 +17,6 @@ import DynamicCards from './DynamicCards';
 	
 	passCardsFromMap = (dataFromOpenMap) => {
 		var loadedCards = []
-		console.log(typeof dataFromOpenMap.data)
-		var dynamicCardData = dataFromOpenMap.data.entries(typeof dataFromOpenMap.data);
-		console.log(typeof dynamicCardData)
 		for(var i=0; i<dataFromOpenMap.data.length; i++){
 			loadedCards.push(
 				{Dorm: dataFromOpenMap.data[i][0],

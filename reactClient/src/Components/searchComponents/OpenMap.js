@@ -12,14 +12,7 @@ class OpenMap extends React.Component {
           lat: 42.686063,
           lng: -73.824688,
           },
-
-          cardData: [
-            { Dorm: 1, Desc: "something", Tags: "Tag", Image: '' },
-            { Dorm: 2, Desc: "something", Tags: "Tag", Image: '' },
-            { Dorm: 3, Desc: "something", Tags: "Tag", Image: '' },
-            { Dorm: 4, Desc: "something", Tags: "Tag", Image: '' },
-            { Dorm: 4, Desc: "something", Tags: "Tag", Image: '' },
-          ]
+          cardData:[]
       }
   
 }
@@ -34,6 +27,7 @@ passUpCardData = () => {
   axios.post('search/load_cards', {
     latitude: this.state.latlng.lat,
     longitude: this.state.latlng.lng
+    //Posts the coordinates of the current marker for filtering
 })
     .then((result) => {
         console.log('result')
@@ -52,20 +46,15 @@ passUpCardData = () => {
         }
     })
   };
-  // var url = 'http://localhost:5001/loadcards'
-  //fetch(url)
-  //.then((result) => result.json())
-  //.then(result => {
-    //   var manipResult = result
-      // this.setState({ cardData : manipResult})
-     //});
-   //}
 
 setMarker = (event) => {
   this.setState({latlng: event.latlng})
   this.setState({proxPosition: [event.latlng.lat, event.latlng.lng]})
   };
     
+  componentDidMount(){
+    this.cardLoadHandler()
+  }
 render(){
      
   var proxMarker =  <Marker position = {this.state.latlng}>

@@ -14,11 +14,9 @@ import {
 		constructor(props) {
 			super(props);
 			this.state = {
-				
 				imagedesc: {
 					display: "flex"
 				},
-
 				useStyles : {
 					
 						padding: 5,
@@ -27,10 +25,8 @@ import {
 						zindex: '10'
 					
 				},
-
 				data: this.props.passDataToDynamicCards
 		   }
-		   
 		}
 
 		
@@ -65,12 +61,7 @@ import {
 						</Grid>
 					))}
 				</Grid>
-			</div>
-					
-				
-				 
-			
-			
+			</div>	
 		)
 	}
 	}
