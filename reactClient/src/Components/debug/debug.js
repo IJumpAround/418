@@ -51,10 +51,11 @@ class DebugPage extends React.Component {
                                 <div className="card-header text-center">Settings</div>
                                 <div className="card-body border-top border-bottom border-dark">
                                     <h5 className="card-title text-center">Config Info:</h5>
-                                    <p className="card-text text-center">env file present: {config.get('envFileExists')} <br/>
-                                    port: {config.get('port')} <br/>
-                                   baseUrl: {config.get('baseUrl')} <br/>
-                                    subfolder: {config.get('subfolder')} <br/>
+                                    <p className="card-text text-center">env file present: {config.get('envFileExists')}
+                                        <br/>
+                                        port: {config.get('port')} <br/>
+                                        baseUrl: {config.get('baseUrl')} <br/>
+                                        subfolder: {config.get('subfolder')} <br/>
                                     </p>
                                 </div>
                             </div>
@@ -81,7 +82,6 @@ class DebugPage extends React.Component {
                 this.render(result.data)
                 console.log('success')
                 console.log(result)
-                console.log(Cookies.get('session)'))
             })
             .catch((error) => {
                 console.log('error')

@@ -6,10 +6,10 @@ import logging
 def create_app():
     app = Flask(__name__, instance_relative_config=True)
     CORS(app, resources=r"/*", supports_credentials=True)
-    # app.config['CORS_HEADERS'] = ['Access-Control-Allow-Origin','Content-Type']
+    app.config['CORS_HEADERS'] = ['Access-Control-Allow-Origin','Content-Type']
 
 
-    logging.getLogger('flask_cors').level = logging.DEBUG
+    # logging.getLogger('flask_cors').level = logging.DEBUG
 
     # Load configuration from default_config.py, overwrite with instance/config.cfg if it exists
     try:

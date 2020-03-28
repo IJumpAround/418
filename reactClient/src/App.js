@@ -15,7 +15,8 @@ class App extends React.Component {
 	constructor(props){
 		super(props);
 		this.state = { 
-			showLogin: false
+			showLogin: false,
+			isLoggedIn: false,
 		};
 
 	};
@@ -28,10 +29,10 @@ class App extends React.Component {
 	return (
 		// Set base route depending on if we are deployed to EC2 or local
 		<Router basename={config.get('subfolder')}>
-		<Navbar />
+		<Navbar isLoggedIn = {this.state.isLoggedIn} />
 		<div className="row">
             <div className="col">
-				<LoginModal />
+				<LoginModal loginResultFn = {this.setLoggedInState}/>
 			</div>
 		</div>
 			<Switch>
@@ -43,6 +44,11 @@ class App extends React.Component {
 			</Switch>
 		</Router>
 	  )
+	}
+
+	setLoggedInState = (isLoggedIn) => {
+		console.log('login state function called with: ' + isLoggedIn);
+		this.state.isLoggedIn = isLoggedIn
 	}
 };
 

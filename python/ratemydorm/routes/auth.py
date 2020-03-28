@@ -1,5 +1,5 @@
 import functools
-from flask import (Blueprint, flash, redirect, request, session, url_for, g)
+from flask import Blueprint, flash, redirect, request, session, url_for, g, current_app
 
 from werkzeug.security import check_password_hash, generate_password_hash
 from ratemydorm.sql.db_connect import get_connection
@@ -8,6 +8,11 @@ from mysql.connector.errors import IntegrityError, InterfaceError
 import logging
 
 bp = Blueprint('auth', __name__, url_prefix='/auth')
+
+
+def exclude_from_before_request(func):
+    func._exclude_from_loading = True
+    return func
 
 
 @bp.route('/register', methods=['GET', 'POST'])
@@ -37,9 +42,8 @@ def register():
         elif not password:
             error = 'Password is required.'
 
-        elif cursor.execute(
-            'SELECT user_id FROM users WHERE username = %(username)s', params
-        ) is not None:
+        elif cursor.execute('SELECT user_id FROM users WHERE username = %(username)s', params)\
+                is not None:
             error = f'User {username} is already registered.'
         elif cursor.execute(
             'SELECT user_id FROM users WHERE email = %(email)s', params
@@ -61,14 +65,16 @@ def register():
                 logging.error(f'User exists: {e}')
                 return 'Username already exists!'
 
-        flash(error)
+        return error
 
-    return {}
+    return 400
 
 
 @bp.route('/login', methods=['GET', 'POST'])
+# @exclude_from_before_request
 def login():
     logging.debug(request.json)
+    data_response = {'success': False}
     connection = get_connection()
     cursor = connection.cursor(named_tuple=True)
 
@@ -83,6 +89,9 @@ def login():
         )
         user = cursor.fetchone()
 
+
+
+
         if user is None:
             error = 'Incorrect email.'
         elif not check_password_hash(user.password, password):
@@ -91,11 +100,13 @@ def login():
         if error is None:
             session.clear()
             session['user_id'] = user.user_id
-            return f'Success'
+            data_response['success'] = True
+            return data_response, 200
 
-        return error
+        data_response['message'] = error
+        return data_response, 401
     connection.commit()
-    return {}
+    # return {}
 
 
 @bp.route('/user', methods=['GET'])
@@ -119,10 +130,17 @@ def test():
     return user
 
 
+@bp.route('/user_logged_in', methods=['GET'])
+def user_logged_in():
+    if g.user is None:
+        return 401
+    else:
+        return 200
+
+
 @bp.before_request
 def load_logged_in_user():
     logging.debug(request.json)
-
     user_id = session.get('user_id')
 
     if user_id is None:
@@ -131,7 +149,7 @@ def load_logged_in_user():
         try:
             connection = get_connection()
         except InterfaceError as e:
-            return (e.msg)
+            return e.msg
 
         cursor = connection.cursor(buffered=True)
         cursor.execute(
@@ -139,22 +157,18 @@ def load_logged_in_user():
         )
         g.user = cursor.fetchone()
 
-    return '200'
-
 
 @bp.route('/logout')
 def logout():
-
     session.clear()
-    return redirect(url_for('index'))
+    return 200
 
 
 def login_required(view):
     @functools.wraps(view)
     def wrapped_view(**kwargs):
         if g.user is None:
-            return redirect(url_for('auth.login'))
+            return 401
 
         return view(**kwargs)
-
     return wrapped_view
