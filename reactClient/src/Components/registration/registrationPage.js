@@ -1,4 +1,5 @@
 import React from 'react'
+import axios from 'axios';
 import {faBed} from "@fortawesome/free-solid-svg-icons";
 import {faCommentDots} from "@fortawesome/free-solid-svg-icons";
 import {faMap} from "@fortawesome/free-solid-svg-icons";
@@ -8,18 +9,41 @@ import './registrationPage.css'
 
 
 class RegistrationPage extends React.Component {
-    constructor(props) {
-        super(props);
+   
+    state = {
+        fields: { 
+          firstName: '',
+          lastName: '',
+          email: '',
+          password: ''}
+    }
+
+    handleInputChange = (e) => {
+        this.setState({
+            fields: {
+                ...this.state.fields,
+                [e.target.name]: e.target.value
+            }
+        });
+    }
+
+    handleSubmitForm = (e) => {
+      e.preventDefault();
+      console.log("Sign Up was clicked");
+      //Get route 
+      axios.get('',{
+
+      })
     }
 
     render() {
+        const {firstName, lastName, email, password} = this.state.fields;
         return (
             <div className="home">
-                <div className="container-fluid my-5 justify-content-center py-4 ">
+                <div className="container-fluid  justify-content-center py-4 ">
                     <div className="row align-items-center">
                         <div className="col-lg-8 text-center pb-5">
                         <br/>
-                      
                         <h3 className="text-light h1 ">Find the dorm you deserve</h3>
                             <br/>
                             <ul className='list-group text-light greeting'>
@@ -41,7 +65,7 @@ class RegistrationPage extends React.Component {
                            
                         </div>
                         <div className='col-12  col-md-3 py-4 rounded signUp'>
-                            <form id='registrationForm'>
+                            <form  onChange={this.handleInputChange} onSubmit={this.handleSubmitForm} id='registrationForm'>
                                 <div className='row'>
                                     <div className='col-12'>
                                         <h1>Sign up</h1>
@@ -51,24 +75,27 @@ class RegistrationPage extends React.Component {
                                 </div>
                                 <div className='row'>
                                     <div className='col-6'>
-                                        <input className='input-group-text w-100' id="first_name" type='text' placeholder='First name'/>
+                                        <input className='input-group-text w-100' name="firstName" type='text' placeholder='First name' value={firstName}/>
                                     </div>
 
                                     <div className='col-6'>
-                                        <input className='input-group-text w-100' id="last_name" type='text' placeholder='Last name'/>
+                                        <input className='input-group-text w-100' name="lastName" type='text' placeholder='Last name' value={lastName}/>
                                     </div>
 
                                 </div>
                                 <div className='row mt-2'>
                                     <div className='col-12'>
-                                        <input className='input-group-text w-100'  id="email" type='email' placeholder='Email address'/>
+                                        <input className='input-group-text w-100'  name="email" type='email' placeholder='Email address' value={email}/>
                                     </div>
                                 </div>
                                 <div className='row mt-2'>
                                     <div className='col-12'>
-                                        <input className='input-group-text w-100' id='password' type='password' placeholder='Password'/>
+                                        <input className='input-group-text w-100' name='password' type='password' placeholder='Password' value={password}/>
                                     </div>
                                 </div>
+                                <button className="btn btn-primary mt-2">Sign Up</button>
+                               {/* 
+                               
                                 <div className='row'>
                                     <div className='col-12'><br/>
                                         Enter your birthdate</div>
@@ -105,6 +132,7 @@ class RegistrationPage extends React.Component {
                                         <input className="input-group-text w-100" id="year" type='number' min='1890' max='2020' placeholder='Year'/>
                                     </div>
                                 </div>
+                               */} 
                             </form>
                         </div>
                    
