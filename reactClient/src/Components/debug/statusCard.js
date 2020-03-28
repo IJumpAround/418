@@ -43,12 +43,12 @@ class StatusCard extends React.Component {
     choose_button(status) {
         const baseButton = "info";
         const errorButton = "warning";
-        const successButton = "success"
+        const successButton = "success";
 
         if (status === "Up")
-            return successButton
+            return successButton;
         if (status === 'Down')
-            return errorButton
+            return errorButton;
         else
             return baseButton
     }

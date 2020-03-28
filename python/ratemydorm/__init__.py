@@ -6,8 +6,7 @@ import logging
 def create_app():
     app = Flask(__name__, instance_relative_config=True)
     CORS(app, resources=r"/*", supports_credentials=True)
-    app.config['CORS_HEADERS'] = ['Access-Control-Allow-Origin','Content-Type']
-
+    app.config['CORS_HEADERS'] = ['Access-Control-Allow-Origin', 'Content-Type']
 
     # logging.getLogger('flask_cors').level = logging.DEBUG
 
@@ -19,14 +18,16 @@ def create_app():
         print("instance/config.cfg was not found. Using default settings")
 
     # Import routes
-    from .routes import auth
-    from .routes import example
-    from .routes import status
+    from ratemydorm.routes import auth
+    from ratemydorm.routes import example
+    from ratemydorm.routes import status
+    from ratemydorm.routes import user
 
     # Register routes
     app.register_blueprint(auth.bp)
     app.register_blueprint(example.bp)
     app.register_blueprint(status.bp)
+    app.register_blueprint(user.bp)
 
     logging.basicConfig(format='%(asctime)s-%(levelname)s: %(message)s',
                         datefmt='%m/%d/%y %H:%M:%S',

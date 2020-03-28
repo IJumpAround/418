@@ -1,5 +1,5 @@
 import functools
-from flask import Blueprint, flash, redirect, request, session, url_for, g, current_app
+from flask import Blueprint, request, session, g
 
 from werkzeug.security import check_password_hash, generate_password_hash
 from ratemydorm.sql.db_connect import get_connection
@@ -22,6 +22,7 @@ def register():
     connection = get_connection()
     cursor = connection.cursor()
     if request.method == 'POST':
+        # Get form data
         username = request.json['username']
         password = request.json['password']
         email = request.json['email']
@@ -37,26 +38,24 @@ def register():
             'last_name': last_name
         }
 
+        # Check for various errors
         if not username:
             error = 'Username is required.'
         elif not password:
             error = 'Password is required.'
-
-        elif cursor.execute('SELECT user_id FROM users WHERE username = %(username)s', params)\
-                is not None:
+        elif cursor.execute('SELECT user_id FROM users WHERE username = %(username)s', params) is not None:
             error = f'User {username} is already registered.'
-        elif cursor.execute(
-            'SELECT user_id FROM users WHERE email = %(email)s', params
-        ) is not None:
+        elif cursor.execute('SELECT user_id FROM users WHERE email = %(email)s', params) is not None:
             error = f'Email {email} is already in use'
+        elif None in params.values():
+            error = 'All form fields are required'
 
         if error is None:
             params['password'] = generate_password_hash(password)
             try:
                 cursor.execute(
                     'INSERT INTO users (username, password, first_name, last_name, email) VALUES (%(username)s, '
-                    '%(password)s, %(first_name)s, %(last_name)s, %(email)s)',
-                    params
+                    '%(password)s, %(first_name)s, %(last_name)s, %(email)s)', params
                 )
 
                 connection.commit()
@@ -64,15 +63,15 @@ def register():
             except IntegrityError as e:
                 logging.error(f'User exists: {e}')
                 return 'Username already exists!'
-
+        logging.error(f'Error in input data {error}')
         return error
 
     return 400
 
 
 @bp.route('/login', methods=['GET', 'POST'])
-# @exclude_from_before_request
 def login():
+    """Set a session cookie for a valid user"""
     logging.debug(request.json)
     data_response = {'success': False}
     connection = get_connection()
@@ -88,9 +87,6 @@ def login():
             'SELECT user_id, password FROM users WHERE email = %(email)s', params
         )
         user = cursor.fetchone()
-
-
-
 
         if user is None:
             error = 'Incorrect email.'
@@ -130,14 +126,6 @@ def test():
     return user
 
 
-@bp.route('/user_logged_in', methods=['GET'])
-def user_logged_in():
-    if g.user is None:
-        return 401
-    else:
-        return 200
-
-
 @bp.before_request
 def load_logged_in_user():
     logging.debug(request.json)
@@ -153,15 +141,24 @@ def load_logged_in_user():
 
         cursor = connection.cursor(buffered=True)
         cursor.execute(
-            'SELECT * FROM users WHERE user_id = %(user_id)s', {'user_id': user_id}
+            'SELECT user_id FROM users WHERE user_id = %(user_id)s', {'user_id': user_id}
         )
         g.user = cursor.fetchone()
 
 
+@bp.route('/session_info', methods=['GET'])
+def session_info():
+    response = {
+        'user_id': session.get('user_id'),
+    }
+    return response
+
+
 @bp.route('/logout')
 def logout():
+    """Clear session cookie"""
     session.clear()
-    return 200
+    return "Logged Out", 200
 
 
 def login_required(view):

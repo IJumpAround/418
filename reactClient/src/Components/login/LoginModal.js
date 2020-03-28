@@ -32,14 +32,15 @@ class LoginModal extends React.Component {
             password: this.state.fields.password
         })
             .then((result) => {
-                console.log('result')
+                console.log('result');
                 if (result) {
                     console.log(Object.entries(result));
                 }
-                this.props.loginResultFn(result.status === 200)
+                this.props.loginResultFn(result.status === 200);
+                window.location.pathname='/dashboard'
             })
             .catch((error) => {
-                console.log('error')
+                console.log('error');
                 if (error) {
                     console.log(Object.entries(error))
                 }

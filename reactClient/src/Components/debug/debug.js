@@ -14,7 +14,8 @@ class DebugPage extends React.Component {
             dbStatus: 'Unknown',
             dbStatusMessage: '',
             serverStatus: 'Unknown',
-            serverStatusMessage: ''
+            serverStatusMessage: '',
+            sessionInfo: false,
         };
         this.test_db = this.test_db.bind(this);
         this.test_server = this.test_server.bind(this);
@@ -63,7 +64,8 @@ class DebugPage extends React.Component {
                     </div>
                     <div className='row'>
                         <div className='col-4'>
-                            <button onClick={this.redirect_test}>Test redirection from back end</button>
+                            <p>{this.state.sessionInfo}</p>
+                            <button onClick={this.login_test}>Is User logged in?</button>
                         </div>
                     </div>
                     <div className='row'>
@@ -76,27 +78,23 @@ class DebugPage extends React.Component {
         )
     }
 
-    redirect_test = () => {
-        axios.get('/auth/test_rendering')
-            .then((result) =>{
-                this.render(result.data)
-                console.log('success')
-                console.log(result)
+    login_test = () => {
+        axios.get('/auth/user_logged_in')
+            .then((result) => {
+                this.setState({sessionInfo:true})
             })
             .catch((error) => {
-                console.log('error')
-                console.log(error.response)
+                this.setState({sessionInfo:false})
             })
-
     };
 
     test_db() {
-        this.setState({'dbStatus': spinner()})
+        this.setState({'dbStatus': spinner()});
         EndpointTest.testDatabaseConnection(this)
     }
 
     test_server() {
-        this.setState({'serverStatus': spinner()})
+        this.setState({'serverStatus': spinner()});
         EndpointTest.testServerStatus(this);
     }
 

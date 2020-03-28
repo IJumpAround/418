@@ -1,17 +1,31 @@
 import axios from './axiosInstance'
+import {set} from "react-global-configuration/lib/configuration";
 
-export function is_user_logged_in() {
-    axios.get('/auth/user_logged_in')
+
+export function is_user_logged_in(callback) {
+    axios.get('/user/user_logged_in')
         .then((response) => {
             console.log(response);
-            return response.status === 200;
+            console.log(response.status);
+            if(response.status ===200) {
+                callback(true)
+            }
+            return false
         })
         .catch((error) => {
-            console.log(error)
-            return false;
+            console.log(error);
+            callback (false)
         })
 }
 
-export function logout() {
-    return 'testi'
+export function logout(setLoginStateFn) {
+    axios.get('/auth/logout')
+        .then((response) => {
+            setLoginStateFn(false);
+            window.location.pathname = '/'
+        })
+        .catch((error) => {
+            console.log('error');
+            console.log(error)
+        })
 }
