@@ -1,7 +1,7 @@
 import React from 'react'
 import { Map, Marker, Popup, TileLayer } from 'react-leaflet'
 import ReactLeafletSearch from "react-leaflet-search";
-
+import axios from '../../utils/axiosInstance';
 
 class OpenMap extends React.Component {
     constructor(props) {
@@ -24,21 +24,42 @@ class OpenMap extends React.Component {
   
 }
 
-outputHandler = (event) => {
-  let out= event.target.output;
-  let val = event.target.value;
-  this.setState({[out]: val});
+passUpCardData = () => {
+  this.props.passCardsToOpenMap(this.state.cardData);
 }
 
  cardLoadHandler = () =>  {
-   var url = 'http://localhost:5001/loadcards'
-  fetch(url)
-  .then((result) => result.json())
-  .then(result => {
-       var manipResult = result
-       this.setState({ cardData : manipResult})
-     });
-   }
+  console.log("marker location changed");
+  //Changing cards begins
+  axios.post('search/load_cards', {
+    latitude: this.state.latlng.lat,
+    longitude: this.state.latlng.lng
+})
+    .then((result) => {
+        console.log('result')
+        if (result) {
+            console.log(Object.entries(result));
+            var manipResult = result.data
+            this.setState({ cardData : manipResult})
+            this.passUpCardData()
+        }
+        
+    })
+    .catch((error) => {
+        console.log('error')
+        if (error) {
+            console.log(Object.entries(error))
+        }
+    })
+  };
+  // var url = 'http://localhost:5001/loadcards'
+  //fetch(url)
+  //.then((result) => result.json())
+  //.then(result => {
+    //   var manipResult = result
+      // this.setState({ cardData : manipResult})
+     //});
+   //}
 
 setMarker = (event) => {
   this.setState({latlng: event.latlng})
@@ -66,6 +87,7 @@ render(){
               {
               this.setMarker(event)
               this.cardLoadHandler()
+              
               }
             }
             >

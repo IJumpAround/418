@@ -28,37 +28,15 @@ import {
 					
 				},
 
-				data: [
-					{ Dorm: 1, Desc: "something", Tags: "Tag", Image: '' },
-					{ Dorm: 2, Desc: "something", Tags: "Tag", Image: '' },
-					{ Dorm: 3, Desc: "something", Tags: "Tag", Image: '' },
-					{ Dorm: 4, Desc: "something", Tags: "Tag", Image: '' },
-					{ Dorm: 4, Desc: "something", Tags: "Tag", Image: '' },
-				]
+				data: this.props.passDataToDynamicCards
 		   }
+		   
 		}
 
-
-
-		outputHandler = (event) => {
-			let out= event.target.output;
-			let val = event.target.value;
-			this.setState({[out]: val});
-		}
 		
-		 cardLoadHandler = (event) =>  {
-			 event.preventDefault();
-			 var url = 'http://localhost:5001/loadcards'
-		  fetch(url)
-			.then((result) => result.json())
-			.then(result => {
-				   this.setState({ data : result})
-			   });
-		   }
 
 		render(){
 		return (
-
 				<div className='Cards' style={this.state.useStyles}>
 				<Grid
 					container
@@ -68,8 +46,8 @@ import {
 					alignItems="flex-end"
 					
 				>
-					{this.state.data.map(elem => (
-						<Grid item xs={6} sm={6} md={12} key={this.state.data.indexOf(elem)}>
+					{this.props.passDataToDynamicCards.map(elem => (
+						<Grid item xs={6} sm={6} md={12} key={this.props.passDataToDynamicCards.indexOf(elem)}>
 							<Card>
 								<CardHeader
 									title={`Dorm : ${elem.Dorm}`}
