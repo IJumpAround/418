@@ -30,9 +30,9 @@ passUpCardData = () => {
     //Posts the coordinates of the current marker for filtering
 })
     .then((result) => {
-        console.log('result')
+        //console.log('result')
         if (result) {
-            console.log(Object.entries(result));
+            //console.log(Object.entries(result));
             var manipResult = result.data
             this.setState({ cardData : manipResult})
             this.passUpCardData()
@@ -58,7 +58,8 @@ setMarker = (event) => {
 render(){
      
   var proxMarker =  <Marker position = {this.state.latlng}>
-                     <popup></popup>
+                    {/* <popup></popup> */}
+                     
                     </Marker>
                
       const mystyle = {

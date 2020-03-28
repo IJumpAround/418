@@ -19,8 +19,12 @@ import DynamicCards from './DynamicCards';
 		var loadedCards = []
 		for(var i=0; i<dataFromOpenMap.data.length; i++){
 			loadedCards.push(
-				{Dorm: dataFromOpenMap.data[i][0],
-				 Desc: dataFromOpenMap.data[i][5],
+				{Dorm_id: dataFromOpenMap.data[i][0],
+				 Room: dataFromOpenMap.data[i][3],
+				 Floor: dataFromOpenMap.data[i][4],
+				 Building: dataFromOpenMap.data[i][5],
+				 Quad: dataFromOpenMap.data[i][6],
+				 Address: dataFromOpenMap.data[i][7],
 				 Tags: "Tag",
 				 Image: ''
 				}

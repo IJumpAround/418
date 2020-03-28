@@ -34,7 +34,7 @@ def load_cards():
             dorm_dict = []
             for i in range(len(dormRows)):
                 dorm_dict.append([
-                    str(dormRows[i][0]), #dorm_id
+                    str(dormRows[i][0]), #dorm_id 
                     str(dormRows[i][1]), #latitude
                     str(dormRows[i][2]), #longitude
                     str(dormRows[i][3]), #room_num
