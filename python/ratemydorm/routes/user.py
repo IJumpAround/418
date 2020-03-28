@@ -14,3 +14,15 @@ def user_logged_in():
         return "nope", 401
     else:
         return "yep", 200
+
+
+@bp.route('/session_info', methods=['GET'])
+def session_info():
+    data = {
+        'user_id': session.get('user_id')
+    }
+    code = 200 if data.get('user_id') else 401
+
+    return data, code
+
+

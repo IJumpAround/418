@@ -172,14 +172,6 @@ def load_logged_in_user():
         g.user = cursor.fetchone()
 
 
-@bp.route('/session_info', methods=['GET'])
-def session_info():
-    response = {
-        'user_id': session.get('user_id'),
-    }
-    return response
-
-
 @bp.route('/logout')
 def logout():
     """Clear session cookie"""
