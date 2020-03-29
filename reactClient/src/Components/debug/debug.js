@@ -79,7 +79,7 @@ class DebugPage extends React.Component {
     }
 
     login_test = () => {
-        axios.get('/auth/user_logged_in')
+        axios.get('/user/user_logged_in')
             .then((result) => {
                 this.setState({sessionInfo:true})
             })
