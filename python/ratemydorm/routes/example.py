@@ -12,12 +12,10 @@ bp = Blueprint('example', __name__, url_prefix='/example')
 @bp.route('/', methods=['GET', 'POST'])
 def hello_world():
     """
-    Example endpoint in flask for those who are new.
-    Import request from flask to access the incoming request https://flask.palletsprojects.com/en/1.1.x/api/#flask.Request
-    Returning data to the view can be done by simply using return. https://flask.palletsprojects.com/en/1.1.x/quickstart/#about-responses
-    POST: data stored in request.form
-    GET: data stored in request.args
-    :return:
+    Example endpoint in flask for those who are new. Import request from flask to access the incoming request
+    https://flask.palletsprojects.com/en/1.1.x/api/#flask.Request Returning data to the view can be done by simply
+    using return. https://flask.palletsprojects.com/en/1.1.x/quickstart/#about-responses POST: data stored in
+    request.form GET: data stored in request.args :return:
     """
     logging.info('Test logging statement')
     if request.method == 'GET':
@@ -28,6 +26,7 @@ def hello_world():
         print(f'post form content: {data}')
 
     return 'Hello World!'
+
 
 # Creates endpoint at baseurl/example/query
 @bp.route('/query', methods=['GET'])
@@ -55,9 +54,8 @@ def example_query():
             print("Number of rows affected by statement '{}': {}".format(
                 result.statement, result.rowcount))
 
-    # Example of the proper way to parameterize an insert
-    # Template 'INSERT INTO example_table (column1, column2) VALUES (%(column1_dictionary_key)s, %(column2_dictionary_key)s)
-    # Note the values format is %(keyname)s
+    # Example of the proper way to parameterize an insert Template 'INSERT INTO example_table (column1,
+    # column2) VALUES (%(column1_dictionary_key)s, %(column2_dictionary_key)s) Note the values format is %(keyname)s
     # This way we can pass a dictionary as a paramter to the query
     values = {
         'data_being_inserted': 'Some data being inserted',
@@ -88,10 +86,10 @@ def example_rollback():
         cursor.execute(stmt, params)
     except Error as e:
         logging.error(f"Shouldn't see this {e}")
-        return(e)
+        return e
 
-    # Imagine we've already run this insert, and now we decide we shouldn't have performed the insert.
-    # Since we are required to commit before changes are published in the database we can rollback the changes we've staged.
+    # Imagine we've already run this insert, and now we decide we shouldn't have performed the insert. Since we are
+    # required to commit before changes are published in the database we can rollback the changes we've staged.
     connector.rollback()
     connector.commit()  # This commit does nothing after we've already rolled back
 
@@ -105,11 +103,10 @@ def example_rollback():
     # Be careful to verify the cursor has returned anything from the query before performing operations on the data
     try:
         expected_string = cursor.fetchone()
-        substring =  expected_string[:5]
+        substring = expected_string[:5]
     except TypeError as e:
         logging.error(e)
         logging.info('This causes an error because the query returned nothing.')
         logging.info('normally it would be fine to slice a string like this.')
-
 
     return {}
