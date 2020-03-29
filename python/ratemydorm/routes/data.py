@@ -44,7 +44,7 @@ def add_review():
         'dorm_id': json_data.get('dorm_id'),
         'timestamp': datetime.datetime.now(),
         'rating': json_data.get('rating'),
-        'review_text': json_data.get('text'),
+        'review_text': json_data.get('review_text'),
     }
 
     if None in params.values():
@@ -60,11 +60,11 @@ def add_review():
         cursor.execute(insert, params)
         response = 't'
     except IntegrityError as e:
-        response = e, 400
+        response = str(e), 400
         logging.error(f'Integrity error during database insertion {e}')
         connection.rollback()
     except Exception as e:
-        response = e, 400
+        response = str(e), 400
         logging.error(f'Unexpected error during review INSERT: {e}')
         connection.rollback()
     else:

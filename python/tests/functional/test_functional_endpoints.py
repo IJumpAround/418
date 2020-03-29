@@ -1,5 +1,7 @@
-from flask.wrappers import Response
 import datetime
+from flask.wrappers import Response
+import unittest
+
 from tests.functional.functional_test_client import FunctionalTestClient
 from ratemydorm.sql.table_types import UserProfile
 
@@ -45,7 +47,7 @@ class TestEndpoints(FunctionalTestClient):
         result = self.post('/data/add_review', data=data)
         response: Response = self._response
         self.assertEqual(400, response.status_code)
-        self.assertIn('Not all fields are filled out', result.get('message'))
+        self.assertIn('foreign key constraint fails', result.get('message'))
 
     def test_add_review_fails_with_invalid_user_id(self):
         data = self._data
@@ -55,4 +57,13 @@ class TestEndpoints(FunctionalTestClient):
         result = self.post('/data/add_review', data=data)
         response: Response = self._response
         self.assertEqual(400, response.status_code)
-        self.assertIn('Not all fields are filled out', result.get('message'))
+        self.assertIn('foreign key constraint fails', result.get('message'))
+
+    @unittest.skip
+    def test_adding_review(self):
+        data = self._data
+        data['dorm_id'] = 2
+
+        result = self.post('/data/add_review', data=data)
+        response: Response = self._response
+        self.assertEqual(response.status_code, 200)
