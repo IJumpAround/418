@@ -20,10 +20,24 @@ def load_cards():
             'latitude': latitude,
             'longitude': longitude
         }
+        print(params)
         cursor = connection.cursor(buffered=True)
         cursor.execute(
-            'SELECT dorm_id, latitude, longitude, room_num, floor, building, quad, address FROM Dorm', params
+            #formula taken from gis.stackexchange.com/questions/31628/find-points-within-a-distance-using-mysql  courtesy of users: Mapperz and sachleen
+            'SELECT dorm_id, latitude, longitude, room_num, floor, building, quad, address, '
+            '(3959 * acos('
+            'cos(radians(%(latitude)s)) '
+            '* cos(radians(latitude)) '
+            '* cos(radians(longitude) - radians(%(longitude)s)) '
+            '+ sin(radians(%(latitude)s)) '
+            '* sin(radians(latitude))'
+            ')'
+            ') AS distance '
+            'FROM Dorm '
+            'HAVING distance < 1 '
+            'ORDER BY distance', params
         )
+
         dormRows = cursor.fetchall()
 
 
@@ -34,7 +48,7 @@ def load_cards():
             dorm_dict = []
             for i in range(len(dormRows)):
                 dorm_dict.append([
-                    str(dormRows[i][0]), #dorm_id 
+                    str(dormRows[i][0]), #dorm_id
                     str(dormRows[i][1]), #latitude
                     str(dormRows[i][2]), #longitude
                     str(dormRows[i][3]), #room_num

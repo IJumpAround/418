@@ -32,39 +32,43 @@ import {Link} from 'react-router-dom';
 
 		render(){
 			return (
-				<div className='Cards' style={this.state.useStyles}>
-					<Grid
-						container
-						spacing={0}
-						direction="column"
-						justify="flex-end"
-						alignItems="flex-end"	
-					>
-						{this.props.passDataToDynamicCards.map(elem => (
-							<Grid item xs={6} sm={6} md={12} key={this.props.passDataToDynamicCards.indexOf(elem)}>
-								<Card>
-									<CardHeader
-										title = <div>
-													<Link to={`/dashboard/`}> 
-														{`${elem.Building} ${elem.Room}`} 
-													</Link>	
+				<React.Fragment>
+					<div className='Cards' style={this.state.useStyles}>
+						<Grid
+							container
+							spacing={0}
+							direction="column"
+							justify="end"
+							alignItems="end"	
+						>
+							{this.props.passDataToDynamicCards.map(elem => (
+								<Grid item xs={6} sm={6} md={12} key={this.props.passDataToDynamicCards.indexOf(elem)}>
+									<Card>
+										<CardHeader
+											title = <div>
+														<Link to={`/dashboard/${elem.Dorm_id}`}> 
+															{`${elem.Building} ${elem.Room}`} 
+														</Link>	
+													</div>
+											subheader={` ${elem.Quad} Quad, ${elem.Address}` }	
+										
+										/>
+										<CardContent>
+											<Typography  component={'span'}>
+												<div className="flex-container" style={this.state.imagedesc}>
+												<img src={require('../../img/stockdormimage.jpg')} width="50%%" height="180px" alt=""/>
 												</div>
-										subheader={` ${elem.Quad} Quad, ${elem.Address}` }	
-									
-									/>
-									<CardContent>
-										<Typography  component={'span'}>
-											<div className="flex-container" style={this.state.imagedesc}>
-											<img src={require('../../img/stockdormimage.jpg')} width="50%%" height="180px" alt=""/>
-											</div>
-										</Typography>
-									</CardContent>
-								</Card>
-							</Grid>
-						
-						) ) } 
-					</Grid> 
-				</div>	
+											</Typography>
+										</CardContent>
+									</Card>
+								</Grid>
+							
+							) ) } 
+							<p>If this is empty, no logged dorms are within the specified range from your marker</p>	
+						</Grid> 
+					</div>
+					
+				</React.Fragment>
 			)
 		}
 	}
