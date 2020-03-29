@@ -10,7 +10,7 @@ def user_logged_in():
     :return: 200 if user has session cookie
              401 if user does not have session cookie
     """
-    if not session['user_id']:
+    if not session.get('user_id'):
         return "nope", 401
     else:
         return "yep", 200

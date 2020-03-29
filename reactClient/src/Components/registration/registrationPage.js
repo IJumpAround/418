@@ -48,7 +48,7 @@ class RegistrationPage extends React.Component {
                            
                         </div>
                         <div className='col-12  col-md-3 py-4 rounded signUp'>
-                            <form  onChange={this.handleInputChange} onSubmit={this.handleSubmitForm} id='registrationForm'>
+                            <form  onChange={this.handleChange} onSubmit={this.handleSubmit} id='registrationForm'>
                                 <div className='row'>
                                     <div className='col-12'>
                                         <h1>Sign up</h1>
@@ -81,7 +81,7 @@ class RegistrationPage extends React.Component {
                                 </div>
                                 <div className='row mt-2'>
                                     <div className='col-12'>
-                                        <input className='input-group-text w-100' id='password' type='password' placeholder='Password' onChange={this.handleChange} required minLength={7}
+                                        <input className='input-group-text w-100' id='password' type='password' placeholder='Password' required minLength={7}
                                                pattern={this.state.passwordPattern}/>
 
                                     </div>
