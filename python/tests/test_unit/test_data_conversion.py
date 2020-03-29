@@ -2,7 +2,7 @@ import unittest
 import json
 
 from collections import namedtuple
-from ratemydorm.utils.data_conversion import convert_single_row_to_dict, convert_multiple_rows_to_dict
+from ratemydorm.utils.data_conversion_functions import convert_single_row_to_dict, convert_multiple_rows_to_dict
 
 from decimal import Decimal
 

@@ -3,8 +3,9 @@ import logging
 from flask import request, Blueprint
 from mysql.connector.errors import IntegrityError
 
+from ratemydorm.utils.api_response import RateMyDormApiResponse
 from ratemydorm.sql.db_connect import get_connection
-from ratemydorm.utils.data_conversion import convert_single_row_to_dict
+from ratemydorm.utils.data_conversion_functions import convert_single_row_to_dict
 
 bp = Blueprint('data', __name__, url_prefix='/data')
 
@@ -31,7 +32,8 @@ def get_user_profile():
     code = 200 if user else 404
 
     user_dict = convert_single_row_to_dict(user)
-    return {'profile': user_dict}, code
+    response = RateMyDormApiResponse(user_dict, code).response
+    return response
 
 
 @bp.route('/add_review', methods=['POST'])
@@ -46,8 +48,7 @@ def add_review():
     }
 
     if None in params.values():
-        error = {'error': 'Not all fields are filled out'}
-        return error, 400
+        return RateMyDormApiResponse(payload="", code=400, message='Not all fields are filled out').response
 
     connection = get_connection()
     cursor = connection.cursor()

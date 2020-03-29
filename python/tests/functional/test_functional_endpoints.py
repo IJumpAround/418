@@ -29,16 +29,23 @@ class TestEndpoints(FunctionalTestClient):
         result = self.get('/data/profile', query)
 
         self.assertIsInstance(result, dict)
-        self.assertIsInstance(result.get('profile'), dict)
+        self.assertIsInstance(result.get('payload'), dict)
+        self.assertCountEqual(profile_keys, result.get('payload').keys())
 
-        self.assertCountEqual(profile_keys, result.get('profile').keys())
+    def test_add_review_fails_with_missing_input(self):
+        data = self._data
+        data['rating'] = None
+        result = self.post('/data/add_review', data=data)
+        response: Response = self._response
+        self.assertEqual(400, response.status_code)
+        self.assertIn('Not all fields are filled out', result.get('message'))
 
     def test_add_review_fails_with_invalid_dorm_id(self):
         data = self._data
         result = self.post('/data/add_review', data=data)
         response: Response = self._response
         self.assertEqual(400, response.status_code)
-        self.assertIn('Not all fields are filled out', result.get('error'))
+        self.assertIn('Not all fields are filled out', result.get('message'))
 
     def test_add_review_fails_with_invalid_user_id(self):
         data = self._data
@@ -48,4 +55,4 @@ class TestEndpoints(FunctionalTestClient):
         result = self.post('/data/add_review', data=data)
         response: Response = self._response
         self.assertEqual(400, response.status_code)
-        self.assertIn('Not all fields are filled out', result.get('error'))
+        self.assertIn('Not all fields are filled out', result.get('message'))
