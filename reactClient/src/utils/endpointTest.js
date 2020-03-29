@@ -8,7 +8,7 @@ class EndpointTest {
     static testServerStatus(self) {
         axios.get('/debug/status')
             .then(function (response) {
-                console.log(response)
+                console.log(response);
                 self.setState({'serverStatus': 'Up',
                                     'serverStatusMessage': response.data});
 
@@ -23,7 +23,7 @@ class EndpointTest {
     static testDatabaseConnection(self) {
         axios.get('/debug/db')
             .then(function (response) {
-                console.log(response)
+                console.log(response);
                 self.setState({'dbStatus': response.status === 200 ? 'Up': 'Down',
                                      'dbStatusMessage': response.data});
             })
