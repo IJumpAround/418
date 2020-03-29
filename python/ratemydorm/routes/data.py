@@ -36,17 +36,17 @@ def get_user_profile():
 
 @bp.route('/add_review', methods=['POST'])
 def add_review():
-
+    json_data = request.json
     params = {
-        'user_id': request['user_id'],
-        'dorm_id': request['dorm_id'],
+        'user_id': json_data.get('user_id'),
+        'dorm_id': json_data.get('dorm_id'),
         'timestamp': datetime.datetime.now(),
-        'rating': request['rating'],
-        'review_text': request['text']
+        'rating': json_data.get('rating'),
+        'review_text': json_data.get('text'),
     }
 
     if None in params.values():
-        error = 'Not all fields are filled out'
+        error = {'error': 'Not all fields are filled out'}
         return error, 400
 
     connection = get_connection()
@@ -72,4 +72,4 @@ def add_review():
         connection.commit()
     finally:
         connection.close()
-        return response
+        return {'message': response[0]},response[1]

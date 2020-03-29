@@ -47,7 +47,7 @@ class FunctionalTestClient(unittest.TestCase):
         :param data: data dictionary to post
         :return: raw response object
         """
-        self._response = self.client.post(endpoint, data=data)
+        self._response = self.client.post(endpoint, json=data)
 
         logging.debug(f'POST: "{endpoint}" data: "{data}".')
         logging.debug(f'Response: {self._response.data}')
