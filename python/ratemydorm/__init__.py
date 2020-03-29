@@ -22,12 +22,14 @@ def create_app():
     from ratemydorm.routes import example
     from ratemydorm.routes import status
     from ratemydorm.routes import user
+    from ratemydorm.routes import searchpage
 
     # Register routes
     app.register_blueprint(auth.bp)
     app.register_blueprint(example.bp)
     app.register_blueprint(status.bp)
     app.register_blueprint(user.bp)
+    app.register_blueprint(searchpage.bp)
 
     logging.basicConfig(format='%(asctime)s-%(levelname)s: %(message)s',
                         datefmt='%m/%d/%y %H:%M:%S',
