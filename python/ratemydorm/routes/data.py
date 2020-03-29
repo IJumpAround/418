@@ -1,9 +1,10 @@
 import datetime
 import logging
-
-from flask import request, session, Blueprint
-from ratemydorm.sql.db_connect import get_connection
+from flask import request, Blueprint
 from mysql.connector.errors import IntegrityError
+
+from ratemydorm.sql.db_connect import get_connection
+from ratemydorm.utils.data_conversion import convert_single_row_to_dict
 
 bp = Blueprint('data', __name__, url_prefix='/data')
 
@@ -21,16 +22,21 @@ def get_user_profile():
     params = {'user_id': user_id}
     query = """SELECT username, first_name, last_name, email, profile_image, status, profile_bio, user_role
                FROM users
-               WHERE user_id = %(user_id)s"""
-    cursor.exectute(query)
-
+               WHERE user_id = %(user_id)s
+               LIMIT 1"""
+    cursor.execute(query, params)
     user = cursor.fetchone()
+
+    logging.debug(user)
+    code = 200 if user else 404
+
+    user_dict = convert_single_row_to_dict(user)
+    return {'profile': user_dict}, code
 
 
 @bp.route('/add_review', methods=['POST'])
 def add_review():
 
-    error = None
     params = {
         'user_id': request['user_id'],
         'dorm_id': request['dorm_id'],
@@ -44,24 +50,25 @@ def add_review():
         return error, 400
 
     connection = get_connection()
-    cursor = connection.cursor(buffered=True, named_tuple=True)
-
+    cursor = connection.cursor()
+    response = ""
     try:
         insert = """INSERT INTO review (user_id, dorm_id, timestamp, rating, review_text) VALUES
         (%(user_id)s, %(dorm_id)s, %(timestamp)s, %(rating)s, %(review_text)s)
         """
-
+        cursor.execute(insert, params)
+        response = 't'
     except IntegrityError as e:
-        logging.error(f'Integrity error during database insertion {e}')
         response = e, 400
+        logging.error(f'Integrity error during database insertion {e}')
         connection.rollback()
     except Exception as e:
-        logging.error(f'Unexpected error during review INSERT: {e}')
         response = e, 400
+        logging.error(f'Unexpected error during review INSERT: {e}')
         connection.rollback()
     else:
-        logging.debug(f'Insert success {params}')
         response = 'success', 200
+        logging.debug(f'Insert success {params}')
         connection.commit()
     finally:
         connection.close()
