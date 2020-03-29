@@ -18,10 +18,12 @@ def create_app():
     from .routes import auth
     from .routes import example
     from .routes import status
+    from .routes import searchpage
     # Register routes
     app.register_blueprint(auth.bp)
     app.register_blueprint(example.bp)
     app.register_blueprint(status.bp)
+    app.register_blueprint(searchpage.bp)
 
     logging.basicConfig(format='%(asctime)s-%(levelname)s: %(message)s',
                         datefmt='%m/%d/%y %H:%M:%S',

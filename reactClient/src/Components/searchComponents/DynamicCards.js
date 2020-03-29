@@ -1,8 +1,6 @@
-import React from 'react';
+import React from 'react'
 import 'bootstrap/dist/js/bootstrap.bundle.min.js'
 import 'bootstrap/dist/css/bootstrap.min.css'
-
-import { makeStyles } from '@material-ui/core/styles'
 import {
 		Grid,
 		Card,
@@ -10,66 +8,69 @@ import {
 		Typography,
 		CardHeader
 	} from '@material-ui/core/'
+import {Link} from 'react-router-dom';	
 	
-	var imagedesc= {
-		display: "flex"
-	}
-
-	var useStyles = makeStyles(theme => ({
-		root: {
-			padding: 5,
-			width: "100vh",
-			overflowY: "scroll",
-			zindex: '10'
+	class DynamicCards extends React.Component{ 
+		constructor(props) {
+			super(props);
+			this.state = {
+				imagedesc: {
+					display: "flex"
+				},
+				useStyles : {
+					
+						padding: 5,
+						width: "100vh",
+						overflowY: "scroll",
+						zindex: '10'
+					
+				}
+		   }
 		}
-	}))
-	
-	export default function AltCard() {
-		var classes = useStyles()
-		var data = [
-			{ Dorm: 1, Desc: "something", Tags: "Tag", Image: '' },
-			{ Dorm: 2, Desc: "something", Tags: "Tag", Image: '' },
-			{ Dorm: 3, Desc: "something", Tags: "Tag", Image: '' },
-			{ Dorm: 4, Desc: "something", Tags: "Tag", Image: '' },
-			{ Dorm: 4, Desc: "something", Tags: "Tag", Image: '' },
-		]
-		return (
 
-				<div className={classes.root}>
-				<Grid
-					container
-					spacing={0}
-					direction="column"
-					justify="flex-end"
-					alignItems="flex-end"
+		
+
+		render(){
+			return (
+				<React.Fragment>
+					<div className='Cards' style={this.state.useStyles}>
+						<Grid
+							container
+							spacing={0}
+							direction="column"
+							justify="end"
+							alignItems="end"	
+						>
+							{this.props.passDataToDynamicCards.map(elem => (
+								<Grid item xs={6} sm={6} md={12} key={this.props.passDataToDynamicCards.indexOf(elem)}>
+									<Card>
+										<CardHeader
+											title = <div>
+														<Link to={`/dashboard/${elem.Dorm_id}`}> 
+															{`${elem.Building} ${elem.Room}`} 
+														</Link>	
+													</div>
+											subheader={` ${elem.Quad} Quad, ${elem.Address}` }	
+										
+										/>
+										<CardContent>
+											<Typography  component={'span'}>
+												<div className="flex-container" style={this.state.imagedesc}>
+												<img src={require('../../img/stockdormimage.jpg')} width="50%%" height="180px" alt=""/>
+												</div>
+											</Typography>
+										</CardContent>
+									</Card>
+								</Grid>
+							
+							) ) } 
+							<p>If this is empty, no logged dorms are within the specified range from your marker</p>	
+						</Grid> 
+					</div>
 					
-				>
-					{data.map(elem => (
-						<Grid item xs={6} sm={6} md={12} key={data.indexOf(elem)}>
-							<Card>
-								<CardHeader
-									title={`Dorm : ${elem.Dorm}`}
-									subheader={` ${elem.Desc}` }
-								/>
-								<CardContent>
-									<Typography  gutterBottom>
-										<div className="flex-container" style={imagedesc}>
-										<img src={require('../../img/stockdormimage.jpg')} width="50%%" height="180px" alt=""/>
-										<p> description header </p>
-										</div>
-									</Typography>
-								</CardContent>
-							</Card>
-						</Grid>
-					))}
-				</Grid>
-			</div>
-					
-				
-				 
-			
-			
-		)
+				</React.Fragment>
+			)
+		}
 	}
-	
-	
+
+export default DynamicCards
