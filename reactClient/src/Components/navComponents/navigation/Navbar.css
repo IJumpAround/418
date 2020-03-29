@@ -1,0 +1,24 @@
+@import url('https://fonts.googleapis.com/css?family=Righteous&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Encode+Sans+Expanded|Righteous&display=swap');
+
+.navbar-custom{
+ /* background-color: #564D80;*/
+  box-shadow: 14px 10px 15px rgba(0, 0, 0, 0.19);
+}
+
+.custom-color {
+  /*color: #f7f7f7; */
+  color: #564D80; 
+  font-family: 'Encode Sans Expanded';
+}
+
+.custom-color:hover{
+  color: #97A1C3;
+  text-decoration: none;
+}
+
+.my-text {
+  font-family: 'Encode Sans Expanded';
+  font-size: 30px;
+}
+

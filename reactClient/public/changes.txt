@@ -1,0 +1,11 @@
+Changed SearchPage.js to App.js
+Created SearchPage component and imported DynamicCards, openMap and 
+Moved all images into /public/img
+Moved default create react files into /src 
+Created a junk folder, put two files inside that are not being used 
+Created a a route to 'search' link in the navbar
+Created a homepage component for our future homepage
+
+
+
+

@@ -1,0 +1,17 @@
+.home {
+    background: linear-gradient( rgba(0,0,0,0.1), rgba(0, 0, 0, 0.3) ),url('../../img//fountainslk1.jpg') no-repeat center center/cover;
+    height: 100vh;
+}
+
+.greeting {
+    font-size: 25px;  
+}
+
+.signUp {
+    background-color: rgba(246, 246, 247, 0.9);
+    color:  #564D80;
+}
+
+.custom {
+    align-items: center;
+}

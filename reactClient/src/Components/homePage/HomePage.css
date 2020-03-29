@@ -1,0 +1,16 @@
+.home {
+
+  background: url('../../img/fountainslk1.jpg') no-repeat center center fixed; 
+
+}
+
+@media screen and (min-width: 0px){ 
+  .home {
+  background: url('../../img/fountainslk1.jpg') no-repeat center center fixed; 
+  background-size: cover;
+  height: 100vh;
+ }
+ 
+} 
+
+
