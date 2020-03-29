@@ -8,6 +8,7 @@ import RegistrationPage from "./Components/registration/registrationPage";
 import SearchPage from './Components/searchComponents/SearchPage';
 import Navbar from './Components/navComponents/navigation/Navbar';
 import DashBoardWrapper from './Components/dashboard/dashboardWrapper';
+import SingleDorm from './Components/singleDorm/singleDorm';
 import config from 'react-global-configuration'
 import {is_user_logged_in} from "./utils/auth";
 
@@ -26,10 +27,10 @@ class App extends React.Component {
     }
 
 
-
     getLoginWindowStatus = (loginWindowStatus) => {
         this.setState({showLogin: !loginWindowStatus});
     };
+
 
     render() {
         return (
@@ -48,6 +49,7 @@ class App extends React.Component {
                     <Route path="/search" component={SearchPage}/>
                     <Route path='/debug' component={DebugPage}/>
                     <Route path='/dashboard' component={DashBoardWrapper}/>
+                    <Route path='/singleDorm' component={SingleDorm}/>
                 </Switch>
             </Router>
         )
@@ -57,6 +59,7 @@ class App extends React.Component {
         console.log('login state function called with: ' + isLoggedIn);
         this.setState({isLoggedIn: isLoggedIn})
     }
+
 };
 
 export default App;
