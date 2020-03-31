@@ -56,7 +56,7 @@ import {Link} from 'react-router-dom';
 										<CardContent>
 											<Typography  component={'span'}>
 												<div className="flex-container" style={this.state.imagedesc}>
-												<img src={require('../../img/stockdormimage.jpg')} width="50%%" height="180px" alt=""/>
+												<img src={require('../../img/stockdormimage.jpg')} width="100%" height="180px" alt=""/>
 												</div>
 											</Typography>
 										</CardContent>

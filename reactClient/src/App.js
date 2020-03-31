@@ -11,6 +11,7 @@ import DashBoardWrapper from './Components/dashboard/dashboardWrapper';
 import SingleDorm from './Components/singleDorm/singleDorm';
 import config from 'react-global-configuration'
 import {is_user_logged_in} from "./utils/auth";
+import addDormForm from './Components/addDormForm/addDormForm';
 
 class App extends React.Component {
     constructor(props) {
@@ -50,6 +51,7 @@ class App extends React.Component {
                     <Route path='/debug' component={DebugPage}/>
                     <Route path='/dashboard' component={DashBoardWrapper}/>
                     <Route path='/singleDorm' component={SingleDorm}/>
+                    <Route path='/addDormForm' component={addDormForm}/>
                 </Switch>
             </Router>
         )
