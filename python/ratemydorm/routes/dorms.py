@@ -13,7 +13,18 @@ bp = Blueprint('dorms', __name__, url_prefix='/dorms')
 
 @bp.route('', methods=["POST"])
 def create_dorm() -> ApiResponse:
-    """Endpoint for dorm creation"""
+    """Endpoint for dorm creation
+    Example post request:
+    {
+        "latitude": 73.33333,
+        "longitude": "77.444j4f4",
+        "room_num": 120,
+        "floor": 2,
+        "building": "Building Name",
+        "quad": "Quad Name",
+        "address": "address information"
+    }
+"""
     data = request.get_json()
     logging.debug(f'Inside Dorm POST endpoint, got {data}')
 
@@ -53,4 +64,4 @@ def create_dorm() -> ApiResponse:
 @bp.route('', methods=['GET'])
 def retrieve_dorm() -> ApiResponse:
     logging.debug('Inside Dorm GET endpoint')
-    return "Get dorm"
+    return RateMyDormMessageResponse(404, 'Not implemented').response
