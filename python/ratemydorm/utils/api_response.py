@@ -51,6 +51,14 @@ class RateMyDormApiResponse(RateMyDormBaseResponse):
 
 
 class RateMyDormRedirectResponse(RateMyDormBaseResponse):
+    """
+    {
+        type: RMD_redirect,
+        location: endpoint,
+        ...
+        any other entries passed in
+        }
+    """
 
     def __init__(self, location: str, data: Union[Dict, str] = ''):
         super().__init__(code=200)
