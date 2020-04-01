@@ -1,5 +1,4 @@
-import unittest
-from unittest.mock import MagicMock, patch
+from unittest.mock import patch
 from .functional_test_client import FunctionalTestClient
 
 TEST_LATITUDE = 73.33333

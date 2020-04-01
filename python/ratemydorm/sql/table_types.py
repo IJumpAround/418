@@ -1,6 +1,7 @@
 from __future__ import annotations
-from typing import NamedTuple, Dict
 import datetime
+from typing import NamedTuple
+from collections import namedtuple
 from decimal import Decimal
 
 """
@@ -77,17 +78,19 @@ class DormRow(NamedTuple):
     address: str
 
 
-class Dorm:
-    def __init__(self, data: Dict):
-        """Convert incoming request from flask into a parameter dictionary for sql queries"""
-        self._data = DormRow(data.get('dorm_id'),
-                           data['latitude'],
-                           data['longitude'],
-                           data['room_num'],
-                           data['floor'],
-                           data['building'],
-                           data['quad'],
-                           data['address'])
+Tables = namedtuple('Tables', 'dorm dorm_image features_lut features review tags reviews')
 
-    def to_dict(self):
-        response = self._data._as_dict()
+
+class TableRegistry:
+
+    tables = Tables(
+        dorm=DormRow,
+        dorm_image=DormImageRow,
+        features_lut=FeaturesLutRow,
+        features=FeaturesRow,
+        review=ReviewRow,
+        tags=TagsRow,
+        reviews=ReviewRow
+    )
+
+

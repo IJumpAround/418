@@ -3,7 +3,9 @@ from flask import request, Blueprint
 from mysql.connector.errors import Error
 
 from ratemydorm.sql.db_connect import get_connection
-from ratemydorm.sql.table_types import DormRow, Dorm
+from ratemydorm.sql.table_types import DormRow, TableRegistry
+from ratemydorm.utils.data_conversion_functions import MalformedRequestException, \
+    convert_request_params_to_query_params
 from ratemydorm.utils.api_response import RateMyDormApiResponse, RateMyDormMessageResponse, ApiResponse
 
 bp = Blueprint('dorms', __name__, url_prefix='/dorms')
@@ -21,8 +23,9 @@ def create_dorm() -> ApiResponse:
     logging.debug(str(DormRow.address))
 
     try:
-        params = Dorm(data)
-    except KeyError as e:
+        params = convert_request_params_to_query_params(data,
+                                                        TableRegistry.tables.dorm)
+    except MalformedRequestException as e:
         logging.error(f'CREATE DORM: Error converting incoming data to a dictionary \n\tGot {data}')
         return RateMyDormApiResponse(data, 400, 'invalid input').response
 
@@ -34,11 +37,17 @@ def create_dorm() -> ApiResponse:
         cursor.execute(insert, params)
     except Error as e:
         logging.error(f'Error inserting into db: {e.msg}')
+        response = RateMyDormApiResponse(data, 400, 'Database error').response
         connection.rollback()
-        return RateMyDormApiResponse(data, 400, e.msg).response
-    finally:
+    except KeyError as e:
+        logging.error(f'Missing required field in query: {e}')
+        response = RateMyDormMessageResponse(400, f"Missing a key field in the query {e}").response
+    else:
         connection.commit()
-        return RateMyDormMessageResponse(200,'Dorm added successfully').response
+        response = RateMyDormMessageResponse(200, 'Dorm added successfully').response
+    finally:
+        connection.close()
+        return response
 
 
 @bp.route('', methods=['GET'])

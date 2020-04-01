@@ -2,7 +2,9 @@ import unittest
 import json
 
 from collections import namedtuple
-from ratemydorm.utils.data_conversion_functions import convert_single_row_to_dict, convert_multiple_rows_to_dict
+from ratemydorm.utils.data_conversion_functions import convert_single_row_to_dict, convert_multiple_rows_to_dict, \
+    convert_request_params_to_query_params
+from ratemydorm.sql.table_types import TableRegistry
 
 from decimal import Decimal
 
@@ -65,3 +67,24 @@ class TestDataConversionFunctions(unittest.TestCase):
         self.assertEqual(row1.key2, result[0][KEY2])
         self.assertEqual(row2.key1, result[1][KEY1])
         self.assertEqual(row2.key2, result[1][KEY2])
+
+    def test_param_conversion_valid(self):
+        table_list = TableRegistry.tables
+        for table in table_list:
+            print(table)
+            keys = table._fields
+            input_dict = {key: 1 for key in keys}
+            constructed_params = convert_request_params_to_query_params(input_dict,
+                                                                        table)
+            self.assertCountEqual(keys, constructed_params.keys())
+            self.assertCountEqual(input_dict.values(), constructed_params.values())
+
+    def test_param_conversion_with_missing_fields(self):
+        dorm_table = TableRegistry.tables.dorm
+
+        dorm_keys = dorm_table._fields[:-1]
+        input_dict = {key: 1 for key in dorm_keys}
+        result = convert_request_params_to_query_params(input_dict,
+                                                        dorm_table)
+        self.assertCountEqual(result.values(), [1]*len(dorm_keys))
+
