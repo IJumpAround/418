@@ -1,11 +1,12 @@
 import functools
+import logging
 from flask import Blueprint, request, session, g
-
 from werkzeug.security import check_password_hash, generate_password_hash
-from ratemydorm.sql.db_connect import get_connection
 from mysql.connector.errors import IntegrityError, InterfaceError
 
-import logging
+from ratemydorm.utils.api_response import RateMyDormRedirectResponse
+from ratemydorm.sql.db_connect import get_connection
+
 
 bp = Blueprint('auth', __name__, url_prefix='/auth')
 
@@ -71,7 +72,9 @@ def register():
                 )
 
                 connection.commit()
-                return 'user registered'
+                data = {'message': 'User registered'}
+                response = RateMyDormRedirectResponse(location='/dashboard', data=data).response
+                return response
             except IntegrityError as e:
                 logging.error(f'User exists: {e}')
                 return 'Username already exists!', 400
@@ -118,7 +121,9 @@ def login():
             session.clear()
             session['user_id'] = user.user_id
             data_response['success'] = True
-            return data_response, 200
+            redirect_response = RateMyDormRedirectResponse('/dashboard', data=data_response).response
+
+            return redirect_response
 
         data_response['message'] = error
         return data_response, 401
@@ -176,8 +181,8 @@ def load_logged_in_user():
 def logout():
     """Clear session cookie"""
     session.clear()
-    return "Logged Out", 200
-
+    redirect_response = RateMyDormRedirectResponse(location='/', data="Logged Out").response
+    return redirect_response
 
 def login_required(view):
     @functools.wraps(view)

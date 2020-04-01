@@ -22,7 +22,6 @@ export function logout(setLoginStateFn) {
     axios.get('/auth/logout')
         .then((response) => {
             setLoginStateFn(false);
-            window.location.pathname = '/'
         })
         .catch((error) => {
             console.log('error');

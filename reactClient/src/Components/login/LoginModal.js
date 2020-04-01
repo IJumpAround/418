@@ -36,8 +36,8 @@ class LoginModal extends React.Component {
                 if (result) {
                     console.log(Object.entries(result));
                 }
+                // Call to set state in top level App component
                 this.props.loginResultFn(result.status === 200);
-                window.location.pathname='/dashboard'
             })
             .catch((error) => {
                 console.log('error');

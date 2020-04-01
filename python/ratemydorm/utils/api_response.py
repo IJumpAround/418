@@ -1,8 +1,9 @@
-from typing import Tuple, Dict
+from typing import Tuple, Dict, Union
 import abc
 import logging
 
 ApiResponse = Tuple[Dict, int]
+
 
 class RateMyDormBaseResponse(abc.ABC):
     def __init__(self, code):
@@ -47,10 +48,19 @@ class RateMyDormApiResponse(RateMyDormBaseResponse):
 
 class RateMyDormRedirectResponse(RateMyDormBaseResponse):
 
-    def __init__(self, location: str, data: dict=None):
+    def __init__(self, location: str, data: Union[Dict, str] = ''):
         super().__init__(code=200)
-        self._data = data or {}
+        self._data = self._set_data(data)
         self._set_location(location)
+
+    def _set_data(self, data) -> dict:
+        """A bit ugly, but allows supplying data as either a string or dictionary"""
+        converted = {'message': None}
+        if isinstance(data, dict):
+            converted = data
+        elif isinstance(data, str):
+            converted['message'] = data
+        return converted
 
     def _set_location(self, location: str):
         if location and location[0] == '/':

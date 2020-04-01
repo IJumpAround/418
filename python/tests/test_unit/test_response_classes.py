@@ -61,3 +61,13 @@ class RateMyDormApiResponseTestCase(unittest.TestCase):
         self.assertEqual(data['type'], 'RMD_redirect')
         self.assertEqual(data['location'], TEST_LOCATION)
 
+    def test_providing_data_as_string(self):
+        response = RateMyDormRedirectResponse(TEST_LOCATION, data=TEST_MESSAGE).response
+        data = response[0]
+        self.assertEqual(data.get('message'), TEST_MESSAGE)
+
+    def test_providing_data_as_other_type(self):
+        response = RateMyDormRedirectResponse(TEST_LOCATION, data=list((1,2,3))).response
+        data = response[0]
+
+        self.assertIsNone(data['message'])
