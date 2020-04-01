@@ -1,9 +1,30 @@
 from typing import Tuple, Dict
+import abc
 
-ApiResponse = Tuple[Dict,int]
+ApiResponse = Tuple[Dict, int]
 
 
-class RateMyDormApiResponse:
+class RateMyDormBaseResponse(abc.ABC):
+    def __init__(self, code):
+        self._code = code
+        self._payload = None
+        self._response = None
+
+    @abc.abstractmethod
+    def _build_payload(self) -> dict:
+        pass
+
+    def _build_response(self) -> ApiResponse:
+        return self._payload, self._code
+
+    @property
+    def response(self) -> ApiResponse:
+        self._payload = self._build_payload()
+        self._response = self._build_response()
+        return self._response
+
+
+class RateMyDormApiResponse(RateMyDormBaseResponse):
     """
     {
         message: 'Some response message'
@@ -13,20 +34,38 @@ class RateMyDormApiResponse:
     """
 
     def __init__(self, payload, code: int, message=None):
-        self._response: tuple
+        super().__init__(code)
         self._message: str = message
         self._payload: dict = payload
-        self._code: int = code
-        self._build_response()
 
-    def _build_response(self):
-        data_dict = {
+    def _build_payload(self) -> dict:
+        return {
             'payload': self._payload,
             'message': self._message,
         }
 
-        self._response = data_dict, self._code
 
-    @property
-    def response(self) -> ApiResponse:
-        return self._response
+class RateMyDormRedirectResponse(RateMyDormBaseResponse):
+
+    def __init__(self, location: str, message=None):
+        super().__init__(code=302)
+        self._message = message
+        self._set_location(location)
+
+    def _set_location(self, location: str):
+        if location and location[0] == '/':
+            self._location = location
+        else:
+            raise InvalidRedirectException(f'location provided: {location}')
+
+    def _build_payload(self) -> dict:
+        return {
+            'type': 'RMD_redirect',
+            'location': self._location,
+            'message': self._message
+        }
+
+
+class InvalidRedirectException(Exception):
+    def __init__(self, message):
+        super().__init__(message)

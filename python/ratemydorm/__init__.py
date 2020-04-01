@@ -27,6 +27,7 @@ def create_app(test_config=None):
     from ratemydorm.routes import user
     from ratemydorm.routes import searchpage
     from ratemydorm.routes import data
+    from ratemydorm.routes import test_routes
 
     # Register routes
     app.register_blueprint(auth.bp)
@@ -35,6 +36,7 @@ def create_app(test_config=None):
     app.register_blueprint(user.bp)
     app.register_blueprint(searchpage.bp)
     app.register_blueprint(data.bp)
+    app.register_blueprint(test_routes.bp)
 
     logging.basicConfig(format='%(asctime)s-%(levelname)s: %(message)s',
                         datefmt='%m/%d/%y %H:%M:%S',
