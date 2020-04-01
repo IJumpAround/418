@@ -14,7 +14,9 @@ class RateMyDormBaseResponse(abc.ABC):
 
     @abc.abstractmethod
     def _build_payload(self) -> dict:
-        """Implement in derived classes to set the dictionary payload"""
+        """Implement in derived classes to set the dictionary payload
+            Use this function to return the structure of the final dictionary
+        """
         pass
 
     def _build_response(self) -> ApiResponse:
@@ -47,6 +49,18 @@ class RateMyDormApiResponse(RateMyDormBaseResponse):
         return {
             'payload': self._payload,
             'message': self._message,
+        }
+
+
+class RateMyDormMessageResponse(RateMyDormBaseResponse):
+    """Response type when there is no significant data being returned, just a message/code"""
+    def __init__(self, code, message):
+        super().__init__(code=code)
+        self._message = message
+
+    def _build_payload(self) -> dict:
+        return {
+            'message': self._message
         }
 
 

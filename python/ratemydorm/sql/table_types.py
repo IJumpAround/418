@@ -1,8 +1,7 @@
 from __future__ import annotations
-from typing import NamedTuple
+from typing import NamedTuple, Dict
 import datetime
 from decimal import Decimal
-
 
 """
 Classes to be used as type annotations for Rows returned from the db
@@ -77,3 +76,18 @@ class DormRow(NamedTuple):
     quad: str
     address: str
 
+
+class Dorm:
+    def __init__(self, data: Dict):
+        """Convert incoming request from flask into a parameter dictionary for sql queries"""
+        self._data = DormRow(data.get('dorm_id'),
+                           data['latitude'],
+                           data['longitude'],
+                           data['room_num'],
+                           data['floor'],
+                           data['building'],
+                           data['quad'],
+                           data['address'])
+
+    def to_dict(self):
+        response = self._data._as_dict()
