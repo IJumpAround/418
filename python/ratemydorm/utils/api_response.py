@@ -6,6 +6,7 @@ ApiResponse = Tuple[Dict, int]
 
 
 class RateMyDormBaseResponse(abc.ABC):
+    """Base class for responses"""
     def __init__(self, code):
         self._code = code
         self._payload = None
@@ -13,13 +14,16 @@ class RateMyDormBaseResponse(abc.ABC):
 
     @abc.abstractmethod
     def _build_payload(self) -> dict:
+        """Implement in derived classes to set the dictionary payload"""
         pass
 
     def _build_response(self) -> ApiResponse:
+        """Create a valid flask tuple response"""
         return self._payload, self._code
 
     @property
     def response(self) -> ApiResponse:
+        """Build the response and return it via the property"""
         self._payload = self._build_payload()
         self._response = self._build_response()
         return self._response
@@ -63,6 +67,7 @@ class RateMyDormRedirectResponse(RateMyDormBaseResponse):
         return converted
 
     def _set_location(self, location: str):
+        """Set the redirect location, only limited error checking is done here"""
         if location and location[0] == '/':
             self._location = location
         else:
@@ -73,6 +78,7 @@ class RateMyDormRedirectResponse(RateMyDormBaseResponse):
             'type': 'RMD_redirect',
             'location': self._location,
         }
+
         # combine payload with data dictionary that was passed in
         for key, value in self._data.items():
             if key not in payload:
