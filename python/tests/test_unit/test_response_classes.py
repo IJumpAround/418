@@ -7,8 +7,9 @@ from ratemydorm.utils.api_response import RateMyDormBaseResponse, RateMyDormApiR
 TEST_CODE = 200
 TEST_KEY = 'a key'
 TEST_VALUE = 'some value'
-TEST_PAYLOAD = {TEST_KEY, TEST_VALUE}
+TEST_PAYLOAD = {TEST_KEY: TEST_VALUE}
 TEST_MESSAGE = 'Custom error message we are sending to browser'
+TEST_LOCATION = '/dashboard'
 
 
 class RateMyDormApiResponseTestCase(unittest.TestCase):
@@ -51,4 +52,12 @@ class RateMyDormApiResponseTestCase(unittest.TestCase):
             RateMyDormRedirectResponse(loc).response
             loc = 'fjfsda'
             RateMyDormRedirectResponse(loc).response
+
+    def test_providing_data_dict_to_reponse(self):
+        response = RateMyDormRedirectResponse(TEST_LOCATION, data=TEST_PAYLOAD).response
+        data = response[0]
+
+        self.assertEqual(TEST_PAYLOAD[TEST_KEY], data[TEST_KEY])
+        self.assertEqual(data['type'], 'RMD_redirect')
+        self.assertEqual(data['location'], TEST_LOCATION)
 

@@ -1,5 +1,5 @@
-from flask import request, redirect, Blueprint
-
+from flask import request, Blueprint
+from ratemydorm.utils.api_response import RateMyDormRedirectResponse
 import logging
 
 bp = Blueprint('tests', __name__, url_prefix='/test_api')
@@ -8,6 +8,10 @@ bp = Blueprint('tests', __name__, url_prefix='/test_api')
 @bp.route('/redirect', methods=['GET'])
 def redirect_test():
     logging.info('Sending redirect to homepage')
-    return redirect("/",code=302)
+    redirect = RateMyDormRedirectResponse('//')
+    logging.debug(redirect.response)
+    return redirect.response
+
+
 
 

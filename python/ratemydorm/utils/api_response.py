@@ -1,8 +1,8 @@
 from typing import Tuple, Dict
 import abc
+import logging
 
 ApiResponse = Tuple[Dict, int]
-
 
 class RateMyDormBaseResponse(abc.ABC):
     def __init__(self, code):
@@ -47,9 +47,9 @@ class RateMyDormApiResponse(RateMyDormBaseResponse):
 
 class RateMyDormRedirectResponse(RateMyDormBaseResponse):
 
-    def __init__(self, location: str, message=None):
-        super().__init__(code=302)
-        self._message = message
+    def __init__(self, location: str, data: dict=None):
+        super().__init__(code=200)
+        self._data = data or {}
         self._set_location(location)
 
     def _set_location(self, location: str):
@@ -59,11 +59,17 @@ class RateMyDormRedirectResponse(RateMyDormBaseResponse):
             raise InvalidRedirectException(f'location provided: {location}')
 
     def _build_payload(self) -> dict:
-        return {
+        payload = {
             'type': 'RMD_redirect',
             'location': self._location,
-            'message': self._message
         }
+        # combine payload with data dictionary that was passed in
+        for key, value in self._data.items():
+            if key not in payload:
+                payload[key] = value
+            else:
+                logging.error(f'Value in data dictionary would overwrite redirect structure. key: {key} value: {value}')
+        return payload
 
 
 class InvalidRedirectException(Exception):
