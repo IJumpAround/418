@@ -1,4 +1,5 @@
 from __future__ import annotations
+import logging
 from typing import NamedTuple, List, Dict
 from decimal import Decimal
 
@@ -22,3 +23,24 @@ def convert_single_row_to_dict(row: Row):
 def convert_multiple_rows_to_dict(rows: List[Row]):
     dicts = [convert_single_row_to_dict(row) for row in rows]
     return dicts
+
+
+def convert_request_params_to_query_params(request: dict,
+                                           table_type: NamedTuple):
+
+    table_fields = table_type._fields
+    constructed_params = {}
+
+    for key in table_fields:
+        try:
+            constructed_params[key] = request[key]
+        except KeyError as e:
+            logging.error(f'possible error: {e}')
+            if key[-3:] == '_id':
+                constructed_params[key] = None
+    return constructed_params
+
+
+class MalformedRequestException(Exception):
+    def __init__(self, msg):
+        super().__init__(msg)

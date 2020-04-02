@@ -1,8 +1,8 @@
 from __future__ import annotations
-from typing import NamedTuple
 import datetime
+from typing import NamedTuple
+from collections import namedtuple
 from decimal import Decimal
-
 
 """
 Classes to be used as type annotations for Rows returned from the db
@@ -76,4 +76,21 @@ class DormRow(NamedTuple):
     building: str
     quad: str
     address: str
+
+
+Tables = namedtuple('Tables', 'dorm dorm_image features_lut features review tags reviews')
+
+
+class TableRegistry:
+
+    tables = Tables(
+        dorm=DormRow,
+        dorm_image=DormImageRow,
+        features_lut=FeaturesLutRow,
+        features=FeaturesRow,
+        review=ReviewRow,
+        tags=TagsRow,
+        reviews=ReviewRow
+    )
+
 
