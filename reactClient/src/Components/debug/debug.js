@@ -81,16 +81,6 @@ class DebugPage extends React.Component {
         )
     }
 
-    redirect_test = () => {
-        axios.get('/test_api/redirect')
-            .then((result) => {
-            console.log(result)
-            })
-            .catch((err) => {
-                console.log(err)
-            })
-    };
-
     login_test = () => {
         axios.get('/user/user_logged_in')
             .then((result) => {

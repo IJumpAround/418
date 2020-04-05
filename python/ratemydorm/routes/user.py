@@ -1,4 +1,10 @@
-from flask import session, Blueprint
+import logging
+
+from flask import session, Blueprint, request
+
+from ratemydorm.sql.db_connect import get_connection
+from ratemydorm.utils.api_response import RateMyDormApiResponse
+from ratemydorm.utils.data_conversion_functions import convert_single_row_to_dict
 
 bp = Blueprint('user', __name__, url_prefix='/user')
 
@@ -26,3 +32,27 @@ def session_info():
     return data, code
 
 
+@bp.route('/profile', methods=['GET'])
+def get_user_profile():
+    """
+    Takes GET request with user_id as a parameter
+    :return:
+    """
+    user_id = request.args.get('user_id')
+    connection = get_connection()
+    cursor = connection.cursor(buffered=True, named_tuple=True)
+
+    params = {'user_id': user_id}
+    query = """SELECT username, first_name, last_name, email, profile_image, status, profile_bio, user_role
+               FROM users
+               WHERE user_id = %(user_id)s
+               LIMIT 1"""
+    cursor.execute(query, params)
+    user = cursor.fetchone()
+
+    logging.debug(user)
+    code = 200 if user else 404
+
+    user_dict = convert_single_row_to_dict(user)
+    response = RateMyDormApiResponse(user_dict, code).response
+    return response

@@ -1,6 +1,7 @@
 import logging
+import datetime
 from flask import request, Blueprint
-from mysql.connector.errors import Error
+from mysql.connector.errors import Error, IntegrityError
 
 from ratemydorm.sql.db_connect import get_connection
 from ratemydorm.sql.table_types import DormRow, TableRegistry
@@ -65,3 +66,44 @@ def create_dorm() -> ApiResponse:
 def retrieve_dorm() -> ApiResponse:
     logging.debug('Inside Dorm GET endpoint')
     return RateMyDormMessageResponse(404, 'Not implemented').response
+
+
+@bp.route('/review', methods=['POST'])
+def add_review():
+    json_data = request.json
+    params = {
+        'user_id': json_data.get('user_id'),
+        'dorm_id': json_data.get('dorm_id'),
+        'timestamp': datetime.datetime.now(),
+        'rating': json_data.get('rating'),
+        'review_text': json_data.get('review_text'),
+    }
+
+    if None in params.values():
+        return RateMyDormApiResponse(payload="", code=400, message='Not all fields are filled out').response
+
+    connection = get_connection()
+    cursor = connection.cursor()
+    response = ""
+    try:
+        insert = """INSERT INTO review (user_id, dorm_id, timestamp, rating, review_text) VALUES
+        (%(user_id)s, %(dorm_id)s, %(timestamp)s, %(rating)s, %(review_text)s)
+        """
+        cursor.execute(insert, params)
+        response = 't'
+    except IntegrityError as e:
+        response = str(e), 400
+        logging.error(f'Integrity error during database insertion {e}')
+        connection.rollback()
+    except Exception as e:
+        response = str(e), 400
+        logging.error(f'Unexpected error during review INSERT: {e}')
+        connection.rollback()
+    else:
+        response = 'success', 200
+        logging.debug(f'Insert success {params}')
+        connection.commit()
+    finally:
+        connection.close()
+        return {'message': response[0]},response[1]
+
