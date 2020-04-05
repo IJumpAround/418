@@ -7,6 +7,8 @@ from ratemydorm import create_app
 
 DeserializedObject = Union[Dict, List]
 
+logger = logging.getLogger('main')
+
 
 class FunctionalTestClient(unittest.TestCase):
     """
@@ -34,8 +36,8 @@ class FunctionalTestClient(unittest.TestCase):
         :return: raw response object
         """
         self._response = self.client.get(endpoint, query_string=params)
-        logging.debug(f'GET: "{endpoint}" \tParams: "{params}".')
-        logging.debug(f' Response: {self._response.data}')
+        logger.debug(f'GET: "{endpoint}" \tParams: "{params}".')
+        logger.debug(f' Response: {self._response.data}')
 
         obj = json.loads(self._response.data)
         return obj
@@ -49,7 +51,7 @@ class FunctionalTestClient(unittest.TestCase):
         """
         self._response = self.client.post(endpoint, json=data)
 
-        logging.debug(f'POST: "{endpoint}" data: "{data}".')
-        logging.debug(f'Response: {self._response.data}')
+        logger.debug(f'POST: "{endpoint}" data: "{data}".')
+        logger.debug(f'Response: {self._response.data}')
         obj = json.loads(self._response.data)
         return obj

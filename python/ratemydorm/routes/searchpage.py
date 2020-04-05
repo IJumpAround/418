@@ -6,9 +6,12 @@ from ratemydorm.sql.db_connect import get_connection
 import logging
 bp = Blueprint('searchpage', __name__, url_prefix='/search')
 
+logger = logging.getLogger('main')
+
+
 @bp.route('/load_cards', methods=('GET', 'POST'))
 def load_cards():
-    logging.debug(request.json)
+    logger.debug(request.json)
     data_response = {'success': False}
     connection = get_connection()
 
@@ -20,7 +23,7 @@ def load_cards():
             'latitude': latitude,
             'longitude': longitude
         }
-        print(params)
+        logger.info(params)
         cursor = connection.cursor(buffered=True)
         cursor.execute(
             #formula taken from gis.stackexchange.com/questions/31628/find-points-within-a-distance-using-mysql  courtesy of users: Mapperz and sachleen
@@ -57,7 +60,7 @@ def load_cards():
                     str(dormRows[i][6]), #quad
                     str(dormRows[i][7]), #address
                     ])
-            print(dorm_dict)
+            logger.debug(dorm_dict)
             return {'data' : dorm_dict}, 200
 
         data_response['message'] = error

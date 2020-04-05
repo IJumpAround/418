@@ -11,6 +11,8 @@ from ratemydorm.utils.api_response import RateMyDormApiResponse, RateMyDormMessa
 
 bp = Blueprint('dorms', __name__, url_prefix='/dorms')
 
+logger = logging.getLogger('main')
+
 
 @bp.route('', methods=["POST"])
 def create_dorm() -> ApiResponse:
@@ -27,32 +29,32 @@ def create_dorm() -> ApiResponse:
     }
 """
     data = request.get_json()
-    logging.debug(f'Inside Dorm POST endpoint, got {data}')
+    logger.debug(f'Inside Dorm POST endpoint, got {data}')
 
     connection = get_connection()
     cursor = connection.cursor()
 
-    logging.debug(str(DormRow.address))
+    logger.debug(str(DormRow.address))
 
     try:
         params = convert_request_params_to_query_params(data,
                                                         TableRegistry.tables.dorm)
     except MalformedRequestException as e:
-        logging.error(f'CREATE DORM: Error converting incoming data to a dictionary \n\tGot {data}')
+        logger.error(f'CREATE DORM: Error converting incoming data to a dictionary \n\tGot {data}')
         return RateMyDormApiResponse(data, 400, 'invalid input').response
 
-    logging.debug(f'Converted params {params}')
+    logger.debug(f'Converted params {params}')
     insert = "INSERT INTO Dorm (latitude, longitude, room_num, floor, building, quad, address) VALUES " \
              "(%(latitude)s, %(longitude)s, %(room_num)s, %(floor)s, %(building)s, %(quad)s, %(address)s )"
 
     try:
         cursor.execute(insert, params)
     except Error as e:
-        logging.error(f'Error inserting into db: {e.msg}')
+        logger.error(f'Error inserting into db: {e.msg}')
         response = RateMyDormApiResponse(data, 400, 'Database error').response
         connection.rollback()
     except KeyError as e:
-        logging.error(f'Missing required field in query: {e}')
+        logger.error(f'Missing required field in query: {e}')
         response = RateMyDormMessageResponse(400, f"Missing a key field in the query {e}").response
     else:
         connection.commit()
@@ -64,7 +66,7 @@ def create_dorm() -> ApiResponse:
 
 @bp.route('', methods=['GET'])
 def retrieve_dorm() -> ApiResponse:
-    logging.debug('Inside Dorm GET endpoint')
+    logger.debug('Inside Dorm GET endpoint')
     return RateMyDormMessageResponse(404, 'Not implemented').response
 
 
@@ -93,15 +95,15 @@ def add_review():
         response = 't'
     except IntegrityError as e:
         response = str(e), 400
-        logging.error(f'Integrity error during database insertion {e}')
+        logger.error(f'Integrity error during database insertion {e}')
         connection.rollback()
     except Exception as e:
         response = str(e), 400
-        logging.error(f'Unexpected error during review INSERT: {e}')
+        logger.error(f'Unexpected error during review INSERT: {e}')
         connection.rollback()
     else:
         response = 'success', 200
-        logging.debug(f'Insert success {params}')
+        logger.debug(f'Insert success {params}')
         connection.commit()
     finally:
         connection.close()

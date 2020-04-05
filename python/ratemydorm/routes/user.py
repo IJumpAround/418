@@ -8,6 +8,8 @@ from ratemydorm.utils.data_conversion_functions import convert_single_row_to_dic
 
 bp = Blueprint('user', __name__, url_prefix='/user')
 
+logger = logging.getLogger('main')
+
 
 @bp.route('/user_logged_in', methods=['GET'])
 def user_logged_in():
@@ -50,7 +52,7 @@ def get_user_profile():
     cursor.execute(query, params)
     user = cursor.fetchone()
 
-    logging.debug(user)
+    logger.debug(user)
     code = 200 if user else 404
 
     user_dict = convert_single_row_to_dict(user)

@@ -4,6 +4,8 @@ import logging
 
 ApiResponse = Tuple[Dict, int]
 
+logger = logging.getLogger('main')
+
 
 class RateMyDormBaseResponse(abc.ABC):
     """Base class for responses"""
@@ -106,7 +108,7 @@ class RateMyDormRedirectResponse(RateMyDormBaseResponse):
             if key not in payload:
                 payload[key] = value
             else:
-                logging.error(f'Value in data dictionary would overwrite redirect structure. key: {key} value: {value}')
+                logger.error(f'Value in data dictionary would overwrite redirect structure. key: {key} value: {value}')
         return payload
 
 

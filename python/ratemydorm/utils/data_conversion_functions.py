@@ -5,6 +5,8 @@ from decimal import Decimal
 
 Row = NamedTuple
 
+logger = logging.getLogger('main')
+
 
 def convert_single_row_to_dict(row: Row):
     """
@@ -35,7 +37,7 @@ def convert_request_params_to_query_params(request: dict,
         try:
             constructed_params[key] = request[key]
         except KeyError as e:
-            logging.error(f'possible error: {e}')
+            logger.error(f'possible error: {e}')
             if key[-3:] == '_id':
                 constructed_params[key] = None
     return constructed_params

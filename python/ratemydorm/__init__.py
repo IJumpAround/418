@@ -36,7 +36,15 @@ def create_app(test_config=None):
     app.register_blueprint(searchpage.bp)
     app.register_blueprint(dorms.bp)
 
-    logging.basicConfig(format='%(asctime)s-%(levelname)s: %(message)s',
-                        datefmt='%m/%d/%y %H:%M:%S',
-                        level=app.config['LOG_LEVEL'])
+    # Setup project logger
+    logger = logging.getLogger('main')
+    log_level = logging.getLevelName(app.config['LOG_LEVEL'])
+    logger.level = log_level
+    ch = logging.StreamHandler()
+    ch.setLevel(log_level)
+    formatter = logging.Formatter('%(asctime)s-[%(filename)s-%(funcName)s %(levelname)s]: %(message)s',
+                                  datefmt='%m/%d/%y %H:%M:%S')
+    ch.setFormatter(formatter)
+    logger.addHandler(ch)
+    logger.info('test123')
     return app
