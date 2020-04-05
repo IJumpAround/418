@@ -8,7 +8,7 @@ Row = NamedTuple
 logger = logging.getLogger('main')
 
 
-def convert_single_row_to_dict(row: Row):
+def convert_single_row_to_dict(row: Row) -> Dict:
     """
     Convert
     :param row:
@@ -22,7 +22,7 @@ def convert_single_row_to_dict(row: Row):
     return row_dict
 
 
-def convert_multiple_rows_to_dict(rows: List[Row]):
+def convert_multiple_rows_to_dict(rows: List[Row]) -> List[Dict]:
     dicts = [convert_single_row_to_dict(row) for row in rows]
     return dicts
 

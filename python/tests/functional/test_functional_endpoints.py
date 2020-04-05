@@ -76,3 +76,10 @@ class TestEndpoints(FunctionalTestClient):
         self.assertEqual(expected_review, result['payload']['reviews'][0]['review_text'])
         self.assertEqual(2, len(result['payload']['reviews']))
         self.assertEqual(2, len(result['payload']['images']))
+
+    def test_get_profile_history_missing_user(self):
+        user_id = -1
+        query = {'user_id': user_id}
+
+        result = self.get('/user/profile', query)
+        self.assertEqual({}, result.get('payload'))
