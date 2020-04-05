@@ -1,10 +1,10 @@
 import logging
-
+from typing import Tuple, Dict, List
 from flask import session, Blueprint, request
 
 from ratemydorm.sql.db_connect import get_connection
-from ratemydorm.utils.api_response import RateMyDormApiResponse
-from ratemydorm.utils.data_conversion_functions import convert_single_row_to_dict
+from ratemydorm.utils.api_response import RateMyDormApiResponse, ApiResponse
+from ratemydorm.utils.data_conversion_functions import convert_single_row_to_dict, convert_multiple_rows_to_dict
 
 bp = Blueprint('user', __name__, url_prefix='/user')
 
@@ -35,12 +35,17 @@ def session_info():
 
 
 @bp.route('/profile', methods=['GET'])
-def get_user_profile():
+def get_user_profile() -> ApiResponse:
     """
     Takes GET request with user_id as a parameter
     :return:
     """
     user_id = request.args.get('user_id')
+    try:
+        int(user_id)
+    except ValueError as e:
+        return RateMyDormApiResponse(None, 400, f"User id was not a valid integer {e}").response
+
     connection = get_connection()
     cursor = connection.cursor(buffered=True, named_tuple=True)
 
@@ -51,10 +56,44 @@ def get_user_profile():
                LIMIT 1"""
     cursor.execute(query, params)
     user = cursor.fetchone()
-
     logger.debug(user)
-    code = 200 if user else 404
 
-    user_dict = convert_single_row_to_dict(user)
-    response = RateMyDormApiResponse(user_dict, code).response
+    payload = {}
+    if user:
+        reviews, images = get_user_history(user_id, cursor)
+        user_dict = convert_single_row_to_dict(user)
+        payload['user'] = user_dict
+        payload['reviews'] = reviews
+        payload['images'] = images
+
+    logger.debug(payload)
+    connection.close()
+    response = RateMyDormApiResponse(payload, 200).response
     return response
+
+
+def get_user_history(user_id, cursor) -> Tuple[List[Dict], List[Dict]]:
+    """
+    :param user_id:
+    :param cursor:
+    :return: (reviews, images)
+    """
+    params = {'user_id': user_id}
+    query = "SELECT * \
+               FROM review \
+               WHERE review.user_id = %(user_id)s"
+
+    cursor.execute(query, params)
+    reviews = cursor.fetchall()
+
+    reviews = convert_multiple_rows_to_dict(reviews)
+
+    image_query = "SELECT *  \
+                   FROM dorm_image \
+                   WHERE user_id= %(user_id)s"
+
+    cursor.execute(image_query, params)
+    images = cursor.fetchall()
+    images = convert_multiple_rows_to_dict(images)
+
+    return reviews, images

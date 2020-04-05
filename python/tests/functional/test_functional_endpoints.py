@@ -32,7 +32,7 @@ class TestEndpoints(FunctionalTestClient):
 
         self.assertIsInstance(result, dict)
         self.assertIsInstance(result.get('payload'), dict)
-        self.assertCountEqual(profile_keys, result.get('payload').keys())
+        self.assertCountEqual(profile_keys, result.get('payload').get('user').keys())
 
     def test_add_review_fails_with_missing_input(self):
         data = self._data
@@ -67,3 +67,12 @@ class TestEndpoints(FunctionalTestClient):
         result = self.post('/dorms/review', data=data)
         response: Response = self._response
         self.assertEqual(response.status_code, 200)
+
+    def test_get_profile_history(self):
+        user_id = 18
+        query = {'user_id': user_id}
+        expected_review = 'I LOVED HATED ENJOYED DESPISED SOMETHINGED this dorm'
+        result = self.get('/user/profile', query)
+        self.assertEqual(expected_review, result['payload']['reviews'][0]['review_text'])
+        self.assertEqual(2, len(result['payload']['reviews']))
+        self.assertEqual(2, len(result['payload']['images']))
