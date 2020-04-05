@@ -12,3 +12,96 @@
 1. Run your ssh forward before starting the app. https://trello.com/c/6bIcfAnv
 1. run start.py from your IDE
     * Alternatively do `python start.py`
+    
+# API
+
+### Users
+User related endpoints
+
+#### Profile
+* Location: `/user/profile`
+* Method: **GET**
+
+Params:
+{'user_id': int}
+Example response:
+```python
+result = {
+  'message': None,
+  'payload': {
+    'images': [{
+      'dorm_id': 10,
+      'url': 'asecondimageforthesamedormbythesameuser',
+      'user_id': 18
+    }, {
+      'dorm_id': 10,
+      'url': 'testurl',
+      'user_id': 18
+    }],
+    'reviews': [{
+      'dorm_id': 10,
+      'rating': 5,
+      'review_id': 8,
+      'review_text': 'I LOVED HATED ENJOYED DESPISED SOMETHINGED this dorm',
+      'timestamp': 'Sun, 05 Apr 2020 16:58:40 GMT',
+      'user_id': 18
+    }, {
+      'dorm_id': 10,
+      'rating': 3,
+      'review_id': 9,
+      'review_text': 'A second review by the same user for the same dorm',
+      'timestamp': 'Sun, 05 Apr 2020 16:53:49 GMT',
+      'user_id': 18
+    }],
+    'user': {
+      'email': 'test123@albany.edu',
+      'first_name': 'Test',
+      'last_name': 'User',
+      'profile_bio': None,
+      'profile_image': None,
+      'status': None,
+      'user_role': '',
+      'username': 'Testy'
+    }
+  }
+}
+```
+
+### Dorm
+
+#### Add Dorm
+* `/dorms`
+* Method **POST**
+
+Example Request:
+```python
+"""Endpoint for dorm creation
+    Example post request:
+    {
+        "latitude": 73.33333,
+        "longitude": "77.444j4f4",
+        "room_num": 120,
+        "floor": 2,
+        "building": "Building Name",
+        "quad": "Quad Name",
+        "address": "address information"
+    }
+"""    
+```
+
+
+#### Add review
+* `/dorms/review`
+* Method = **POST**
+
+Example request data:
+```python
+"""
+{
+  user_id: 2,
+  dorm_id: 3,
+  rating: 5,
+  review_text: 'some review text'
+}
+"""
+```

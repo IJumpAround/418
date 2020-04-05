@@ -45,13 +45,12 @@ import {Link} from 'react-router-dom';
 								<Grid item xs={6} sm={6} md={12} key={this.props.passDataToDynamicCards.indexOf(elem)}>
 									<Card>
 										<CardHeader
-											title = <div>
+											title = {<div>
 														<Link to={`/dashboard/${elem.Dorm_id}`}> 
 															{`${elem.Building} ${elem.Room}`} 
 														</Link>	
-													</div>
-											subheader={` ${elem.Quad} Quad, ${elem.Address}` }	
-										
+													</div>}
+											subheader={` ${elem.Quad} Quad, ${elem.Address}` }
 										/>
 										<CardContent>
 											<Typography  component={'span'}>
