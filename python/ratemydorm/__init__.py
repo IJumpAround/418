@@ -42,7 +42,7 @@ def create_app(test_config=None):
     logger.level = log_level
     ch = logging.StreamHandler()
     ch.setLevel(log_level)
-    formatter = logging.Formatter('%(asctime)s-[%(filename)s-%(funcName)s %(levelname)s]: %(message)s',
+    formatter = logging.Formatter('%(asctime)s-[%(filename)s.%(funcName)s() %(levelname)s]: %(message)s',
                                   datefmt='%m/%d/%y %H:%M:%S')
     ch.setFormatter(formatter)
     logger.addHandler(ch)
