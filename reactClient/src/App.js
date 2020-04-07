@@ -11,6 +11,17 @@ import DashBoardWrapper from './Components/dashboard/dashboardWrapper';
 import SingleDorm from './Components/singleDorm/singleDorm';
 import config from 'react-global-configuration'
 import {is_user_logged_in} from "./utils/auth";
+import addDormForm from './Components/addDormForm/addDormForm';
+import {createStore, combineReducers} from 'redux';
+import {reducer as formReducer} from 'redux-form'
+import {Provider} from 'react-redux';
+
+//Returns all reducing functions as an object into the store..in our case we just have one reducing function to handle state of our addDormForm 
+const reducers = combineReducers({form: formReducer});
+ //Redux store, this holds the complete state of our app.
+ //It accepts a reducing function that accepts next state tree
+const store = createStore(reducers);
+//console.log(store);
 
 class App extends React.Component {
     constructor(props) {
@@ -21,7 +32,6 @@ class App extends React.Component {
         };
     }
 
-
     componentDidMount() {
         is_user_logged_in(this.setAppLoggedInState)
     }
@@ -31,10 +41,12 @@ class App extends React.Component {
         this.setState({showLogin: !loginWindowStatus});
     };
 
-
     render() {
+        
         return (
-            // Set base route depending on if we are deployed to EC2 or local
+            
+           <Provider store = {store}>
+             {/*Set base route depending on if we are deployed to EC2 or local*/}
             <Router basename={config.get('subfolder')}>
                 <Navbar isLoggedIn={this.state.isLoggedIn}
                         setAppLoginState={this.setAppLoggedInState}/>
@@ -50,8 +62,10 @@ class App extends React.Component {
                     <Route path='/debug' component={DebugPage}/>
                     <Route path='/dashboard' component={DashBoardWrapper}/>
                     <Route path='/singleDorm' component={SingleDorm}/>
+                    <Route path='/addDormForm' component={addDormForm}/>
                 </Switch>
             </Router>
+           </Provider> 
         )
     }
 
