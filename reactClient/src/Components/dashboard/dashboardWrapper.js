@@ -1,11 +1,11 @@
 import React from 'react'
 
 import SideBar from './sidebar';
-
 import UserDataSection from './userDataSection';
 import HistorySection from './historySection';
 import './dashboardWrapper.css'
 
+//Holds all the components of the dashboard
 function DashboardWrapper() {
   
   return (
@@ -22,10 +22,6 @@ function DashboardWrapper() {
       </div>
       </div>   
     </div> 
-    
-    
-
-
     ); 
 }
 

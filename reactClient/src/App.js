@@ -1,7 +1,7 @@
 import React from 'react';
-import {BrowserRouter as Router, Switch, Route} from "react-router-dom";
 import 'bootstrap/dist/js/bootstrap.bundle';
 import './utils/config'
+import {BrowserRouter as Router, Switch, Route} from "react-router-dom";
 import DebugPage from './Components/debug/debug'
 import LoginModal from './Components/login/LoginModal'
 import RegistrationPage from "./Components/registration/registrationPage";
@@ -18,8 +18,8 @@ import DashBoard from './Components/dashboard/dashboard.js';
 
 //Returns all reducing functions as an object into the store..in our case we just have one reducing function to handle state of our addDormForm 
 const reducers = combineReducers({form: formReducer});
- //Redux store, this holds the complete state of our app.
- //It accepts a reducing function that accepts next state tree
+//Redux store, this holds the complete state of our app.
+//It accepts a reducing function that accepts next state tree
 const store = createStore(reducers);
 //console.log(store);
 
@@ -62,7 +62,7 @@ class App extends React.Component {
                     <Route path='/debug' component={DebugPage}/>
                     <Route path='/singleDorm' component={SingleDorm}/>
                     <Route path='/addDormForm' component={addDormForm}/>
-                    <Route component={DashBoard}/>
+                    <Route component={DashBoard}/>{/*KEEP THIS AS THE LAST ROUTE*/}
                 </Switch>
             </Router>
            </Provider> 

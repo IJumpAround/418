@@ -2,17 +2,18 @@ import React, {useState} from 'react';
 import {useHistory} from 'react-router-dom';
 
 function Modal() {
+  //useHistory hook, helps with navigating or changing routes
   let history = useHistory();
-
+  //useState hook, allows state variables inside functinal components
   const [status,showModal] = useState(false);
 
- 
   let back = e => {
     e.stopPropagation();
-    history.goBack();
+    history.goBack(); //loads previous url
   };
 
   return (
+    //displays modal on click
     <div
       onClick={()=> showModal(status)}
       style={{
@@ -23,7 +24,7 @@ function Modal() {
         right: 0,
         background: "rgba(0, 0, 0, 0.08)"
       }}
-    >
+    >    
       <div
         className="Modal"
         style={{
@@ -36,11 +37,13 @@ function Modal() {
           border: "3px solid #564D80"
         }}
       >
-      <h1 className="text-center">Settings</h1>
+      {/*Settings Modal*/}
+      <h1 className="text-center">Settings</h1> 
         <div className="row justify-content-center">
         <div className="form-group">
          <div className="row justify-content-center">
            <div className="col-sm-12">
+             {/*User upload picture section*/}
              <h4 className="text-center mb-4"><u>Update Profile Picture</u></h4>
             <div className="row justify-content-end">
             <input type="file"/>
@@ -52,6 +55,7 @@ function Modal() {
           <br />           
         </div> 
           <div className="col-sm-6">
+            {/*User upload information section*/}
           <h4 className="text-center mb-4"><u>Update Student Information</u></h4>
             <div className="form-group justify-content-center">           
             <div className="row justify-content-center">
@@ -81,8 +85,7 @@ function Modal() {
             </div>
            </div>    
           </div>
-        </div>
-     
+        </div> 
         <button className="btn btn-dark"type="button" onClick={back}>
           Close
         </button>
