@@ -3,7 +3,6 @@ import React from 'react';
 import DashBoardWrapper from './dashboardWrapper';
 import Modal from './modal';
 import {Switch,Route, useLocation} from 'react-router-dom';
-import SideBar from './sidebar';
 
 function ModalSwitch() {
   let location = useLocation();

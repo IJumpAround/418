@@ -1,7 +1,7 @@
 import React from 'react'
-import {Switch, useLocation,Route} from 'react-router-dom';
+
 import SideBar from './sidebar';
-import Modal from './modal';
+
 import UserDataSection from './userDataSection';
 import HistorySection from './historySection';
 import './dashboardWrapper.css'

@@ -60,9 +60,9 @@ class App extends React.Component {
                     <Route path='/register' component={RegistrationPage}/>
                     <Route path="/search" component={SearchPage}/>
                     <Route path='/debug' component={DebugPage}/>
-                    <Route component={DashBoard}/>
                     <Route path='/singleDorm' component={SingleDorm}/>
                     <Route path='/addDormForm' component={addDormForm}/>
+                    <Route component={DashBoard}/>
                 </Switch>
             </Router>
            </Provider> 

@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React from 'react'
 import ProfileImgPlaceholder from '../../img/placeholder-profile-male-500x500.png';
 import './sidebar.css';
 import {Link, useLocation} from 'react-router-dom';
@@ -12,7 +12,7 @@ function Sidebar() {
       <div className="sidebar d-flex flex-column">       
         <div className="mt-4">
           <div className="text-center">
-            <img src={ProfileImgPlaceholder} className=" bg-dark rounded-circle border border-3 " alt="profile image" height="" width="120px" />
+            <img src={ProfileImgPlaceholder} className="bg-dark rounded-circle border border-3" alt="" height="" width="120px" />
           </div>
           
             <div className="text-light text-left px-3 py-2">
