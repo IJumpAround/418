@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import './historySection.css';
 
- class historySection extends Component {
+ class HistorySection extends Component {
 
   render() {
 
@@ -28,4 +28,4 @@ import './historySection.css';
   }
 }
 
-export default historySection;
+export default HistorySection;

@@ -7,7 +7,6 @@ import LoginModal from './Components/login/LoginModal'
 import RegistrationPage from "./Components/registration/registrationPage";
 import SearchPage from './Components/searchComponents/SearchPage';
 import Navbar from './Components/navComponents/navigation/Navbar';
-import DashBoardWrapper from './Components/dashboard/dashboardWrapper';
 import SingleDorm from './Components/singleDorm/singleDorm';
 import config from 'react-global-configuration'
 import {is_user_logged_in} from "./utils/auth";
@@ -15,6 +14,7 @@ import addDormForm from './Components/addDormForm/addDormForm';
 import {createStore, combineReducers} from 'redux';
 import {reducer as formReducer} from 'redux-form'
 import {Provider} from 'react-redux';
+import DashBoard from './Components/dashboard/dashboard.js';
 
 //Returns all reducing functions as an object into the store..in our case we just have one reducing function to handle state of our addDormForm 
 const reducers = combineReducers({form: formReducer});
@@ -60,7 +60,7 @@ class App extends React.Component {
                     <Route path='/register' component={RegistrationPage}/>
                     <Route path="/search" component={SearchPage}/>
                     <Route path='/debug' component={DebugPage}/>
-                    <Route path='/dashboard' component={DashBoardWrapper}/>
+                    <Route component={DashBoard}/>
                     <Route path='/singleDorm' component={SingleDorm}/>
                     <Route path='/addDormForm' component={addDormForm}/>
                 </Switch>

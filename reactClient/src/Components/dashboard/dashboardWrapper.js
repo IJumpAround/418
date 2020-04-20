@@ -1,14 +1,14 @@
-import React, { Component } from 'react'
+import React from 'react'
+import {Switch, useLocation,Route} from 'react-router-dom';
 import SideBar from './sidebar';
+import Modal from './modal';
 import UserDataSection from './userDataSection';
 import HistorySection from './historySection';
 import './dashboardWrapper.css'
 
- class dashboardWrapper extends Component {
-
-  render() {
-
-    return (
+function DashboardWrapper() {
+  
+  return (
     <div className="wrapper">
         <SideBar />
       <div className="container-fluid">
@@ -22,8 +22,11 @@ import './dashboardWrapper.css'
       </div>
       </div>   
     </div> 
-    )
-  }
+    
+    
+
+
+    ); 
 }
 
-export default dashboardWrapper;
+export default DashboardWrapper;

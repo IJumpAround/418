@@ -1,13 +1,15 @@
 import React, { Component } from 'react'
 import ProfileImgPlaceholder from '../../img/placeholder-profile-male-500x500.png';
 import './sidebar.css';
+import {Link, useLocation} from 'react-router-dom';
 
- class sidebar extends Component {
+function Sidebar() {
+  
+  let location = useLocation();
 
-  render() {
     return (
     
-      <div className="sidebar d-flex flex-column">
+      <div className="sidebar d-flex flex-column">       
         <div className="mt-4">
           <div className="text-center">
             <img src={ProfileImgPlaceholder} className=" bg-dark rounded-circle border border-3 " alt="profile image" height="" width="120px" />
@@ -18,15 +20,25 @@ import './sidebar.css';
                 <hr />
                 <p className="mb-0">Senior</p>
                 <p className="mb-0">Dutch Quad</p>
+            
                 <hr />
-                <button className="btn btn-dark">Settings</button>
+                <Link 
+                  to={{
+                    pathname: '/dashboard/settings',
+                    // This is the trick! This link sets
+                    // the `background` in location state.
+                    state: { background: location }
+                  }}>
+                   <button className="btn btn-dark">Settings</button>
+                   </Link>
             </div>
             
         </div>
       </div> 
+     
     )
-  }
+  
 }
 
 
-export default sidebar;
+export default Sidebar;
