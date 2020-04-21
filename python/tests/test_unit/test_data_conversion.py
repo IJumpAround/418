@@ -71,7 +71,6 @@ class TestDataConversionFunctions(unittest.TestCase):
     def test_param_conversion_valid(self):
         table_list = TableRegistry.tables
         for table in table_list:
-            print(table)
             keys = table._fields
             input_dict = {key: 1 for key in keys}
             constructed_params = convert_request_params_to_query_params(input_dict,

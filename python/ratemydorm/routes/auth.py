@@ -10,6 +10,7 @@ from ratemydorm.sql.db_connect import get_connection
 
 bp = Blueprint('auth', __name__, url_prefix='/auth')
 
+logger = logging.getLogger('main')
 
 def exclude_from_before_request(func):
     func._exclude_from_loading = True
@@ -30,7 +31,7 @@ def register():
     :return: 200 status if registration was successful
              400 status plus error message if registration failed
     """
-    logging.info('Register route')
+    logger.info('Register route')
 
     connection = get_connection()
     cursor = connection.cursor()
@@ -76,9 +77,9 @@ def register():
                 response = RateMyDormRedirectResponse(location='/dashboard', data=data).response
                 return response
             except IntegrityError as e:
-                logging.error(f'User exists: {e}')
+                logger.error(f'User exists: {e}')
                 return 'Username already exists!', 400
-        logging.error(f'Error in input data {error}')
+        logger.error(f'Error in input data {error}')
         return error, 400
 
     return 400
@@ -96,7 +97,7 @@ def login():
     :return: 200 status if successfully logged in
              401 if login failed
     """
-    logging.debug(request.json)
+    logger.debug(request.json)
     data_response = {'success': False}
     connection = get_connection()
     cursor = connection.cursor(named_tuple=True)
@@ -133,7 +134,7 @@ def login():
 
 @bp.route('/user', methods=['GET'])
 def get_user_id_and_role():
-    logging.debug(request.json)
+    logger.debug(request.json)
 
     user_id = session.get('user_id')
     admin = session.get('admin')
@@ -142,8 +143,8 @@ def get_user_id_and_role():
 
 @bp.route('/test_rendering', methods=['GET'])
 def test():
-    logging.debug(f'session value in test route: {session}')
-    logging.debug(f'g value in test route {g.get("user")}')
+    logger.debug(f'session value in test route: {session}')
+    logger.debug(f'g value in test route {g.get("user")}')
     user = {
         'user_id': session.get('user_id'),
         'role': session.get('role'),
@@ -159,7 +160,7 @@ def load_logged_in_user():
     request
     :return:
     """
-    logging.debug(request.json)
+    logger.debug(request.json)
     user_id = session.get('user_id')
 
     if user_id is None:

@@ -28,23 +28,23 @@ class TestEndpoints(FunctionalTestClient):
     def test_get_user_profile(self):
         user_id = 2
         query = {'user_id': user_id}
-        result = self.get('/data/profile', query)
+        result = self.get('/user/profile', query)
 
         self.assertIsInstance(result, dict)
         self.assertIsInstance(result.get('payload'), dict)
-        self.assertCountEqual(profile_keys, result.get('payload').keys())
+        self.assertCountEqual(profile_keys, result.get('payload').get('user').keys())
 
     def test_add_review_fails_with_missing_input(self):
         data = self._data
         data['rating'] = None
-        result = self.post('/data/add_review', data=data)
+        result = self.post('/dorms/review', data=data)
         response: Response = self._response
         self.assertEqual(400, response.status_code)
         self.assertIn('Not all fields are filled out', result.get('message'))
 
     def test_add_review_fails_with_invalid_dorm_id(self):
         data = self._data
-        result = self.post('/data/add_review', data=data)
+        result = self.post('/dorms/review', data=data)
         response: Response = self._response
         self.assertEqual(400, response.status_code)
         self.assertIn('foreign key constraint fails', result.get('message'))
@@ -54,7 +54,7 @@ class TestEndpoints(FunctionalTestClient):
         data['user_id'] = 9999909
         data['dorm_id'] = 1
 
-        result = self.post('/data/add_review', data=data)
+        result = self.post('/dorms/review', data=data)
         response: Response = self._response
         self.assertEqual(400, response.status_code)
         self.assertIn('foreign key constraint fails', result.get('message'))
@@ -64,6 +64,22 @@ class TestEndpoints(FunctionalTestClient):
         data = self._data
         data['dorm_id'] = 2
 
-        result = self.post('/data/add_review', data=data)
+        result = self.post('/dorms/review', data=data)
         response: Response = self._response
         self.assertEqual(response.status_code, 200)
+
+    def test_get_profile_history(self):
+        user_id = 18
+        query = {'user_id': user_id}
+        expected_review = 'I LOVED HATED ENJOYED DESPISED SOMETHINGED this dorm'
+        result = self.get('/user/profile', query)
+        self.assertEqual(expected_review, result['payload']['reviews'][0]['review_text'])
+        self.assertEqual(2, len(result['payload']['reviews']))
+        self.assertEqual(2, len(result['payload']['images']))
+
+    def test_get_profile_history_missing_user(self):
+        user_id = -1
+        query = {'user_id': user_id}
+
+        result = self.get('/user/profile', query)
+        self.assertEqual({}, result.get('payload'))
