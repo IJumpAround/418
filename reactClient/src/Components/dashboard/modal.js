@@ -1,5 +1,7 @@
 import React, {useState} from 'react';
 import {useHistory} from 'react-router-dom';
+import UploadImage from './uploadImage';
+
 
 function Modal() {
   //useHistory hook, helps with navigating or changing routes
@@ -7,6 +9,8 @@ function Modal() {
   //useState hook, allows state variables inside functinal components
   const [status,showModal] = useState(false);
 
+
+  
   let back = e => {
     e.stopPropagation();
     history.goBack(); //loads previous url
@@ -41,17 +45,7 @@ function Modal() {
       <h1 className="text-center">Settings</h1> 
         <div className="row justify-content-center">
         <div className="form-group">
-         <div className="row justify-content-center">
-           <div className="col-sm-12">
-             {/*User upload picture section*/}
-             <h4 className="text-center mb-4"><u>Update Profile Picture</u></h4>
-            <div className="row justify-content-end">
-            <input type="file"/>
-            </div>                        
-            <br/>
-           </div>
-          <button className="btn btn-dark btn-sm">Upload Image</button>
-          </div>
+        <UploadImage />
           <br />           
         </div> 
           <div className="col-sm-6">
