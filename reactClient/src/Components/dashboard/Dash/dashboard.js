@@ -1,5 +1,5 @@
 import React from 'react';
-import SettingsModal from './SettingsModal';
+import SettingsModal from '../Sidebar/UserSettings/SettingsModal';
 import './dashboard.css';
 
 function Dashboard() {

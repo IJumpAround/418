@@ -14,7 +14,7 @@ import addDormForm from './Components/addDormForm/addDormForm';
 import {createStore, combineReducers} from 'redux';
 import {reducer as formReducer} from 'redux-form'
 import {Provider} from 'react-redux';
-import DashBoard from './Components/dashboard/dashboard.js';
+import DashBoard from './Components/dashboard/Dash/dashboard.js';
 
 //Returns all reducing functions as an object into the store..in our case we just have one reducing function to handle state of our addDormForm 
 const reducers = combineReducers({form: formReducer});

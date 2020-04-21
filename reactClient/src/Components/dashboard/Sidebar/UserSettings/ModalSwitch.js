@@ -1,6 +1,6 @@
 import React from 'react';
 import {Switch,Route, useLocation} from 'react-router-dom';
-import DashBoardWrapper from './dashboardWrapper';
+import DashBoardWrapper from '../../Dash/dashboardWrapper';
 import Modal from './modal';
 
 function ModalSwitch() {

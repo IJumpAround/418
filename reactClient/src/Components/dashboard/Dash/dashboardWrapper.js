@@ -1,8 +1,8 @@
 import React from 'react'
 
-import SideBar from './sidebar';
-import UserDataSection from './userDataSection';
-import HistorySection from './historySection';
+import SideBar from '../Sidebar/sidebar';
+import UserDataSection from '../UserDataSection/userDataSection';
+import HistorySection from '../HistorySection/historySection';
 import './dashboardWrapper.css'
 
 //Holds all the components of the dashboard
