@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {useHistory} from 'react-router-dom';
 import UploadImage from './uploadImage';
-
+import UpdateStudentInfo from './updateStudentInfo';
 
 function Modal() {
   //useHistory hook, helps with navigating or changing routes
@@ -48,37 +48,7 @@ function Modal() {
         <UploadImage />
           <br />           
         </div> 
-          <div className="col-sm-6">
-            {/*User upload information section*/}
-          <h4 className="text-center mb-4"><u>Update Student Information</u></h4>
-            <div className="form-group justify-content-center">           
-            <div className="row justify-content-center">
-              <div className="col-sm-7">
-                <label>Student Status:</label>                
-                  <select name="student_status" className="custom-select mb-2" component="select">
-                    <option value="Freshman">Freshman</option>
-                    <option value="Sophomore">Sophomore</option>
-                    <option value="Junior">Junior</option>
-                    <option selected="selected">Senior</option>
-                  ></select>
-              </div>   
-             </div>              
-            <div className="row justify-content-center">
-              <div className="col-sm-7">
-                <label>Quad:</label>                
-                  <select name="quad" className="custom-select mb-2" component="select">
-                    <option value="Colonial">Colonial</option>
-                    <option selected="selected">Dutch</option>
-                    <option value="Indian">Indian</option>
-                    <option value="State">State</option>
-                  ></select>
-              </div>
-            </div>
-            <div className="row justify-content-center">
-              <button className="btn btn-dark btn-sm">Update</button>
-            </div>
-           </div>    
-          </div>
+        <UpdateStudentInfo />
         </div> 
         <button className="btn btn-dark"type="button" onClick={back}>
           Close

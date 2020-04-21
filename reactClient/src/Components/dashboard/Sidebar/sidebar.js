@@ -8,6 +8,10 @@ function Sidebar() {
   //useLocation hook, returns location object that represents current url
   let location = useLocation();
 
+  /* Need to figure out how to manage state for the profile image because this is a functional component */
+
+  /* Need to set img url and fetch image from database*/
+  
     return (    
       //Admin Panel Sidebar
       <div className="sidebar d-flex flex-column">       
