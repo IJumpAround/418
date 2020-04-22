@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import OpenMap from './OpenMap';
 import DynamicCards from './DynamicCards';
+import {Link, useLocation} from 'react-router-dom';
 
 
  class SearchPage extends Component {
@@ -15,7 +16,7 @@ import DynamicCards from './DynamicCards';
 	};
 	
 	
-	passCardsFromMap = (dataFromOpenMap) => {
+	passedCardsFromMap = (dataFromOpenMap) => {
 		var loadedCards = []
 		for(var i=0; i<dataFromOpenMap.data.length; i++){
 			loadedCards.push(
@@ -44,10 +45,20 @@ import DynamicCards from './DynamicCards';
 	};
     return (
 		<React.Fragment>
-		<div className="text-right"><div className = "h2" style = {textstyle}> ~Search on the map: The search-bar is in the top right. click to set a marker and find dorms nearby! ~ </div></div>
-		<div className="flex-container" style={mystyle}>
-			<DynamicCards passDataToDynamicCards = {this.state.cardData}/>
-			<OpenMap passCardsToOpenMap = {this.passCardsFromMap} />
+		<div className="text-right"><div className = "h2" style = {textstyle}> ~Search on the map: The search-bar is in the top right. click to set a marker and find dorms nearby! ~ </div>
+		</div>
+		<div className="flex-container-fluid" style={mystyle}>
+			<div className="container-fluid" >
+				<DynamicCards passDataToDynamicCards = {this.state.cardData}/>
+				<Link 
+					to={{
+					pathname: '/addDormForm',
+					// This link sets the background in location state.
+					}}>
+					<button className="btn btn-secondary">Don't see your dorm? ADD ONE!</button>
+				</Link>
+			</div>
+			<OpenMap passCardsFromOpenMap = {this.passedCardsFromMap} />
 	  	</div>	
 		</React.Fragment>
     )
