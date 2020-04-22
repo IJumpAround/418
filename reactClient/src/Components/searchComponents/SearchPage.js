@@ -15,7 +15,7 @@ import DynamicCards from './DynamicCards';
 	};
 	
 	
-	passCardsFromMap = (dataFromOpenMap) => {
+	passedCardsFromMap = (dataFromOpenMap) => {
 		var loadedCards = []
 		for(var i=0; i<dataFromOpenMap.data.length; i++){
 			loadedCards.push(
@@ -45,9 +45,11 @@ import DynamicCards from './DynamicCards';
     return (
 		<React.Fragment>
 		<div className="text-right"><div className = "h2" style = {textstyle}> ~Search on the map: The search-bar is in the top right. click to set a marker and find dorms nearby! ~ </div></div>
-		<div className="flex-container" style={mystyle}>
+		<div className="flex-container-fluid" style={mystyle}>
+			<div className="container-fluid" >
 			<DynamicCards passDataToDynamicCards = {this.state.cardData}/>
-			<OpenMap passCardsToOpenMap = {this.passCardsFromMap} />
+			</div>
+			<OpenMap passCardsFromOpenMap = {this.passedCardsFromMap} />
 	  	</div>	
 		</React.Fragment>
     )

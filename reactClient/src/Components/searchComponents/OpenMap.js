@@ -18,7 +18,7 @@ class OpenMap extends React.Component {
 }
 
 passUpCardData = () => {
-  this.props.passCardsToOpenMap(this.state.cardData);
+  this.props.passCardsFromOpenMap(this.state.cardData);
 }
 
  cardLoadHandler = () =>  {
@@ -65,7 +65,7 @@ render(){
       const mystyle = {
         position: "relative",
         height: "100%-44px",
-        width: "100%",
+        width: "1500vh",
         zindex: '1'
       }
 
