@@ -1,5 +1,4 @@
 import React from 'react'
-import {Form,Row,Col} from 'react-bootstrap';
 import {reduxForm, Field,} from 'redux-form';
 
 const onSubmit = values => {

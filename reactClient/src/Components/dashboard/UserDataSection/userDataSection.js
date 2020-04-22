@@ -6,12 +6,18 @@ import './userDataSection.css';
   render() {
 
     return (
+      
       <div className="table table-striped border rounded">
-          <thead className="custom-thead">
-            <tr>
-              <th>User Data</th>
-            </tr>
-          </thead>
+          <div className="custom-thead">
+           <table>
+             <tbody>
+               <tr>
+                <th>User Data</th>
+              </tr>       
+             </tbody>
+             </table> 
+          </div>
+        <table>
           <tbody>
                 <tr>
                   <td style={{width: "10%"}}>Posts: 5</td>
@@ -23,6 +29,7 @@ import './userDataSection.css';
                   <td>Reviews: 7</td>
                 </tr>    
           </tbody>
+        </table> 
         </div>
     )
   }

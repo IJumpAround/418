@@ -49,26 +49,26 @@ class singleDorm extends Component {
             <hr className="mx-4" style={{color: "#564D80"} }/>       
             <div className="row custom-row">
               <div className="col-lg-6 custom-spacer custom-text-center">
-              <img className="custom-text-center" src="https://img.icons8.com/ios/30/000000/toilet.png"/>Floor Bathroom
+              <img className="custom-text-center" src="https://img.icons8.com/ios/30/000000/toilet.png" alt=""/>Floor Bathroom
               </div>
               <div className="col-lg-6 custom-spacer">
-              <img src="https://img.icons8.com/ios/30/000000/washing-machine.png"/>Floor Laundry
+              <img src="https://img.icons8.com/ios/30/000000/washing-machine.png" alt=""/>Floor Laundry
               </div>
             </div>
             <div className="row custom-row">
               <div className="col-lg-6 custom-spacer">
-              <img src="https://img.icons8.com/ios/30/000000/air-conditioner.png"/><del>Air Conidtioning</del>
+              <img src="https://img.icons8.com/ios/30/000000/air-conditioner.png" alt=""/><del>Air Conidtioning</del>
               </div>
               <div className="col-lg-6 custom-spacer">
-              <img src="https://img.icons8.com/ios/30/000000/dining-room.png"/>Dining
+              <img src="https://img.icons8.com/ios/30/000000/dining-room.png" alt=""/>Dining
               </div>
             </div>
             <div className="row custom-row">
               <div className="col-lg-6  custom-spacer">
-              <img src="https://img.icons8.com/ios/30/000000/internet.png"/>Internet
+              <img src="https://img.icons8.com/ios/30/000000/internet.png" alt=""/>Internet
               </div>
               <div className="col-lg-6  custom-spacer">
-              <img src="https://img.icons8.com/ios/30/000000/barbell.png"/>Fitness
+              <img src="https://img.icons8.com/ios/30/000000/barbell.png" alt=""/>Fitness
               </div>
             </div>
           </div>
@@ -92,13 +92,13 @@ class singleDorm extends Component {
               <li id="crumb" className="breadcrumb-item collapse text-light">#food</li>
             </ol>
           </div>
-        <a href="" className="" data-toggle="collapse" data-target="#crumb" style={{color: "#564D80"}}>Show more</a> 
+        <button href="#" className="btn btn-light" data-toggle="collapse" data-target="#crumb" style={{color: "#564D80"}}>Show more</button> 
         <div className="ml-4">
         <div className="row">
           <h3>Reviews</h3>
         </div>
         <div className="row">
-          <img src="https://img.icons8.com/ios/30/000000/rating.png"/>
+          <img src="https://img.icons8.com/ios/30/000000/rating.png" alt=""/>
           <h3 className="">1.06</h3>
         </div>
         <div className="row">

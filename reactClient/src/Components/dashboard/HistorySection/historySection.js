@@ -1,17 +1,22 @@
 import React, { Component } from 'react'
 import './historySection.css';
 
- class historySection extends Component {
+ class HistorySection extends Component {
 
   render() {
 
     return (
       <div className="table table-striped border rounded">
-      <thead className="custom-thead">
-        <tr>
-          <th>History</th>
-        </tr>
-      </thead>
+      <div className="custom-thead">
+        <table>
+          <tbody>
+            <tr>
+              <th>History</th>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+     <table>
       <tbody>
             <tr>
               <td style={{width: "10%"}}> Wrote a review...</td>
@@ -23,9 +28,10 @@ import './historySection.css';
               <td> Created a tag...</td>
             </tr>    
       </tbody>
+     </table> 
     </div>
     )
   }
 }
 
-export default historySection;
+export default HistorySection;
