@@ -65,7 +65,7 @@ class LoginModal extends React.Component {
                                 </button>
                             </div>
                             <div className="modal-body mx-3">
-                                <div className="md-form mb-5">
+                                 <div className="md-form mb-5">
                                     <i className="fas fa-envelope prefix grey-text"/>
                                     <input type="email" id="defaultForm-email" className="form-control validate"
                                            placeholder="Email address" name="email" minLength={1} required={true}/>

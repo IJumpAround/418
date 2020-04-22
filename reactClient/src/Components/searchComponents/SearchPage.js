@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import OpenMap from './OpenMap';
 import DynamicCards from './DynamicCards';
+import {Link, useLocation} from 'react-router-dom';
 
 
  class SearchPage extends Component {
@@ -44,10 +45,18 @@ import DynamicCards from './DynamicCards';
 	};
     return (
 		<React.Fragment>
-		<div className="text-right"><div className = "h2" style = {textstyle}> ~Search on the map: The search-bar is in the top right. click to set a marker and find dorms nearby! ~ </div></div>
+		<div className="text-right"><div className = "h2" style = {textstyle}> ~Search on the map: The search-bar is in the top right. click to set a marker and find dorms nearby! ~ </div>
+		</div>
 		<div className="flex-container-fluid" style={mystyle}>
 			<div className="container-fluid" >
-			<DynamicCards passDataToDynamicCards = {this.state.cardData}/>
+				<DynamicCards passDataToDynamicCards = {this.state.cardData}/>
+				<Link 
+					to={{
+					pathname: '/addDormForm',
+					// This link sets the background in location state.
+					}}>
+					<button className="btn btn-secondary">Don't see your dorm? ADD ONE!</button>
+				</Link>
 			</div>
 			<OpenMap passCardsFromOpenMap = {this.passedCardsFromMap} />
 	  	</div>	

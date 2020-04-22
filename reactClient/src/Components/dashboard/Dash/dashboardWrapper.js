@@ -1,14 +1,14 @@
-import React, { Component } from 'react'
-import SideBar from './sidebar';
-import UserDataSection from './userDataSection';
-import HistorySection from './historySection';
+import React from 'react'
+
+import SideBar from '../Sidebar/sidebar';
+import UserDataSection from '../UserDataSection/userDataSection';
+import HistorySection from '../HistorySection/historySection';
 import './dashboardWrapper.css'
 
- class dashboardWrapper extends Component {
-
-  render() {
-
-    return (
+//Holds all the components of the dashboard
+function DashboardWrapper() {
+  
+  return (
     <div className="wrapper">
         <SideBar />
       <div className="container-fluid">
@@ -22,8 +22,7 @@ import './dashboardWrapper.css'
       </div>
       </div>   
     </div> 
-    )
-  }
+    ); 
 }
 
-export default dashboardWrapper;
+export default DashboardWrapper;
