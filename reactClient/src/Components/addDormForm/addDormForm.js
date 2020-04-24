@@ -2,7 +2,9 @@ import React from 'react'
 import {reduxForm, Field,} from 'redux-form';
 
 const onSubmit = values => {
+
   alert(JSON.stringify(values));
+  
 }
 
 function addDormForm ({handleSubmit}) { //We can grab handleSubmit from redux-form
