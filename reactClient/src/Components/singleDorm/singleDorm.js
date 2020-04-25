@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, useState} from 'react'
 import './singleDorm.css';
 import Image1 from "../../img/stockdormimage.jpg";
 import Image2 from "../../img/placeholder-profile-male-500x500.png";
@@ -6,7 +6,6 @@ import Image3 from "../../img/UA_campus2.jpg";
 import {faArrowAltCircleRight} from "@fortawesome/free-solid-svg-icons";
 import {faArrowAltCircleLeft} from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-
 import axios from 'axios';
 import StarRatingComponent from 'react-star-rating-component';
 
@@ -14,30 +13,67 @@ class singleDorm extends Component {
 
   constructor(props){
     super(props);
+
     this.state = {
-      status: false,
-      rating: 0,
-      nextrating: null,
-      prevrating: null
+      status: false,   
+      showMoreBtn: false,
+      dorm_info: {
+        room: "",
+        floor: "",
+        room_type: "",
+        quad: "",
+        dorm_user_raiting: 0,
+        img: "",
+        tags: []
+      },
+      features: {
+        bath: true,
+        laundry: true,
+        AC: true,
+        internet: true,
+        dining: true,
+        fitness: true
+      }
+
     }
 
+    this.handleChange = this.handleChangeOnReviewInput.bind(this);
+    this.handleChangeOnTagInput = this.handleChangeOnTagInput.bind(this);
     this.handleSubmitReview = this.handleSubmitReview.bind(this);
-    this.handleChange = this.handleChange.bind(this);
     this.handleStarClick = this.handleStarClick.bind(this);
     this.handleAddTagClick = this.handleAddTagClick.bind(this);
+    this.handleShowMoreClick = this.handleShowMoreClick.bind(this);
+
   }
 
-    handleChange(e){
+    handleChangeOnReviewInput(e){
       this.setState({
-        [e.target.id]: e.target.value})
-    }
+        [e.target.id]: e.target.value
+      })
+      }
+      handleChangeOnTagInput(e){
+        this.setState({
+          [e.target.name]: e.target.value
+        })
+      }
+      
+      handleAddTagClick(e){
+        e.preventDefault();
+        this.setState({
+          tags: this.state.tags.concat(this.state.tags)
+
+        })
+        console.log(this.state.tags);
+        
+        
+      }
 
     handleSubmitReview(e){
       e.preventDefault();
       axios.post('',{
 
         'dorm_review': this.state.comment,
-        'dorm_user_raiting': this.state.rating
+        'dorm_user_raiting': this.state.user_dorm_rating
       })
 
     }
@@ -48,13 +84,42 @@ class singleDorm extends Component {
       })
     }
 
-    handleAddTagClick(e){
-      e.preventDefault();
- 
+
+    handleShowMoreClick(){
+     
+      this.state.showMoreBtn ? this.setState({showMoreBtn: false}) : this.setState({showMoreBtn: true})
+
+    }
+
+    componentDidMount(){     
+      this.setState({
+        //Dorm info
+        quad: "Dutch",
+        room: "403",
+        floor: "4",
+        room_type: "Single",
+        //Features
+        bath: true,
+        laundry: false,
+        AC: false,
+        internet: true,
+        dining: true,
+        fitness: true
+        
+      })
+      
+      
     }
 
     render() {
 
+      const element = <div>Show Less</div>
+      const element2 = <div>Show More</div>
+      
+      
+
+      //console.log(this.state.showMoreBtn);
+      
       return (
         
         <div>
@@ -85,34 +150,40 @@ class singleDorm extends Component {
        
         <div className="row mr-2">
           <div className="col-md-4 mt-2 description border-right" style={{color: "#564D80"} }>
-            <h3 className="text-center">Dutch Quad</h3>
-            <h6>Room 321</h6>
-            <h6>Floor 3</h6>
-            <h6>Double</h6>
+            <h3 className="text-center">{this.state.quad + ' Quad'}</h3>
+            <h6>Room: {this.state.room}</h6>
+            <h6>Floor: {this.state.floor}</h6>
+            <h6>Type: {this.state.room_type}</h6>
             <h5 className="text-left ml-4">Features</h5>
             <hr className="mx-4" style={{color: "#564D80"} }/>       
             <div className="row custom-row">
               <div className="col-lg-6 custom-spacer custom-text-center">
-              <img className="custom-text-center" src="https://img.icons8.com/ios/30/000000/toilet.png" alt=""/>Floor Bathroom
+              <img className="custom-text-center" src="https://img.icons8.com/ios/30/000000/toilet.png" alt=""/>{
+              this.state.bath ? <div>Floor Bathroom</div> : <del>Floor Bathroom</del>}
               </div>
               <div className="col-lg-6 custom-spacer">
-              <img src="https://img.icons8.com/ios/30/000000/washing-machine.png" alt=""/>Floor Laundry
+              <img src="https://img.icons8.com/ios/30/000000/washing-machine.png" alt=""/>
+              {this.state.laundry ? <div>Floor Laundry</div> : <del>Floor Laundry</del>}
               </div>
             </div>
             <div className="row custom-row">
               <div className="col-lg-6 custom-spacer">
-              <img src="https://img.icons8.com/ios/30/000000/air-conditioner.png" alt=""/><del>Air Conidtioning</del>
+              <img src="https://img.icons8.com/ios/30/000000/air-conditioner.png" alt=""/>
+              {this.state.AC ? <div>Air Conditioning</div> : <del>Air Conditioning</del>}
               </div>
               <div className="col-lg-6 custom-spacer">
-              <img src="https://img.icons8.com/ios/30/000000/dining-room.png" alt=""/>Dining
+              <img src="https://img.icons8.com/ios/30/000000/dining-room.png" alt=""/>
+              {this.state.dining ? <div>Dining</div> : <del>Dining</del>}
               </div>
             </div>
             <div className="row custom-row">
               <div className="col-lg-6  custom-spacer">
-              <img src="https://img.icons8.com/ios/30/000000/internet.png" alt=""/>Internet
+              <img src="https://img.icons8.com/ios/30/000000/internet.png" alt=""/>
+              {this.state.internet ? <div>Internet</div> : <del>Internet</del>}
               </div>
               <div className="col-lg-6  custom-spacer">
-              <img src="https://img.icons8.com/ios/30/000000/barbell.png" alt=""/>Fitness
+              <img src="https://img.icons8.com/ios/30/000000/barbell.png" alt=""/>
+              {this.state.fitness ? <div>Fitness</div> : <del>Fitness</del>}
               </div>
             </div>
           </div>
@@ -122,11 +193,26 @@ class singleDorm extends Component {
                 <h3 className="text-left">Tags</h3>
               </div>
               <div className="">
-                <div className="form-group">
-                  <input className=""/>
-                <button className="btn btn-light mr-2" type="Submit" style={{color: "#564D80"}} onClick={this.handleAddTagClick}>Add Tag</button> 
-                <button className="btn btn-light" data-toggle="collapse" data-target="#crumb" style={{color: "#564D80"}}>Show more</button> 
-                </div>
+                <form className="form-group" onSubmit={this.handleAddTagClick}>
+                <input className=""
+                       name="tags" 
+                       value={this.state.tags} 
+                       onChange={this.handleChangeOnTagInput} 
+                       />
+                <button className="btn btn-light mr-2"
+                        type="submit" 
+                        style={{color: "#564D80"}}
+                        >Add Tag
+                </button> 
+                <button className="btn btn-light" 
+                        data-toggle="collapse" 
+                        data-target="#crumb" 
+                        style={{color: "#564D80"}} 
+                        onClick={this.handleShowMoreClick}
+                        >
+                        {this.state.showMoreBtn ? element : element2}
+                </button> 
+                </form>
               </div>
             </div>
            
@@ -180,7 +266,7 @@ class singleDorm extends Component {
 
         </div>
         <div className="input-section">
-          <form onSubmit={this.handleSubmitReview} onChange={this.handleChange} id='reviewSection'>
+          <form onSubmit={this.handleSubmitReview} onChange={this.handleChangeOnReviewInput} id='reviewSection'>
             <div className="row">
               <div className="col-md-12">                 
                 <div className="form-group">
@@ -192,7 +278,7 @@ class singleDorm extends Component {
                         id = "dorm_user_rating"
                         name = "starRate"
                         starCount = {5}
-                        value = {this.state.rating}
+                        value = {this.state.user_dorm_rating}
                         onStarClick = {this.handleStarClick}
                         emptyStarColor = "#564D80"
                       />           
@@ -215,3 +301,4 @@ class singleDorm extends Component {
 
 
 export default singleDorm;
+
