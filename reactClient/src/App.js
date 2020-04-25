@@ -28,8 +28,15 @@ class App extends React.Component {
         super(props);
         this.state = {
             showLogin: false,
-            isLoggedIn: false
+            isLoggedIn: false,
+            passedCoordinates: {
+                lat: 42.686063,
+                lng: -73.824688,
+                },
+            passedAddress: ''
         };
+
+        
     }
 
     componentDidMount() {
@@ -40,6 +47,16 @@ class App extends React.Component {
     getLoginWindowStatus = (loginWindowStatus) => {
         this.setState({showLogin: !loginWindowStatus});
     };
+
+    passedCoordFromMap = (coordFromOpenMap) => {
+		var passedCoord = coordFromOpenMap
+		this.setState({passedCoordinates: passedCoord})
+    }
+    
+    passedAddressFromMap = (addressFromOpenMap) => {
+		var address = addressFromOpenMap
+		this.setState({passedAddress: address})
+    }
 
     render() {
         
@@ -58,7 +75,12 @@ class App extends React.Component {
                 <Switch>
                     <RegistrationPage path="/" exact component={RegistrationPage}/>
                     <Route path='/register' component={RegistrationPage}/>
-                    <Route path="/search" component={SearchPage}/>
+                    <Route path="/search" component={() => 
+                        <SearchPage
+                            coordinates = {this.passedCoordFromMap} 
+                            searchAddress = {this.passedAddressFromMap}
+                        />	
+                    }/>
                     <Route path='/debug' component={DebugPage}/>
                     <Route path='/singleDorm' component={SingleDorm}/>
                     <Route path='/addDormForm' component={addDormForm}/>

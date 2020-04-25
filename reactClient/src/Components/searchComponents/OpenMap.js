@@ -3,6 +3,7 @@ import { Map, Marker, Popup, TileLayer } from 'react-leaflet'
 import ReactLeafletSearch from "react-leaflet-search";
 import axios from '../../utils/axiosInstance';
 
+
 class OpenMap extends React.Component {
     constructor(props) {
        super(props);
@@ -12,16 +13,53 @@ class OpenMap extends React.Component {
           lat: 42.686063,
           lng: -73.824688,
           },
-          cardData:[]
+
+          searchCoord:{
+            lat: 42.686063,
+            lng: -73.824688,
+            },
+          currentAddress: '',
+          cardData:[], 
+          
       }
+    
   
 }
+
 
 passUpCardData = () => {
   this.props.passCardsFromOpenMap(this.state.cardData);
 }
 
- cardLoadHandler = () =>  {
+passUpCoord = () => {
+  this.props.passCoordFromOpenMap(this.state.latlng);
+}
+
+passUpAddress = () => {
+  this.props.passAddressFromOpenMap(this.state.currentAddress);
+}
+ 
+bingReverseGeo = () => {
+  fetch(`http://dev.virtualearth.net/REST/v1/Locations/${this.state.latlng.lat},${this.state.latlng.lng}?o=json&key=AtVpew29wF6vGwfKIVd-IfeNta0fA4gmM9Kuz_hoGNIl25-oNfo3jML_zaPTTZfF`)/* , {
+    method: 'GET',
+    mode: 'no-cors',
+    headers: {
+      'Access-Control-Allow-Origin' : '*'
+    }
+  }) */
+    .then((response) => {
+      response.json()
+        .then((res) => {
+          this.setState({currentAddress: res.resourceSets[0].resources[0].address})
+        })
+    })
+    .catch((error) => {
+      console.log('error', error)
+      })
+
+}
+
+cardLoadHandler = () =>  {
   console.log("marker location changed");
   //Changing cards begins
   axios.post('search/load_cards', {
@@ -51,17 +89,27 @@ setMarker = (event) => {
   this.setState({latlng: event.latlng})
   this.setState({proxPosition: [event.latlng.lat, event.latlng.lng]})
   };
+
+handleSearchEnd = (event) => {
+    var searchedCoord = event.target.getCenter()
+    this.setState({searchCoord: searchedCoord})
+    //this.setState({proxPosition: [searchedCoord.lat, searchedCoord.lng]})
+    };
     
   componentDidMount(){
+    this.bingReverseGeo()
     this.cardLoadHandler()
+    this.passUpCoord()
+    this.passUpAddress()  
   }
+
 render(){
-     
+  
   var proxMarker =  <Marker position = {this.state.latlng}>
                     {/* <popup></popup> */}
                      
                     </Marker>
-               
+  
       const mystyle = {
         position: "relative",
         height: "100%-44px",
@@ -76,16 +124,35 @@ render(){
             onClick={(event) =>
               {
               this.setMarker(event)
+              this.bingReverseGeo()
+              this.passUpCoord()
+              this.passUpAddress()
               this.cardLoadHandler()
               
               }
             }
+            onMoveEnd={ (event) =>
+              {
+                this.handleSearchEnd(event)
+              }
+            }
+            >
             >
             <ReactLeafletSearch 
               inputPlaceholder="input desired location"
               zoom={15} 
               showMarker={false}
               showPopup={false}
+
+            /* Search coordinates found in this path within reactleafletsearch component
+              ReactLeafletSearch ->
+                Leaflet ->
+                  Map ->
+                      Handlers - >
+                        1 ->
+                          Map ->
+                            _LastCenter - >
+                          */
             />
                 <TileLayer
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
