@@ -10,7 +10,15 @@ import {Link, useLocation} from 'react-router-dom';
 		this.state = { 
 			cardData: [
 			
-			]
+			],
+
+			passedCoordsFromMap: {
+				lat: 42.686063,
+				lng: -73.824688,
+				},
+
+			passedAddress: ''
+
 		};
 
 	};
@@ -34,6 +42,23 @@ import {Link, useLocation} from 'react-router-dom';
 		this.setState({cardData: loadedCards})
 	}
 
+	passedCoordFromMap = (coordFromOpenMap) => {
+		var passedCoord = coordFromOpenMap
+		this.setState({passedCoordsFromMap: passedCoord})
+	}
+
+	passedCoordFromMap = (addressFromOpenMap) => {
+		var address = addressFromOpenMap
+		this.setState({passedAddress: address})
+	}
+
+	passUpCoord = () => {
+		this.props.coordinates(this.state.passedCoordsFromMap);
+	  }
+
+	passUpAddress = () => {
+	this.props.searchAddress(this.state.passedAddress);
+	}
 
   render() {
 	const mystyle = {
@@ -55,10 +80,18 @@ import {Link, useLocation} from 'react-router-dom';
 					pathname: '/addDormForm',
 					// This link sets the background in location state.
 					}}>
-					<button className="btn btn-secondary">Don't see your dorm? ADD ONE!</button>
+					<button className="btn btn-secondary" onClick = 
+					{(event) => {
+						this.passUpCoord()
+						this.passUpAddress()
+					}
+					}>Don't see your dorm? ADD ONE!</button>
 				</Link>
+				<h6>Click on the approximate location of your residence then hit the above button!</h6>
 			</div>
-			<OpenMap passCardsFromOpenMap = {this.passedCardsFromMap} />
+			<OpenMap passCardsFromOpenMap = {this.passedCardsFromMap} 
+					 passCoordFromOpenMap = {this.passedCoordFromMap}
+					 passAddressFromOpenMap = {this.passedCoordFromMap}/>
 	  	</div>	
 		</React.Fragment>
     )
