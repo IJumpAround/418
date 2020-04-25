@@ -47,18 +47,25 @@ import {Link, useLocation} from 'react-router-dom';
 		this.setState({passedCoordsFromMap: passedCoord})
 	}
 
-	passedCoordFromMap = (addressFromOpenMap) => {
-		var address = addressFromOpenMap
-		this.setState({passedAddress: address})
-	}
-
 	passUpCoord = () => {
 		this.props.coordinates(this.state.passedCoordsFromMap);
 	  }
 
-	passUpAddress = () => {
-	this.props.searchAddress(this.state.passedAddress);
-	}
+	 bingReverseGeo = (latlng, callback) => {
+		 console.log('reversegeo latlng input', latlng)
+		 fetch(`http://dev.virtualearth.net/REST/v1/Locations/${latlng.lat},${latlng.lng}?o=json&key=AtVpew29wF6vGwfKIVd-IfeNta0fA4gmM9Kuz_hoGNIl25-oNfo3jML_zaPTTZfF`)
+			 .then((response) => {
+				 response.json()
+					 .then((res) => {
+						 console.log('reversegeo', res)
+					 	let addr = res.resourceSets[0].resources[0].address
+						 callback(addr)
+					 })
+			 })
+			 .catch((error) => {
+				 console.log('error', error)
+			 })
+	 }
 
   render() {
 	const mystyle = {
@@ -78,12 +85,15 @@ import {Link, useLocation} from 'react-router-dom';
 				<Link 
 					to={{
 					pathname: '/addDormForm',
+					dormFormProps: {
+						coords: this.state.passedCoordsFromMap,
+						bingFn: this.bingReverseGeo
+					}
 					// This link sets the background in location state.
 					}}>
 					<button className="btn btn-secondary" onClick = 
 					{(event) => {
 						this.passUpCoord()
-						this.passUpAddress()
 					}
 					}>Don't see your dorm? ADD ONE!</button>
 				</Link>
@@ -91,7 +101,7 @@ import {Link, useLocation} from 'react-router-dom';
 			</div>
 			<OpenMap passCardsFromOpenMap = {this.passedCardsFromMap} 
 					 passCoordFromOpenMap = {this.passedCoordFromMap}
-					 passAddressFromOpenMap = {this.passedCoordFromMap}/>
+			/>
 	  	</div>	
 		</React.Fragment>
     )

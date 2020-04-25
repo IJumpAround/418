@@ -1,7 +1,7 @@
 import React from 'react';
 import 'bootstrap/dist/js/bootstrap.bundle';
 import './utils/config'
-import {BrowserRouter as Router, Switch, Route} from "react-router-dom";
+import {BrowserRouter as Router, Route, Switch} from "react-router-dom";
 import DebugPage from './Components/debug/debug'
 import LoginModal from './Components/login/LoginModal'
 import RegistrationPage from "./Components/registration/registrationPage";
@@ -11,7 +11,7 @@ import SingleDorm from './Components/singleDorm/singleDorm';
 import config from 'react-global-configuration'
 import {is_user_logged_in} from "./utils/auth";
 import addDormForm from './Components/addDormForm/addDormForm';
-import {createStore, combineReducers} from 'redux';
+import {combineReducers, createStore} from 'redux';
 import {reducer as formReducer} from 'redux-form'
 import {Provider} from 'react-redux';
 import DashBoard from './Components/dashboard/Dash/dashboard.js';
@@ -49,13 +49,11 @@ class App extends React.Component {
     };
 
     passedCoordFromMap = (coordFromOpenMap) => {
-		var passedCoord = coordFromOpenMap
-		this.setState({passedCoordinates: passedCoord})
+        this.setState({passedCoordinates: coordFromOpenMap})
     }
     
     passedAddressFromMap = (addressFromOpenMap) => {
-		var address = addressFromOpenMap
-		this.setState({passedAddress: address})
+        this.setState({passedAddress: addressFromOpenMap})
     }
 
     render() {
