@@ -4,10 +4,10 @@ import Review from './review'
  //list all of the reviews into an array
  function ReviewList(props) {
  console.log(props);
- const review = props; 
+ const {review, rating} = props; 
   return (
     <div>
-      <Review  review={review}/>
+      <Review  review={review} rating={rating}/>
     </div>
   )
 }

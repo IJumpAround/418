@@ -42,7 +42,6 @@ class singleDorm extends Component {
       }
 
     }
-
     
     this.handleChangeOnTagInput = this.handleChangeOnTagInput.bind(this);
     this.handleStarClick = this.handleStarClick.bind(this);
@@ -179,12 +178,10 @@ class singleDorm extends Component {
         </div>
         <div className="review_section shadow-sm">
           <div className="row ml-3">
-            <img src="https://img.icons8.com/ios/30/000000/rating.png" alt=""/>
-            <h3 className="">{this.state.rating}</h3>
+            
           </div>
         <div className="row ml-3">
-          <ReviewList reviews={this.state.reviews}/>
-
+          <ReviewList reviews={this.state.reviews} rating={this.state.dorm_info.dorm_user_raiting}/>
         </div>
         </div>
         <div className="input-section">
