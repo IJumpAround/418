@@ -1,6 +1,8 @@
 import React from 'react'
+import {options as buildingOptions} from "./buildingOptions";
 
 class addDormForm extends React.Component {
+    test = true
     constructor(props) {
         super(props);
         let passed = props.location.dormFormProps
@@ -50,6 +52,16 @@ class addDormForm extends React.Component {
     // Use bing api to get an address from a latitude/longitude
     bingReverseGeo = (latlng, callback) => {
         console.log('reversegeo latlng input', latlng)
+        if(this.test) {
+            callback({
+                addressLine: 'test address',
+                adminDistrict: 'test state',
+                adminDistrict2: 'test city',
+                postalCode: '00000'
+            })
+            return
+        }
+
         fetch(`http://dev.virtualearth.net/REST/v1/Locations/${latlng.lat},${latlng.lng}?o=json&key=AtVpew29wF6vGwfKIVd-IfeNta0fA4gmM9Kuz_hoGNIl25-oNfo3jML_zaPTTZfF`)
             .then((response) => {
                 response.json()
@@ -83,9 +95,26 @@ class addDormForm extends React.Component {
 
     }
 
+    // Check if the address form fields have changed from the intitially populated values
+    formAddressUnchanged(address) {
+        let defaults = this.state.formDefaults
+        for(let prop in address) {
+            let val = address[prop]
+            console.log('comparing ', val, 'and ', defaults[prop])
+            if(defaults[prop] !== val) {
+                return false
+            }
+        }
+        return true
+    }
+
     onSubmit = (event) => {
         event.preventDefault()
         console.log(event.target)
+
+        // TODO use regular geocode if address is not passed in.
+        // Disable address field if passed in from props.
+        // Alternatively, get coords from geocode if user changes address from what is passed.
         if(this.state.coords == null){
             alert("Error, coordinates are missing from state. Maybe you didn't reach this page via the search page?")
             return
@@ -95,6 +124,17 @@ class addDormForm extends React.Component {
         city = event.target.city.value
         state = event.target.state.value
         zip = event.target.zip_code.value
+
+        let addressUnchanged = this.formAddressUnchanged({
+            address_1: address,
+            city: city,
+            state: state,
+            zip: zip
+        })
+        if(!addressUnchanged) {
+            alert('address form has been changed from the initial default values')
+            return
+        }
 
         // Construct location portion of payload
         let payload = {
@@ -145,7 +185,9 @@ class addDormForm extends React.Component {
                                 <div className="row">
                                     <div className="col-sm-6 mb-2">
                                         <label>Building:</label>
-                                        <input required type="text" className="form-control" name="building"/>
+                                        <select required className="custom-select" name="building">
+                                            {buildingOptions.map((x) => <option key={x} value={x}>{x}</option>)}
+                                        </select>
                                     </div>
                                     <div className="col-sm-2">
                                         <label>Floor #:</label>
