@@ -49,9 +49,23 @@ def create_dorm() -> ApiResponse:
 
     query_params = {key: val for key, val in params.items() if key != 'features'}
     logger.debug(f'Converted params {params}')
-    # TODO prevent duplicates
+
+    # Check for duplicate dorms
     insert = "INSERT INTO Dorm (latitude, longitude, room_num, floor, building, quad, address) VALUES " \
              "(%(latitude)s, %(longitude)s, %(room_num)s, %(floor)s, %(building)s, %(quad)s, %(address)s )"
+
+    duplicate_check = """SELECT * 
+                        FROM Dorm
+                        WHERE room_num=%(room_num)s AND floor=%(floor)s AND building=%(building)s AND quad=%(quad)s AND
+                        address=%(address)s
+                        LIMIT 1"""
+    cursor.execute(duplicate_check, query_params)
+    res = cursor.fetchone()
+    if res is not None:
+        connection.rollback()
+        connection.close()
+        return RateMyDormMessageResponse(400, "Duplicate dorm").response
+    
     # Insert into Dorm table
     try:
         cursor.execute(insert, query_params)
