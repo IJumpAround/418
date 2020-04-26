@@ -144,7 +144,7 @@ class addDormForm extends React.Component {
             quad: event.target.quad.value,
             floor: event.target.floor.value,
             latitude: this.state.coords.lat,
-            longitude: this.state.coords.long,
+            longitude: this.state.coords.lng,
             features: {}
         }
 
@@ -158,6 +158,7 @@ class addDormForm extends React.Component {
         payload.features.internet = event.target.internet.value
         payload.features.kitchen = event.target.kitchen.value
         alert(JSON.stringify(payload))
+        console.log(JSON.stringify(payload))
     }
 
 

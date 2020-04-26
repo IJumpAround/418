@@ -1,12 +1,14 @@
 import logging
 import datetime
+
 from flask import request, Blueprint
+from marshmallow.exceptions import ValidationError
 from mysql.connector.errors import Error, IntegrityError
 
+from ratemydorm.schemas.add_dorm import AddDormRequestSchema
+from ratemydorm.models.dorm import Dorm
 from ratemydorm.sql.db_connect import get_connection
-from ratemydorm.sql.table_types import DormRow, TableRegistry
-from ratemydorm.utils.data_conversion_functions import MalformedRequestException, \
-    convert_request_params_to_query_params
+from ratemydorm.utils.data_conversion_functions import MalformedRequestException
 from ratemydorm.utils.api_response import RateMyDormApiResponse, RateMyDormMessageResponse, ApiResponse
 
 bp = Blueprint('dorms', __name__, url_prefix='/dorms')
@@ -34,34 +36,63 @@ def create_dorm() -> ApiResponse:
     connection = get_connection()
     cursor = connection.cursor()
 
-    logger.debug(str(DormRow.address))
-
     try:
-        params = convert_request_params_to_query_params(data,
-                                                        TableRegistry.tables.dorm)
+        schema = AddDormRequestSchema()
+        params = schema.load(data)
+        logging.debug('Incoming JSON validated against schema')
     except MalformedRequestException as e:
         logger.error(f'CREATE DORM: Error converting incoming data to a dictionary \n\tGot {data}')
         return RateMyDormApiResponse(data, 400, 'invalid input').response
+    except ValidationError as e:
+        logger.error(f'Invalid request {e}')
+        return RateMyDormApiResponse(data, 400, 'Invalid request').response
 
+    query_params = {key: val for key, val in params.items() if key != 'features'}
     logger.debug(f'Converted params {params}')
+    # TODO prevent duplicates
     insert = "INSERT INTO Dorm (latitude, longitude, room_num, floor, building, quad, address) VALUES " \
              "(%(latitude)s, %(longitude)s, %(room_num)s, %(floor)s, %(building)s, %(quad)s, %(address)s )"
-
+    # Insert into Dorm table
     try:
-        cursor.execute(insert, params)
+        cursor.execute(insert, query_params)
     except Error as e:
         logger.error(f'Error inserting into db: {e.msg}')
         response = RateMyDormApiResponse(data, 400, 'Database error').response
         connection.rollback()
+        return response
     except KeyError as e:
         logger.error(f'Missing required field in query: {e}')
         response = RateMyDormMessageResponse(400, f"Missing a key field in the query {e}").response
-    else:
-        connection.commit()
-        response = RateMyDormMessageResponse(200, 'Dorm added successfully').response
-    finally:
-        connection.close()
+        connection.rollback()
         return response
+
+    # Get dorm id we just created & feature_ids from the features
+    cursor.execute("""SELECT LAST_INSERT_ID()""")
+    dorm_id = cursor.fetchone()[0]
+    logger.debug('Beginning feature iteration insertion')
+    try:
+        for feature in data['features']:
+            value = data['features'][feature]
+            insert_features = """INSERT INTO feature_lut(dorm_id, feature_id, feature_value)
+            SELECT %(dorm_id)s, feature_id, %(feature_value)s
+            FROM
+            features
+            WHERE
+            features.feature = %(feature_key)s"""
+            feature_param = {'dorm_id': dorm_id,
+                             'feature_value': value,
+                             'feature_key': feature}
+
+            cursor.execute(insert_features, feature_param)
+
+    except Exception as e:
+        logger.error(f'Error during feature insertion {e}')
+        response = RateMyDormMessageResponse(400, f'Error during feature insertion {e}')
+        connection.rollback()
+        return response.response
+
+    connection.commit()
+    return RateMyDormApiResponse(code=200, payload={'dorm_id': dorm_id}).response
 
 
 @bp.route('', methods=['GET'])
@@ -107,5 +138,4 @@ def add_review():
         connection.commit()
     finally:
         connection.close()
-        return {'message': response[0]},response[1]
-
+        return {'message': response[0]}, response[1]

@@ -77,8 +77,18 @@ class DormRow(NamedTuple):
     quad: str
     address: str
 
+class AddDorm(NamedTuple):
+    dorm_id: int
+    latitude: Decimal
+    longitude: Decimal
+    room_num: int
+    floor: int
+    building: str
+    quad: str
+    address: str
 
-Tables = namedtuple('Tables', 'dorm dorm_image features_lut features review tags reviews')
+
+Tables = namedtuple('Tables', 'dorm dorm_image features_lut features review tags reviews addDorm')
 
 
 class TableRegistry:
@@ -90,7 +100,8 @@ class TableRegistry:
         features=FeaturesRow,
         review=ReviewRow,
         tags=TagsRow,
-        reviews=ReviewRow
+        reviews=ReviewRow,
+        addDorm=AddDorm,
     )
 
 

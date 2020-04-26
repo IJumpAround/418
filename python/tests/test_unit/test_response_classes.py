@@ -1,7 +1,6 @@
 import unittest
 
-from unittest.mock import MagicMock
-from ratemydorm.utils.api_response import RateMyDormBaseResponse, RateMyDormApiResponse, RateMyDormRedirectResponse, \
+from ratemydorm.utils.api_response import RateMyDormApiResponse, RateMyDormRedirectResponse, \
     InvalidRedirectException
 
 TEST_CODE = 200

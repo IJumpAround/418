@@ -29,7 +29,6 @@ def convert_multiple_rows_to_dict(rows: List[Row]) -> List[Dict]:
 
 def convert_request_params_to_query_params(request: dict,
                                            table_type: NamedTuple):
-
     table_fields = table_type._fields
     constructed_params = {}
 
