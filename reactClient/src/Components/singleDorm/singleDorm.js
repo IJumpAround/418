@@ -9,6 +9,19 @@ import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import axios from 'axios';
 import StarRatingComponent from 'react-star-rating-component';
 
+function RenderComment(props){
+
+  let status = props.status;
+  let comment = props.comment;
+  if(status){
+  return <div>{comment}</div>
+  
+
+  } else {
+    return null;
+  }
+}
+
 class singleDorm extends Component {
 
   constructor(props){
@@ -17,14 +30,17 @@ class singleDorm extends Component {
     this.state = {
       status: false,   
       showMoreBtn: false,
+      tag: "",
+      comment: "",
+      tag_List: [],
       dorm_info: {
         room: "",
         floor: "",
         room_type: "",
         quad: "",
         dorm_user_raiting: 0,
+        overall_dorm_rating: 0,
         img: "",
-        tags: []
       },
       features: {
         bath: true,
@@ -37,7 +53,7 @@ class singleDorm extends Component {
 
     }
 
-    this.handleChange = this.handleChangeOnReviewInput.bind(this);
+    this.handleChangeOnReviewInput = this.handleChangeOnReviewInput.bind(this);
     this.handleChangeOnTagInput = this.handleChangeOnTagInput.bind(this);
     this.handleSubmitReview = this.handleSubmitReview.bind(this);
     this.handleStarClick = this.handleStarClick.bind(this);
@@ -48,33 +64,36 @@ class singleDorm extends Component {
 
     handleChangeOnReviewInput(e){
       this.setState({
-        [e.target.id]: e.target.value
+        [e.target.name]: e.target.value
       })
       }
+      
       handleChangeOnTagInput(e){
         this.setState({
           [e.target.name]: e.target.value
         })
       }
-      
       handleAddTagClick(e){
         e.preventDefault();
+        console.log(this.state.tag);
+        
+        const tag = this.state.tag;
         this.setState({
-          tags: this.state.tags.concat(this.state.tags)
-
-        })
-        console.log(this.state.tags);
-        
-        
+          tag_List: [...this.state.tag_List, tag]
+          
+        })       
+        console.log(this.state.tag_List);
       }
 
     handleSubmitReview(e){
       e.preventDefault();
+      this.setState({status: true})
       axios.post('',{
 
         'dorm_review': this.state.comment,
         'dorm_user_raiting': this.state.user_dorm_rating
       })
+      
 
     }
 
@@ -91,7 +110,9 @@ class singleDorm extends Component {
 
     }
 
-    componentDidMount(){     
+    componentDidMount(){   
+      
+
       this.setState({
         //Dorm info
         quad: "Dutch",
@@ -99,26 +120,23 @@ class singleDorm extends Component {
         floor: "4",
         room_type: "Single",
         //Features
-        bath: true,
+        bath: false,
         laundry: false,
         AC: false,
-        internet: true,
-        dining: true,
-        fitness: true
+        internet: false,
+        dining: false,
+        fitness: false,
         
-      })
-      
-      
+      })    
     }
 
     render() {
 
       const element = <div>Show Less</div>
       const element2 = <div>Show More</div>
-      
-      
-
       //console.log(this.state.showMoreBtn);
+      const status = this.state.status;
+      const comment = this.state.comment;
       
       return (
         
@@ -193,15 +211,16 @@ class singleDorm extends Component {
                 <h3 className="text-left">Tags</h3>
               </div>
               <div className="">
-                <form className="form-group" onSubmit={this.handleAddTagClick}>
+                <div className="form-group" >
                 <input className=""
-                       name="tags" 
-                       value={this.state.tags} 
+                       name="tag" 
+                       value={this.state.tag} 
                        onChange={this.handleChangeOnTagInput} 
                        />
                 <button className="btn btn-light mr-2"
-                        type="submit" 
+                        type="button"                     
                         style={{color: "#564D80"}}
+                        onClick={this.handleAddTagClick}
                         >Add Tag
                 </button> 
                 <button className="btn btn-light" 
@@ -212,7 +231,7 @@ class singleDorm extends Component {
                         >
                         {this.state.showMoreBtn ? element : element2}
                 </button> 
-                </form>
+                </div>
               </div>
             </div>
            
@@ -239,15 +258,13 @@ class singleDorm extends Component {
      
         <div className="row">
           <div className="col-6">
-            <h3>Overall Dorm Rating: 4.3</h3>
+            <h3>Overall Dorm Rating: {this.state.overall_dorm_rating}</h3>
           </div>
         </div>
         <div className="review_section shadow-sm">
           <div className="row ml-3">
             <img src="https://img.icons8.com/ios/30/000000/rating.png" alt=""/>
             <h3 className="">{this.state.rating}</h3>
-      
-            {this.state.prevrating}
           </div>
         <div className="row ml-3">
         <div className="media">
@@ -259,14 +276,12 @@ class singleDorm extends Component {
          </div>
         </div>
         <div className="row text-left ml-3">
-            Nostrud dolore anim anim elit sit. Ea eiusmod non enim ea nulla aute. Do fugiat aute 
-            incididunt est sit excepteur do est exercitation fugiat mollit esse elit. Non do reprehenderit
-            minim dolore cillum pariatur magna id dolor Lorem aliquip occaecat.  
+           <RenderComment  status={status} comment={comment}/> 
         </div>
 
         </div>
         <div className="input-section">
-          <form onSubmit={this.handleSubmitReview} onChange={this.handleChangeOnReviewInput} id='reviewSection'>
+          <form onSubmit={this.handleSubmitReview}  id='reviewSection'>
             <div className="row">
               <div className="col-md-12">                 
                 <div className="form-group">
@@ -283,7 +298,7 @@ class singleDorm extends Component {
                         emptyStarColor = "#564D80"
                       />           
                   </div>
-                  <textarea className="form-control" rows="5" id="review" type="review" required></textarea>    
+                  <textarea className="form-control" rows="5" id="review" name="comment" value={this.state.comment}  onChange={this.handleChangeOnReviewInput}/>  
                 </div>
               </div>
             </div>
