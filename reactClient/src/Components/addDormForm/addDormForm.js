@@ -157,7 +157,7 @@ class addDormForm extends React.Component {
         payload.features.laundry = event.target.laundry.value
         payload.features.internet = event.target.internet.value
         payload.features.kitchen = event.target.kitchen.value
-        alert(Object.entries(payload));
+        alert(JSON.stringify(payload))
     }
 
 
@@ -186,6 +186,8 @@ class addDormForm extends React.Component {
                                     <div className="col-sm-6 mb-2">
                                         <label>Building:</label>
                                         <select required className="custom-select" name="building">
+                                            <option value="" selected disabled hidden>Choose a Building</option>
+                                            <option value="NA">N/A</option>
                                             {buildingOptions.map((x) => <option key={x} value={x}>{x}</option>)}
                                         </select>
                                     </div>
