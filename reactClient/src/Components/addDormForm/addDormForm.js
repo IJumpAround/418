@@ -1,255 +1,366 @@
 import React from 'react'
-import {reduxForm, Field,} from 'redux-form';
-
-const onSubmit = values => {
-  alert(JSON.stringify(values));
-}
 
 class addDormForm extends React.Component {
-  constructor(props) {
-    super(props);
-    let passed = props.location.dormFormProps
-    console.log('passed', passed)
-    try {
-      this.state = {
-        coords: passed.coords
-      }
-    } catch (ex) {
-      this.state = {}
-      console.log(ex)
+    constructor(props) {
+        super(props);
+        let passed = props.location.dormFormProps
+        console.log('passed', passed)
+
+        try {
+            this.state = {
+                coords: passed.coords,
+                formDefaults: {}
+            }
+        } catch (ex) {
+            this.state = {
+                coords: null,
+                formDefaults: {}
+            }
+            console.log(ex)
+        }
+
     }
-  }
 
-  componentDidMount() {
-    console.log(this.state)
-    if (this.props.location.dormFormProps) {
-      this.props.location.dormFormProps.bingFn(this.state.coords, (address) => {
-        this.setState({address: address})
-      })
+    componentWillMount() {
+        if (this.state.coords != null) {
+            this.bingReverseGeo(this.state.coords, (address) => {
+                this.storeAddressFields(address)
+            })
+        }
     }
-    else {
-      console.log('page was not redirected from search page')
+
+    // Use an address to get coordinates from bing's api.
+    bingGeo = (address, callback) => {
+        fetch(`http://dev.virtualearth.net/REST/v1/Locations/${address}&maxResults=1&key=AtVpew29wF6vGwfKIVd-IfeNta0fA4gmM9Kuz_hoGNIl25-oNfo3jML_zaPTTZfF`)
+            .then((response) => {
+                response.json()
+                    .then((res) => {
+                        let coords = res.resourceSets[0].resources[0].point.coordinates
+                        coords = {
+                            lat: coords[0],
+                            long: coords[1]
+                        }
+                        console.log('raw response geolocate ', res)
+                        console.log('coords from geolocate', coords)
+                        callback(coords)
+                    })
+            })
     }
-  }
+
+    // Use bing api to get an address from a latitude/longitude
+    bingReverseGeo = (latlng, callback) => {
+        console.log('reversegeo latlng input', latlng)
+        fetch(`http://dev.virtualearth.net/REST/v1/Locations/${latlng.lat},${latlng.lng}?o=json&key=AtVpew29wF6vGwfKIVd-IfeNta0fA4gmM9Kuz_hoGNIl25-oNfo3jML_zaPTTZfF`)
+            .then((response) => {
+                response.json()
+                    .then((res) => {
+                        console.log('reversegeo', res)
+                        let addr = res.resourceSets[0].resources[0].address
+                        callback(addr)
+                    })
+            })
+            .catch((error) => {
+                console.log('error', error)
+            })
+    }
+
+    storeAddressFields(address) {
+        console.log('address', address)
+        let city = address.adminDistrict2
+
+        if (city != null) {
+            city = city.split(' ')[0]
+        }
+        this.setState({
+            formDefaults: {
+                address_1: address.addressLine || '',
+                state: address.adminDistrict || '',
+                city: city || '',
+                zip: address.postalCode || ''
+            }
+        })
 
 
-  onSubmit = values => {
-    alert(JSON.stringify(values));
-  }
+    }
 
-  render() {
+    onSubmit = (event) => {
+        event.preventDefault()
+        console.log(event.target)
+        if(this.state.coords == null){
+            alert("Error, coordinates are missing from state. Maybe you didn't reach this page via the search page?")
+            return
+        }
+        let address, city, state, zip
+        address = event.target.address.value
+        city = event.target.city.value
+        state = event.target.state.value
+        zip = event.target.zip_code.value
 
-    return (
-        <div className="container">
-          <div className="card">
-            <div className="card-body">
-              <h3 className="card-title text-center">Add Your Dorm</h3>
-              <form className="card-text" onSubmit={this.onSubmit}>
-                <div className="form-group">
-                  <div className="row">
-                    <div className="col-sm-4">
-                      <label>Quad:</label>
-                      <Field name="quad" className="custom-select mb-2" defaultValue={'Select Quad'} component="select">
-                        <option value="Select Quad">Select Quad</option>
-                        <option value="Colonial">Colonial</option>
-                        <option value="Dutch">Dutch</option>
-                        <option value="Indian">Indian</option>
-                        <option value="State">State</option>
-                        ></Field>
+        // Construct location portion of payload
+        let payload = {
+            address: address + ", " + city + ", " + state + ", " + zip,
+            room_num: event.target.room_num.value,
+            building: event.target.building.value,
+            quad: event.target.quad.value,
+            floor: event.target.floor.value,
+            latitude: this.state.coords.lat,
+            longitude: this.state.coords.long,
+            features: {}
+        }
+
+
+        // Features & Room
+        payload.features.room_type = event.target.room_type.value
+        payload.features.bathroom = event.target.bathroom.value
+        payload.features.ac = event.target.ac.value
+        payload.features.gym = event.target.gym.value
+        payload.features.laundry = event.target.laundry.value
+        payload.features.internet = event.target.internet.value
+        payload.features.kitchen = event.target.kitchen.value
+        alert(Object.entries(payload));
+    }
+
+
+    render() {
+        return (
+            <div className="container">
+                <div className="card">
+                    <div className="card-body">
+                        <h3 className="card-title text-center">Add Your Dorm</h3>
+                        <form className="card-text" onSubmit={this.onSubmit}>
+                            <div className="form-group">
+                                <div className="row">
+                                    <div className="col-sm-4">
+                                        <label>Quad:</label>
+                                        <select required name="quad" className="custom-select mb-2">
+                                            <option value="" selected disabled hidden>Choose a quad</option>
+                                            <option value="Colonial">Colonial</option>
+                                            <option value="Dutch">Dutch</option>
+                                            <option value="Indian">Indian</option>
+                                            <option value="State">State</option>
+                                            <option value="Off Campus">Off Campus</option>
+                                            ></select>
+                                    </div>
+                                </div>
+                                <div className="row">
+                                    <div className="col-sm-6 mb-2">
+                                        <label>Building:</label>
+                                        <input required type="text" className="form-control" name="building"/>
+                                    </div>
+                                    <div className="col-sm-2">
+                                        <label>Floor #:</label>
+                                        <input required type="number" className="form-control" name="floor"/>
+                                    </div>
+                                    <div className="col-sm-2">
+                                        <label>Room #:</label>
+                                        <input required type="number" className="form-control" name="room_num"
+
+                                        />
+                                    </div>
+                                </div>
+                                <div className="row">
+                                    <div className="col-sm-7">
+                                        <label>Address:</label>
+                                        <input required type="text" className="form-control mb-2" name="address"
+                                               defaultValue={this.state.formDefaults.address_1}/>
+                                    </div>
+                                    <div className="col-sm-3">
+                                        <label>Zip:</label>
+                                        <input required type="number" className="form-control" name="zip_code"
+                                               defaultValue={this.state.formDefaults.zip}
+                                        />
+                                    </div>
+                                </div>
+                                <div className="row">
+                                    <div className="col-sm-2">
+                                        <label>State:</label>
+                                        <input required type="text" className="form-control mb-2" name="state"
+                                               defaultValue={this.state.formDefaults.state}/>
+                                    </div>
+                                    <div className="col-sm-3">
+                                        <label>City:</label>
+                                        <input required type="text" className="form-control" name="city"
+                                               defaultValue={this.state.formDefaults.city}/>
+                                    </div>
+                                </div>
+                                <div className="row">
+                                    <div className="col-sm-4">
+                                        <label>Room Type:</label>
+                                        <select required name="room_type" className="custom-select mb-2">
+                                            <option value="" selected disabled hidden>Select Type</option>
+                                            <option value="Single">Single</option>
+                                            <option value="Double">Double</option>
+                                            <option value="Triple">Triple</option>
+                                            <option value="Quad">Quad</option>
+                                            ></select>
+                                    </div>
+                                </div>
+                                <div className="row">
+                                    <div className="col-sm-5">
+                                        <label className="">Dorm Image:</label>
+                                        <input type="file" className="mb-2 mt-2" id="dorm_image" name="dorm_image"
+                                        />
+                                    </div>
+                                </div>
+                                <div className="row mt-3">
+                                    <div className="col-sm-4">
+                                        <label>Bathroom:</label>
+                                        <div className='form-check'>
+                                            <input type="radio"
+                                                   className="form-check-input"
+                                                   required
+                                                   name="bathroom"
+                                                   id="bath_dorm"
+                                                   value='In Dorm'
+                                            />
+                                            <label className="form-check-label" htmlFor='bath_floor'>In Dorm</label>
+                                        </div>
+                                        <div className='form-check'>
+                                            <input type="radio"
+                                                   className="form-check-input"
+                                                   required
+                                                   name="bathroom"
+                                                   id="bath_floor"
+                                                   value='On Floor'
+                                            />
+                                            <label className="form-check-label">On Floor</label>
+                                        </div>
+                                    </div>
+                                    <div className="col-sm-4">
+                                        <label>Air Conditioning:</label>
+                                        <div className="form-check">
+                                            <input type="radio"
+                                                   className='form-check-input'
+                                                   required
+                                                   name="ac"
+                                                   id="ac_yes"
+                                                   value={true}
+                                            />
+                                            <label className="form-check-label">Yes</label>
+                                        </div>
+                                        <div className="form-check">
+                                            <input type="radio"
+                                                   className='form-check-input'
+                                                   required
+                                                   name="ac"
+                                                   id="ac_no"
+                                                   value={false}
+
+                                            />
+                                            <label className="form-check-label">No</label>
+                                        </div>
+                                    </div>
+                                    <div className="col-sm-4 mb-4">
+                                        <label>Fitness Area:</label>
+
+                                        <div className='form-check'>
+                                            <input type="radio"
+                                                   className="form-check-input"
+                                                   required
+                                                   name="gym"
+                                                   id="gym_yes"
+                                                   value={true}
+                                            />
+                                            <label className="form-check-label">Yes</label>
+                                        </div>
+
+                                        <div className='form-check'>
+                                            <input type="radio"
+                                                   className='form-check-input'
+                                                   required
+                                                   name="gym"
+                                                   id="gym_no"
+                                                   value={false}
+                                            />No
+                                        </div>
+                                    </div>
+                                    <div className="col-sm-4">
+                                        <label>Laundry:</label>
+                                        <div className='form-check'>
+                                            <input type="radio"
+                                                   className='form-check-input'
+                                                   required
+                                                   name="laundry"
+                                                   id="laundry_dorm"
+                                                   value='In Dorm'
+                                            />
+                                            <label className="form-check-label">In Dorm</label>
+                                        </div>
+                                        <div className='form-check'>
+                                            <input type="radio"
+                                                   className='form-check-input'
+                                                   required
+                                                   name="laundry"
+                                                   id="laundry_floor"
+                                                   value='On Floor'
+                                            />
+                                            <label className="form-check-label">On Floor</label>
+                                        </div>
+                                    </div>
+                                    <div className="col-sm-4">
+                                        <label>Internet:</label>
+                                            <div className='form-check'>
+                                                <input type="radio"
+                                                       className='form-check-input'
+                                                       required
+                                                       name="internet"
+                                                       id="wifi"
+                                                       value='Wifi'
+                                                /> <label className="form-check-label">Wifi</label>
+                                            </div>
+
+                                            <div className='form-check'>
+                                                <input type="radio"
+                                                       className='form-check-input'
+                                                       required
+                                                       name="internet"
+                                                       id="ethernet"
+                                                       value='Ethernet'
+                                                /> <label className="form-check-label">Ethernet</label>
+                                            </div>
+                                            <div className='form-check'>
+                                                <input type="radio"
+                                                       className='form-check-input'
+                                                       required
+                                                       name="internet"
+                                                       id="internet_both"
+                                                       value='Both'
+                                                /><label className="form-check-label">Both</label>
+                                            </div>
+                                    </div>
+                                    <div className="col-sm-4">
+                                        <label>Dining:</label>
+                                            <div className='form-check'>
+                                                <input type="radio"
+                                                       className='form-check-input'
+                                                       required
+                                                       name="kitchen"
+                                                       id="dining_hall"
+                                                       value='Dining Hall'
+                                                /><label className="form-check-label">Dining Hall</label>
+                                            </div>
+                                            <div className='form-check'>
+                                                <input type="radio"
+                                                       className='form-check-input'
+                                                       required
+                                                       name="kitchen"
+                                                       id="dorm_kitchen"
+                                                       value='In Dorm Kitchen'
+                                                /><label className="form-check-label">In Dorm Kitchen</label>
+                                            </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="align-items-center">
+                                <button className="btn btn-dark">Submit</button>
+                            </div>
+                        </form>
                     </div>
-                  </div>
-                  <div className="row">
-                    <div className="col-sm-6 mb-2">
-                      <label>Building:</label>
-                      <Field type="text" className="form-control" name="building" component="input"/>
-                    </div>
-                    <div className="col-sm-2">
-                      <label>Floor #:</label>
-                      <Field type="number" className="form-control" name="floor" component="input"/>
-                    </div>
-                    <div className="col-sm-2">
-                      <label>Room #:</label>
-                      <Field type="number" className="form-control" name="room_number" component="input"/>
-                    </div>
-                  </div>
-                  <div className="row">
-                    <div className="col-sm-7">
-                      <label>Address:</label>
-                      <Field type="text" className="form-control mb-2" name="address" component="input"/>
-                    </div>
-                    <div className="col-sm-3">
-                      <label>Zip:</label>
-                      <Field type="number" className="form-control" name="zip_code" component="input"/>
-                    </div>
-                  </div>
-                  <div className="row">
-                    <div className="col-sm-2">
-                      <label>State:</label>
-                      <Field type="text" className="form-control mb-2" name="state" component="input"/>
-                    </div>
-                    <div className="col-sm-3">
-                      <label>City:</label>
-                      <Field type="text" className="form-control" name="city" component="input"/>
-                    </div>
-                  </div>
-                  <div className="row">
-                    <div className="col-sm-4">
-                      <label>Room Type:</label>
-                      <Field name="room_type" className="custom-select mb-2" defaultValue={'Select Type'}
-                             component="select">
-                        <option value="Select Type">Select Type</option>
-                        <option value="Single">Single</option>
-                        <option value="Double">Double</option>
-                        <option value="Triple">Triple</option>
-                        <option value="Quad">Quad</option>
-                        ></Field>
-                    </div>
-                  </div>
-                  <div className="row">
-                    <div className="col-sm-5">
-                      <label className="">Dorm Image:</label>
-                      <Field type="file" className="mb-2 mt-2" id="dorm_image" name="dorm_image" component="input"/>
-                    </div>
-                  </div>
-                  <div className="row mt-3">
-                    <div className="col-sm-4">
-                      <label>Bathroom:</label>
-                      <div className="row">
-                        <div>
-                          <Field type="checkbox"
-                                 name="bath_dorm"
-                                 id="bath_dorm"
-                                 component="input"/>In Dorm
-                        </div>
-                      </div>
-                      <div className="row">
-                        <div>
-                          <Field type="checkbox"
-                                 name="bath_floor"
-                                 id="bath_floor"
-                                 component="input"/>On Floor
-                        </div>
-                      </div>
-                    </div>
-                    <div className="col-sm-4">
-                      <label>Air Conditioning:</label>
-                      <div className="row">
-                        <div>
-                          <Field type="checkbox"
-                                 name="ac_yes"
-                                 id="ac_yes"
-                                 component="input"/>Yes
-                        </div>
-                      </div>
-                      <div className="row">
-                        <div>
-                          <Field type="checkbox"
-                                 name="ac_no"
-                                 id="ac_no"
-                                 component="input"/>No
-                        </div>
-                      </div>
-                    </div>
-                    <div className="col-sm-4 mb-4">
-                      <label>Fitness Area:</label>
-                      <div className="row">
-                        <div>
-                          <Field type="checkbox"
-                                 name="gym_yes"
-                                 id="gym_yes"
-                                 component="input"/>Yes
-                        </div>
-                      </div>
-                      <div className="row">
-                        <div>
-                          <Field type="checkbox"
-                                 name="gym_no"
-                                 id="gym_no"
-                                 component="input"/>No
-                        </div>
-                      </div>
-                    </div>
-                    <div className="col-sm-4">
-                      <label>Laundry:</label>
-                      <div className="row">
-                        <div>
-                          <Field type="checkbox"
-                                 name="laundry_dorm"
-                                 id="laundry_dorm"
-                                 component="input"/>In Dorm
-                        </div>
-                      </div>
-                      <div className="row">
-                        <div>
-                          <Field type="checkbox"
-                                 name="laundry_floor"
-                                 id="laundry_floor"
-                                 component="input"/>On Floor
-                        </div>
-                      </div>
-                    </div>
-                    <div className="col-sm-4">
-                      <label>Internet:</label>
-                      <div className="row">
-                        <div>
-                          <Field type="checkbox"
-                                 name="wifi"
-                                 id="wifi"
-                                 component="input"/>Wifi
-                        </div>
-                      </div>
-                      <div className="row">
-                        <div>
-                          <Field type="checkbox"
-                                 name="ethernet"
-                                 id="ethernet"
-                                 component="input"/>Ethernet
-                        </div>
-                      </div>
-                      <div className="row">
-                        <div>
-                          <Field type="checkbox"
-                                 name="internet_both"
-                                 id="internet_both"
-                                 component="input"/>Both
-                        </div>
-                      </div>
-                    </div>
-                    <div className="col-sm-4">
-                      <label>Dinning:</label>
-                      <div className="row">
-                        <div>
-                          <Field type="checkbox"
-                                 name="dinning_hall"
-                                 id="dinning_hall"
-                                 component="input"/>Dinning Hall
-                        </div>
-                      </div>
-                      <div className="row">
-                        <div>
-                          <Field type="checkbox"
-                                 name="dorm_kitchen"
-                                 id="dorm_kitchen"
-                                 component="input"/>In Dorm Kitchen
-                        </div>
-                      </div>
-                    </div>
-                  </div>
                 </div>
-                <div className="align-items-center">
-                  <button className="btn btn-dark">Submit</button>
-                </div>
-              </form>
             </div>
-          </div>
-        </div>
 
-    );
-  }
+        );
+    }
 }
 
- 
-export default reduxForm({ //Wrapping our component with reduxForm
-  form: 'add-dorm-form', //config form with unique name
-  onSubmit, //created own onSubmit 
-})(addDormForm);
+export default addDormForm
