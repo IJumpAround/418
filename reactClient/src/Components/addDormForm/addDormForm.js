@@ -3,21 +3,21 @@ import axios from '../../utils/axiosInstance'
 import {options as buildingOptions} from "./buildingOptions";
 
 class addDormForm extends React.Component {
-    test = true
+    test = false // Disables querying geocode api when true
     constructor(props) {
         super(props);
-        let passed = props.location.dormFormProps
-        console.log('passed', passed)
 
         try {
             this.state = {
-                coords: passed.coords,
-                formDefaults: {}
+                coords: props.location.dormFormProps.coords,
+                formDefaults: {},
+                offCampus: false
             }
         } catch (ex) {
             this.state = {
                 coords: null,
-                formDefaults: {}
+                formDefaults: {},
+                offCampus: false,
             }
             console.log(ex)
         }
@@ -25,6 +25,7 @@ class addDormForm extends React.Component {
     }
 
     componentWillMount() {
+        // Only geocode if we have coordinates
         if (this.state.coords != null) {
             this.bingReverseGeo(this.state.coords, (address) => {
                 this.storeAddressFields(address)
@@ -53,6 +54,7 @@ class addDormForm extends React.Component {
     // Use bing api to get an address from a latitude/longitude
     bingReverseGeo = (latlng, callback) => {
         console.log('reversegeo latlng input', latlng)
+        // Use test data to populate form if testing is enabled
         if(this.test) {
             callback({
                 addressLine: 'test address',
@@ -63,6 +65,7 @@ class addDormForm extends React.Component {
             return
         }
 
+        // Otherwise, query Bing's api
         fetch(`http://dev.virtualearth.net/REST/v1/Locations/${latlng.lat},${latlng.lng}?o=json&key=AtVpew29wF6vGwfKIVd-IfeNta0fA4gmM9Kuz_hoGNIl25-oNfo3jML_zaPTTZfF`)
             .then((response) => {
                 response.json()
@@ -77,7 +80,7 @@ class addDormForm extends React.Component {
             })
     }
 
-    // set state from address values we got
+    // set state from resulting reverse geocoded address.
     storeAddressFields(address) {
         console.log('address', address)
         let city = address.adminDistrict2
@@ -97,7 +100,8 @@ class addDormForm extends React.Component {
 
     }
 
-    // Check if the address form fields have changed from the intitially populated values
+    // Compare geocoded address with values in the form. If they are different, then the user has modified the address
+    // portion of the form
     formAddressUnchanged(address) {
         let defaults = this.state.formDefaults
         for(let prop in address) {
@@ -108,6 +112,20 @@ class addDormForm extends React.Component {
             }
         }
         return true
+    }
+
+    // Enable or disable room type and building selections if "off campus" is chosen.
+    quadOnChange = (event) => {
+        let value = event.target.value
+
+        if(value === "Off Campus") {
+            this.setState({offCampus: true})
+        }
+        else {
+            if(this.state.offCampus === true) {
+                this.setState({offCampus: false})
+            }
+        }
     }
 
     onSubmit = (event) => {
@@ -134,7 +152,8 @@ class addDormForm extends React.Component {
             state: state,
             zip: zip
         })
-        // Either setup to get new coordinates, or just don't allow changing
+
+        // Either set up to get new coordinates, or just don't allow changing
         if(!addressUnchanged) {
             alert('address form has been changed from the initial default values')
             return
@@ -144,7 +163,7 @@ class addDormForm extends React.Component {
         let payload = {
             address: address + ", " + city + ", " + state + ", " + zip,
             room_num: event.target.room_num.value,
-            building: event.target.building.value,
+            building: this.state.offCampus ? 'NA' : event.target.building.value,
             quad: event.target.quad.value,
             floor: event.target.floor.value,
             latitude: this.state.coords.lat,
@@ -154,7 +173,7 @@ class addDormForm extends React.Component {
 
 
         // Features & Room
-        payload.features.room_type = event.target.room_type.value
+        payload.features.room_type = this.state.offCampus ? "NA" : event.target.room_type.value
         payload.features.bathroom = event.target.bathroom.value
         payload.features.ac = event.target.ac.value
         payload.features.gym = event.target.gym.value
@@ -162,28 +181,23 @@ class addDormForm extends React.Component {
         payload.features.internet = event.target.internet.value
         payload.features.kitchen = event.target.kitchen.value
 
-        alert(JSON.stringify(payload))
         console.log(JSON.stringify(payload))
-
         this.postToApi(payload)
     }
 
+    // add dorm to mysql database via flask backend
     async postToApi(payload) {
         let result = await axios.post('/dorms', payload)
-        console.log(`result ${result}`)
         let message
         if(result.status === 200){
             //success
-
-            alert(`Success! navigating to single dorm page ${result.data}`)
-            let dorm_id = result.data.payload.dorm_id
-            window.location.pathname = `/singleDorm/${dorm_id}`
+            console.log(`Success! navigating to single dorm page ${result.data}`)
+            window.location.pathname = `/singleDorm/${result.data.payload.dorm_id}`
         }
         else{
             alert(`Error adding dorm: ${result.data.payload.message}`)
         }
     }
-
 
     render() {
         return (
@@ -196,7 +210,8 @@ class addDormForm extends React.Component {
                                 <div className="row">
                                     <div className="col-sm-4">
                                         <label>Quad:</label>
-                                        <select required name="quad" className="custom-select mb-2">
+                                        <select required name="quad" className="custom-select mb-2"
+                                        onChange={this.quadOnChange}>
                                             <option value="" selected disabled hidden>Choose a quad</option>
                                             <option value="Colonial">Colonial</option>
                                             <option value="Dutch">Dutch</option>
@@ -209,7 +224,8 @@ class addDormForm extends React.Component {
                                 <div className="row">
                                     <div className="col-sm-6 mb-2">
                                         <label>Building:</label>
-                                        <select required className="custom-select" name="building">
+                                        <select required className="custom-select" name="building" id="building_select"
+                                        disabled={this.state.offCampus}>
                                             <option value="" selected disabled hidden>Choose a Building</option>
                                             <option value="NA">N/A</option>
                                             {buildingOptions.map((x) => <option key={x} value={x}>{x}</option>)}
@@ -254,7 +270,8 @@ class addDormForm extends React.Component {
                                 <div className="row">
                                     <div className="col-sm-4">
                                         <label>Room Type:</label>
-                                        <select required name="room_type" className="custom-select mb-2">
+                                        <select required name="room_type" className="custom-select mb-2"
+                                        disabled={this.state.offCampus}>
                                             <option value="" selected disabled hidden>Select Type</option>
                                             <option value="Single">Single</option>
                                             <option value="Double">Double</option>
