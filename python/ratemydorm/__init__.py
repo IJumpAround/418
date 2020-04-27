@@ -2,6 +2,8 @@ from flask import Flask
 from flask_cors import CORS
 import logging
 
+config = {}
+
 
 def create_app(test_config=None):
     app = Flask(__name__, instance_relative_config=True)
@@ -20,6 +22,11 @@ def create_app(test_config=None):
     else:
         app.config.from_mapping(test_config)
 
+    config['aws_access_key_id'] = app.config.get('AWS_ACCESS_KEY_ID')
+    config['aws_secret_access_key'] = app.config.get('AWS_SECRET')
+    config['aws_region'] = 'us-east-2'
+    config['aws_bucket'] = app.config.get('AWS_BUCKET')
+
     # Import routes
     from ratemydorm.routes import auth
     from ratemydorm.routes import example
@@ -27,6 +34,8 @@ def create_app(test_config=None):
     from ratemydorm.routes import user
     from ratemydorm.routes import searchpage
     from ratemydorm.routes import dorms
+    from ratemydorm.routes import s3
+    from ratemydorm.routes import images
 
     # Register routes
     app.register_blueprint(auth.bp)
@@ -35,6 +44,8 @@ def create_app(test_config=None):
     app.register_blueprint(user.bp)
     app.register_blueprint(searchpage.bp)
     app.register_blueprint(dorms.bp)
+    app.register_blueprint(s3.bp)
+    app.register_blueprint(images.bp)
 
     # Setup project logger
     logger = logging.getLogger('main')

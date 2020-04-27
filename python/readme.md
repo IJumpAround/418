@@ -70,7 +70,7 @@ result = {
 ### Dorm
 
 #### Add Dorm
-* `/dorms`
+* Endpoint: `/dorms`
 * Method **POST**
 
 Example Request:
@@ -78,20 +78,29 @@ Example Request:
 """Endpoint for dorm creation
     Example post request:
     {
-        "latitude": 73.33333,
-        "longitude": "77.444j4f4",
-        "room_num": 120,
-        "floor": 2,
-        "building": "Building Name",
-        "quad": "Quad Name",
-        "address": "address information"
+      "address": "test address, test, test state, 00000",
+      "room_num": "3",
+      "building": "Adirondack Hall",
+      "quad": "Colonial",
+      "floor": "1",
+      "latitude": 42.6878856096061,
+      "longitude": -73.82490425053925,
+      "features": {
+        "room_type": "Triple",
+        "bathroom": "On Floor",
+        "ac": "false",
+        "gym": "false",
+        "laundry": "On Floor",
+        "internet": "Both",
+        "kitchen": "In Dorm Kitchen"
+        }
     }
 """    
 ```
 
 
 #### Add review
-* `/dorms/review`
+* Endpoint: `/dorms/review`
 * Method = **POST**
 
 Example request data:
@@ -104,4 +113,74 @@ Example request data:
   review_text: 'some review text'
 }
 """
+```
+
+
+### Images
+
+
+#### S3 Url
+* Endpoint `/s3Upload`
+* Method = **POST**
+
+Example request
+```json
+{
+  "filename": "name of file being uploaded"
+}
+```
+
+#### Retrieve Image URL
+* Endpoint: `/images`
+* Method = **GET**
+ 
+Set image_type to either `profile` or `dorm` depending on which you want to retrieve.
+entity_id will be either the dorm_id or user_id depending on your choice of image_type  
+
+Example Request: 
+```json
+{
+  "entity_id": 22,
+  "image_type": "profile"
+}
+```
+
+Example Response:
+```json
+{
+  "message": null,
+  "payload": {
+    "urls": ["mock profile image entry"]
+  }
+}
+```
+
+###Storing Image URL
+* Endpoint: `/images`
+* Method = **POST**
+
+####Profile
+Request Structure:
+```json
+{
+  "entity_id": 23,
+  "url": "test_url",
+  "image_type": "profile"
+}
+```
+  
+
+####Dorm 
+Dorms can have multiple images and the table stores both dorm_id and user_id, so both are required here. 
+For dorms, we store each id as a subfield to the entity_id field
+Request Structure:
+```json
+{
+  "entity_id": {
+    "user_id": 23,
+    "dorm_id": 17
+  },
+  "url": "test_ur",
+  "image_type": "dorm"
+}
 ```

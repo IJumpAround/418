@@ -3,15 +3,11 @@ import OpenMap from './OpenMap';
 import DynamicCards from './DynamicCards';
 import {Link, useLocation} from 'react-router-dom';
 
-
  class SearchPage extends Component {
 	constructor(props){
 		super(props);
 		this.state = { 
-			cardData: [
-			
-			],
-
+			cardData: [],
 			passedCoordsFromMap: {
 				lat: 42.686063,
 				lng: -73.824688,
@@ -51,21 +47,7 @@ import {Link, useLocation} from 'react-router-dom';
 		this.props.coordinates(this.state.passedCoordsFromMap);
 	  }
 
-	 bingReverseGeo = (latlng, callback) => {
-		 console.log('reversegeo latlng input', latlng)
-		 fetch(`http://dev.virtualearth.net/REST/v1/Locations/${latlng.lat},${latlng.lng}?o=json&key=AtVpew29wF6vGwfKIVd-IfeNta0fA4gmM9Kuz_hoGNIl25-oNfo3jML_zaPTTZfF`)
-			 .then((response) => {
-				 response.json()
-					 .then((res) => {
-						 console.log('reversegeo', res)
-					 	let addr = res.resourceSets[0].resources[0].address
-						 callback(addr)
-					 })
-			 })
-			 .catch((error) => {
-				 console.log('error', error)
-			 })
-	 }
+
 
   render() {
 	const mystyle = {
@@ -87,7 +69,6 @@ import {Link, useLocation} from 'react-router-dom';
 					pathname: '/addDormForm',
 					dormFormProps: {
 						coords: this.state.passedCoordsFromMap,
-						bingFn: this.bingReverseGeo
 					}
 					// This link sets the background in location state.
 					}}>

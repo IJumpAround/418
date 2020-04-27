@@ -83,3 +83,30 @@ class TestEndpoints(FunctionalTestClient):
 
         result = self.get('/user/profile', query)
         self.assertEqual({}, result.get('payload'))
+
+    def test_get_image(self):
+        params ={'entity_id': 10, 'image_type': 'dorm'}
+        params2 = {'entity_id': 22, 'image_type': 'profile'}
+        expected = ['asecondimageforthesamedormbythesameuser','testurl']
+        expected2 = ['mock profile image entry']
+
+        result = self.get('/images', params)
+        result2 = self.get('/images', params2)
+        self.assertCountEqual(result['payload']['urls'], expected)
+        self.assertCountEqual(result2['payload']['urls'], expected2)
+
+    @unittest.skip
+    def test_store_profile_image(self):
+        data = {'entity_id': 23, 'url': 'test_url', 'image_type': 'profile'}
+        expected = 'Stored image url'
+
+        result = self.post('/images', data)
+        self.assertEqual(result['message'], expected)
+
+    @unittest.skip
+    def test_store_dorm_image(self):
+        data = {'entity_id': {'user_id': 23, 'dorm_id': 17}, 'url':'test_ur', 'image_type': 'dorm'}
+        expected = 'Stored image url'
+
+        result = self.post('/images', data)
+        self.assertEqual(result['message'], expected)

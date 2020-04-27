@@ -7,10 +7,10 @@ from mysql.connector.errors import IntegrityError, InterfaceError
 from ratemydorm.utils.api_response import RateMyDormRedirectResponse
 from ratemydorm.sql.db_connect import get_connection
 
-
 bp = Blueprint('auth', __name__, url_prefix='/auth')
 
 logger = logging.getLogger('main')
+
 
 def exclude_from_before_request(func):
     func._exclude_from_loading = True
@@ -185,6 +185,7 @@ def logout():
     redirect_response = RateMyDormRedirectResponse(location='/', data="Logged Out").response
     return redirect_response
 
+
 def login_required(view):
     @functools.wraps(view)
     def wrapped_view(**kwargs):
@@ -192,4 +193,5 @@ def login_required(view):
             return "not authorized", 401
 
         return view(**kwargs)
+
     return wrapped_view

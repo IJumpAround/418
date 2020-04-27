@@ -9,6 +9,7 @@ bp = Blueprint('example', __name__, url_prefix='/example')
 
 logger = logging.getLogger('main')
 
+
 # Creates endpoint at baseurl/example/
 @bp.route('/', methods=['GET', 'POST'])
 def hello_world():
