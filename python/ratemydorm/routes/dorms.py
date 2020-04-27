@@ -6,7 +6,6 @@ from marshmallow.exceptions import ValidationError
 from mysql.connector.errors import Error, IntegrityError
 
 from ratemydorm.schemas.add_dorm import AddDormRequestSchema
-from ratemydorm.models.dorm import Dorm
 from ratemydorm.sql.db_connect import get_connection
 from ratemydorm.utils.data_conversion_functions import MalformedRequestException
 from ratemydorm.utils.api_response import RateMyDormApiResponse, RateMyDormMessageResponse, ApiResponse
@@ -65,7 +64,7 @@ def create_dorm() -> ApiResponse:
         connection.rollback()
         connection.close()
         return RateMyDormMessageResponse(400, "Duplicate dorm").response
-    
+
     # Insert into Dorm table
     try:
         cursor.execute(insert, query_params)

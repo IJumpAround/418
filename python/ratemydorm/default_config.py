@@ -10,5 +10,5 @@ class Config:
     ENV = 'production'
     PORT = '5001'
     BROWSER_PORT = '3000'
-
     LOG_LEVEL = 'INFO'
+    AWS_BUCKET = 'ratemydorm'
