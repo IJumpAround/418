@@ -18,7 +18,6 @@ class OpenMap extends React.Component {
             lat: 42.686063,
             lng: -73.824688,
             },
-          currentAddress: '',
           cardData:[], 
           
       }
@@ -26,38 +25,15 @@ class OpenMap extends React.Component {
   
 }
 
-
 passUpCardData = () => {
   this.props.passCardsFromOpenMap(this.state.cardData);
 }
 
 passUpCoord = () => {
+    console.log('calling passCoordprop in openmap.js')
   this.props.passCoordFromOpenMap(this.state.latlng);
 }
 
-passUpAddress = () => {
-  this.props.passAddressFromOpenMap(this.state.currentAddress);
-}
- 
-bingReverseGeo = () => {
-  fetch(`http://dev.virtualearth.net/REST/v1/Locations/${this.state.latlng.lat},${this.state.latlng.lng}?o=json&key=AtVpew29wF6vGwfKIVd-IfeNta0fA4gmM9Kuz_hoGNIl25-oNfo3jML_zaPTTZfF`)/* , {
-    method: 'GET',
-    mode: 'no-cors',
-    headers: {
-      'Access-Control-Allow-Origin' : '*'
-    }
-  }) */
-    .then((response) => {
-      response.json()
-        .then((res) => {
-          this.setState({currentAddress: res.resourceSets[0].resources[0].address})
-        })
-    })
-    .catch((error) => {
-      console.log('error', error)
-      })
-
-}
 
 cardLoadHandler = () =>  {
   console.log("marker location changed");
@@ -97,10 +73,8 @@ handleSearchEnd = (event) => {
     };
     
   componentDidMount(){
-    this.bingReverseGeo()
     this.cardLoadHandler()
     this.passUpCoord()
-    this.passUpAddress()  
   }
 
 render(){
@@ -124,11 +98,8 @@ render(){
             onClick={(event) =>
               {
               this.setMarker(event)
-              this.bingReverseGeo()
               this.passUpCoord()
-              this.passUpAddress()
               this.cardLoadHandler()
-              
               }
             }
             onMoveEnd={ (event) =>
