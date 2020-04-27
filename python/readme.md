@@ -70,7 +70,7 @@ result = {
 ### Dorm
 
 #### Add Dorm
-* `/dorms`
+* Endpoint: `/dorms`
 * Method **POST**
 
 Example Request:
@@ -100,7 +100,7 @@ Example Request:
 
 
 #### Add review
-* `/dorms/review`
+* Endpoint: `/dorms/review`
 * Method = **POST**
 
 Example request data:
@@ -120,7 +120,7 @@ Example request data:
 
 
 #### S3 Url
-* /s3Upload
+* Endpoint `/s3Upload`
 * Method = **POST**
 
 Example request
@@ -130,5 +130,57 @@ Example request
 }
 ```
 
+#### Retrieve Image URL
+* Endpoint: `/images`
+* Method = **GET**
+ 
+Set image_type to either `profile` or `dorm` depending on which you want to retrieve.
+entity_id will be either the dorm_id or user_id depending on your choice of image_type  
 
-#### Storing Image URL
+Example Request: 
+```json
+{
+  "entity_id": 22,
+  "image_type": "profile"
+}
+```
+
+Example Response:
+```json
+{
+  "message": null,
+  "payload": {
+    "urls": ["mock profile image entry"]
+  }
+}
+```
+
+###Storing Image URL
+* Endpoint: `/images`
+* Method = **POST**
+
+####Profile
+Request Structure:
+```json
+{
+  "entity_id": 23,
+  "url": "test_url",
+  "image_type": "profile"
+}
+```
+  
+
+####Dorm 
+Dorms can have multiple images and the table stores both dorm_id and user_id, so both are required here. 
+For dorms, we store each id as a subfield to the entity_id field
+Request Structure:
+```json
+{
+  "entity_id": {
+    "user_id": 23,
+    "dorm_id": 17
+  },
+  "url": "test_ur",
+  "image_type": "dorm"
+}
+```
