@@ -1,6 +1,10 @@
 from typing import List
 from ratemydorm.sql.db_connect import get_connection
 
+"""
+Don't import and use these, these were for tests and some things may not work properly when importing because of the
+connection being opened in this file.
+"""
 
 def get_feature_ids(featureList: List) -> List[int]:
     connection = get_connection()

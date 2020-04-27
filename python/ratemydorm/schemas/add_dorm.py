@@ -17,6 +17,6 @@ class AddDormRequestSchema(Schema):
     building = fields.String(allow_none=False)
     quad = fields.String(allow_none=False)
     floor = fields.Integer(allow_none=False)
-    latitude = fields.Decimal()
-    longitude = fields.Decimal()
+    latitude = fields.Decimal(allow_none=False)
+    longitude = fields.Decimal(allow_none=False)
     features = fields.Nested(FeaturesSchema)
