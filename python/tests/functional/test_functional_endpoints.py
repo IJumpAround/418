@@ -83,3 +83,15 @@ class TestEndpoints(FunctionalTestClient):
 
         result = self.get('/user/profile', query)
         self.assertEqual({}, result.get('payload'))
+
+    def test_get_user_image(self):
+        params ={'entity_id': 10, 'image_type': 'dorm'}
+        params2 = {'entity_id': 22, 'image_type': 'profile'}
+        expected = ['asecondimageforthesamedormbythesameuser','testurl']
+        expected2 = ['mock profile image entry']
+
+
+        result = self.get('/images', params)
+        result2 = self.get('/images', params2)
+        self.assertCountEqual(result['payload']['urls'], expected)
+        self.assertCountEqual(result2['payload']['urls'], expected2)

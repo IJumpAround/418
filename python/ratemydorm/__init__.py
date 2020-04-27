@@ -35,6 +35,7 @@ def create_app(test_config=None):
     from ratemydorm.routes import searchpage
     from ratemydorm.routes import dorms
     from ratemydorm.routes import s3
+    from ratemydorm.routes import images
 
     # Register routes
     app.register_blueprint(auth.bp)
@@ -44,6 +45,7 @@ def create_app(test_config=None):
     app.register_blueprint(searchpage.bp)
     app.register_blueprint(dorms.bp)
     app.register_blueprint(s3.bp)
+    app.register_blueprint(images.bp)
 
     # Setup project logger
     logger = logging.getLogger('main')
