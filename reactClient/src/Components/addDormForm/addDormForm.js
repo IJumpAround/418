@@ -1,4 +1,5 @@
 import React from 'react'
+import axios from '../../utils/axiosInstance'
 import {options as buildingOptions} from "./buildingOptions";
 
 class addDormForm extends React.Component {
@@ -76,6 +77,7 @@ class addDormForm extends React.Component {
             })
     }
 
+    // set state from address values we got
     storeAddressFields(address) {
         console.log('address', address)
         let city = address.adminDistrict2
@@ -125,12 +127,14 @@ class addDormForm extends React.Component {
         state = event.target.state.value
         zip = event.target.zip_code.value
 
+        // Check if the address was changed from our geocoded result
         let addressUnchanged = this.formAddressUnchanged({
             address_1: address,
             city: city,
             state: state,
             zip: zip
         })
+        // Either setup to get new coordinates, or just don't allow changing
         if(!addressUnchanged) {
             alert('address form has been changed from the initial default values')
             return
@@ -157,8 +161,27 @@ class addDormForm extends React.Component {
         payload.features.laundry = event.target.laundry.value
         payload.features.internet = event.target.internet.value
         payload.features.kitchen = event.target.kitchen.value
+
         alert(JSON.stringify(payload))
         console.log(JSON.stringify(payload))
+
+        this.postToApi(payload)
+    }
+
+    async postToApi(payload) {
+        let result = await axios.post('/dorms', payload)
+        console.log(`result ${result}`)
+        let message
+        if(result.status === 200){
+            //success
+
+            alert(`Success! navigating to single dorm page ${result.data}`)
+            let dorm_id = result.data.payload.dorm_id
+            window.location.pathname = `/singleDorm/${dorm_id}`
+        }
+        else{
+            alert(`Error adding dorm: ${result.data.payload.message}`)
+        }
     }
 
 
