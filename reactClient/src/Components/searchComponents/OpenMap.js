@@ -86,8 +86,8 @@ render(){
   
       const mystyle = {
         position: "relative",
-        height: "100%-44px",
-        width: "1500vh",
+        height: "90%-44px",
+        width: "300%",
         zindex: '1'
       }
 

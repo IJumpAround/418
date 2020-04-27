@@ -80,7 +80,7 @@ class App extends React.Component {
                         />	
                     }/>
                     <Route path='/debug' component={DebugPage}/>
-                    <Route path='/singleDorm' component={SingleDorm}/>
+                    <Route path='/singleDorm/:id' component={SingleDorm}/>
                     <Route path='/addDormForm' component={addDormForm}/>
                     <Route component={DashBoard}/>{/*KEEP THIS AS THE LAST ROUTE*/}
                 </Switch>

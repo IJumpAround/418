@@ -57,12 +57,17 @@ import {Link, useLocation} from 'react-router-dom';
 	const textstyle = {
 		color: "grey"
 	};
+
+	const cardstyle = {
+		overflowY : 'scroll',
+		width : '100%'
+	}
     return (
 		<React.Fragment>
 		<div className="text-right"><div className = "h2" style = {textstyle}> ~Search on the map: The search-bar is in the top right. click to set a marker and find dorms nearby! ~ </div>
 		</div>
 		<div className="flex-container-fluid" style={mystyle}>
-			<div className="container-fluid" >
+			<div className="container-fluid" style = {cardstyle} >
 				<DynamicCards passDataToDynamicCards = {this.state.cardData}/>
 				<Link 
 					to={{
