@@ -208,11 +208,39 @@ def load_dorm() -> ApiResponse:
         [6] = kitchen
         '''
 
+        cursor.execute(
+            'SELECT review_text, rating, username, timestamp, review_id '
+            'FROM review '
+            'LEFT JOIN users '
+            'ON review.user_id = users.user_id '
+            'WHERE review.dorm_id = %(dorm_id)s', params
+        )
+        reviews = cursor.fetchall()
+        if reviews is None:
+            error = 'No dorms match your query'
+        reviews_returned = []
+        if error is None:
+            for i in range(len(reviews)):
+                reviews_returned.append(
+                    reviews[i]
+                )
+        '''
+        Reviews are returned in array of this layout:
+        [i]
+        [
+        [0] = review_text
+        [1] = rating
+        [2] = username
+        [3] = timestamp
+        [4] = user_id  (this one unsure if we should keep for moderation purposes)
+        ]
+        '''
+
     dorm_data = {
             'dorm_info': dorm_info_returned,
             'dorm_features': features_returned,
-            'dorm_images': dorm_images_returned ,
-
+            'dorm_images': dorm_images_returned,
+            'dorm_reviews': reviews_returned
     }
     response = RateMyDormApiResponse(dorm_data, 200).response
     return response
