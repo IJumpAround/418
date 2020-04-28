@@ -134,8 +134,8 @@ def load_dorm() -> ApiResponse:
         -all info from: Dorms{lat/lng/room_num/floor/building/quad/address || DONE
         -Dorm image: dorm_image{url} || DONE
         -Features: format is a bit strange, going to have to do it like so ->
-            join features with features_lut on feature_id? or just reference both
-            return the features name and value
+            join features with features_lut on feature_id or just reference both
+            return the features name and value || DONE
         -Reviews: the reviews need to returned like so ->
             retrieve; review_id, user_id, timestamp,rating, text
             also need to return user's name from the user_id to display on the review from Users
@@ -143,6 +143,7 @@ def load_dorm() -> ApiResponse:
         '''
         #load dorm basic info
         cursor = connection.cursor(buffered=True)
+
         cursor.execute(
             'SELECT latitude, longitude, room_num, floor, building, quad, address '
             'FROM Dorm '
@@ -153,7 +154,6 @@ def load_dorm() -> ApiResponse:
             error = 'No dorms match your query'
             data_response['message'] = error
             return data_response, 401
-
         dorm_info_returned = []
         if error is None:
             dorm_info_returned =[
@@ -166,24 +166,53 @@ def load_dorm() -> ApiResponse:
                 str(dorm_info[6]),  # address
             ]
 
+
         cursor.execute(
             'SELECT url '
             'FROM dorm_image '
-            'WHERE dorm_image.dorm_id = %(dorm_id)s', params
+            'WHERE dorm_id = %(dorm_id)s', params
         )
-
         dorm_image = cursor.fetchall()
         if dorm_image is None:
             error = 'No dorms match your query'
-
         dorm_images_returned = []
         if error is None:
             for i in range(len(dorm_image)):
                 dorm_images_returned.append(dorm_image[i])
 
+
+        cursor.execute(
+            'SELECT feature, feature_value '
+            'FROM feature_lut '
+            'LEFT JOIN features '
+            'ON feature_lut.feature_id = features.feature_id '
+            'WHERE feature_lut.dorm_id = %(dorm_id)s', params
+        )
+        features = cursor.fetchall()
+        if features is None:
+            error = 'No dorms match your query'
+        features_returned = []
+        if error is None:
+            for i in range(len(features)):
+                features_returned.append(
+                    features[i]
+                )
+        '''
+        Features are returned in array of this layout:
+        [0] = room_type
+        [1] = bathroom
+        [2] = ac
+        [3] = gym
+        [4] = laundry
+        [5] = internet
+        [6] = kitchen
+        '''
+
     dorm_data = {
-                'dorm_images': dorm_images_returned ,
-                'dorm_info': dorm_info_returned
+            'dorm_info': dorm_info_returned,
+            'dorm_features': features_returned,
+            'dorm_images': dorm_images_returned ,
+
     }
     response = RateMyDormApiResponse(dorm_data, 200).response
     return response
