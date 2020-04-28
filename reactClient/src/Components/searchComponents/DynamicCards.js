@@ -21,7 +21,7 @@ import {Link} from 'react-router-dom';
 				useStyles : {
 						padding: 5,
 						width: "100%",
-						overflowY: "scroll",
+						//overflowY: "scroll",
 						zindex: '10'	
 				}
 		   }
