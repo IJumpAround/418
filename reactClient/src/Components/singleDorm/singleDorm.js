@@ -5,6 +5,7 @@ import ReviewList from './ReviewSection/reviewList';
 import ReviewForm from './ReviewSection/reviewForm';
 import Features from './FeatureSection/features';
 import Carousel from './Carousel/carousel';
+import axios from '../../utils/axiosInstance';
 
 class singleDorm extends Component {
 
@@ -12,6 +13,9 @@ class singleDorm extends Component {
     super(props);
 
     this.state = { 
+
+      loadedResult: '',
+
       showMoreBtn: false,
       tag: "",
       tag_List: [],
@@ -50,6 +54,27 @@ class singleDorm extends Component {
 
   }
 
+    dormLoadHandler = () =>  {
+      axios.post('dorms/load_dorm', {
+        dorm_id: this.props.match.params.id
+        //Posts the dorm's ID to server to load it's info
+      })
+        .then((result) => {
+            if (result) {
+                //console.log(Object.entries(result));
+                var manipResult = result.data
+                this.setState({ loadedResult : manipResult})
+            }
+            
+        })
+        .catch((error) => {
+            console.log('error')
+            if (error) {
+                console.log(Object.entries(error))
+            }
+        })
+    };
+
       handleChangeOnTagInput(e){
         this.setState({
           [e.target.name]: e.target.value
@@ -83,7 +108,7 @@ class singleDorm extends Component {
       }
 
       componentDidMount(){   
-        
+        this.dormLoadHandler()
         this.setState({
           //Dorm info
           quad: "Dutch",

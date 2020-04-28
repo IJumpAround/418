@@ -114,6 +114,80 @@ def retrieve_dorm() -> ApiResponse:
     return RateMyDormMessageResponse(404, 'Not implemented').response
 
 
+@bp.route('/load_dorm', methods=['POST'])
+def load_dorm() -> ApiResponse:
+    logger.debug('Inside Dorm GET endpoint')
+    logger.debug(request.json)
+    data_response = {'success': False}
+    connection = get_connection()
+
+    if request.method == 'POST':
+        dorm_id = request.json['dorm_id']
+        error = None
+        params = {
+            'dorm_id': dorm_id
+        }
+
+        logger.info(params)
+
+        '''Things we need to load:
+        -all info from: Dorms{lat/lng/room_num/floor/building/quad/address || DONE
+        -Dorm image: dorm_image{url} || DONE
+        -Features: format is a bit strange, going to have to do it like so ->
+            join features with features_lut on feature_id? or just reference both
+            return the features name and value
+        -Reviews: the reviews need to returned like so ->
+            retrieve; review_id, user_id, timestamp,rating, text
+            also need to return user's name from the user_id to display on the review from Users
+        -Tags: Won't worry about this for now
+        '''
+        #load dorm basic info
+        cursor = connection.cursor(buffered=True)
+        cursor.execute(
+            'SELECT latitude, longitude, room_num, floor, building, quad, address '
+            'FROM Dorm '
+            'WHERE Dorm.dorm_id = %(dorm_id)s', params
+        )
+        dorm_info = cursor.fetchone()
+        if dorm_info is None:
+            error = 'No dorms match your query'
+            data_response['message'] = error
+            return data_response, 401
+
+        dorm_info_returned = []
+        if error is None:
+            dorm_info_returned =[
+                str(dorm_info[0]),  # latitude
+                str(dorm_info[1]),  # longitude
+                str(dorm_info[2]),  # room_num
+                str(dorm_info[3]),  # floor
+                str(dorm_info[4]),  # building
+                str(dorm_info[5]),  # quad
+                str(dorm_info[6]),  # address
+            ]
+
+        cursor.execute(
+            'SELECT url '
+            'FROM dorm_image '
+            'WHERE dorm_image.dorm_id = %(dorm_id)s', params
+        )
+
+        dorm_image = cursor.fetchall()
+        if dorm_image is None:
+            error = 'No dorms match your query'
+
+        dorm_images_returned = []
+        if error is None:
+            for i in range(len(dorm_image)):
+                dorm_images_returned.append(dorm_image[i])
+
+    dorm_data = {
+                'dorm_images': dorm_images_returned ,
+                'dorm_info': dorm_info_returned
+    }
+    response = RateMyDormApiResponse(dorm_data, 200).response
+    return response
+
 @bp.route('/review', methods=['POST'])
 def add_review():
     json_data = request.json
