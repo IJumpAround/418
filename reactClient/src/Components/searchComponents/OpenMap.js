@@ -84,17 +84,13 @@ render(){
                      
                     </Marker>
   
-      const mystyle = {
-        position: "relative",
-        height: "90%-44px",
-        width: "300%",
-        zindex: '1'
-      }
-
 
         return(
-           
-            <Map id="mymap" center={this.state.proxPosition} zoom={17} style={mystyle}
+       
+              <div className="row h-100">
+                  <div className="col-sm-12" >
+
+            <Map className=" h-75" id="mymap" center={this.state.proxPosition} zoom={17}  
             onClick={(event) =>
               {
               this.setMarker(event)
@@ -108,7 +104,7 @@ render(){
               }
             }
             >
-            >
+            
             <ReactLeafletSearch 
               inputPlaceholder="input desired location"
               zoom={15} 
@@ -131,6 +127,12 @@ render(){
                 />
                 {proxMarker}
             </Map>
+                  </div>
+ 
+              </div>
+         
+
+       
            
         )
     }

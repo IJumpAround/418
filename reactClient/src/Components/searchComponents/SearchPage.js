@@ -66,8 +66,13 @@ import {Link, useLocation} from 'react-router-dom';
 		<React.Fragment>
 		<div className="text-right"><div className = "h2" style = {textstyle}> ~Search on the map: The search-bar is in the top right. click to set a marker and find dorms nearby! ~ </div>
 		</div>
+
+		<div className="container-fluid">
+			<div className="row">
+				<div className="col-md-4" style={cardstyle} >
+
 		<div className="flex-container-fluid" style={mystyle}>
-			<div className="container-fluid" style = {cardstyle} >
+			<div className="container-fluid"  >
 				<DynamicCards passDataToDynamicCards = {this.state.cardData}/>
 				<Link 
 					to={{
@@ -85,10 +90,16 @@ import {Link, useLocation} from 'react-router-dom';
 				</Link>
 				<h6>Click on the approximate location of your residence then hit the above button!</h6>
 			</div>
+	  	</div>	
+				</div>
+				<div className="col-md-8 w-50">
 			<OpenMap passCardsFromOpenMap = {this.passedCardsFromMap} 
 					 passCoordFromOpenMap = {this.passedCoordFromMap}
 			/>
-	  	</div>	
+
+				</div>
+			</div>
+		</div>
 		</React.Fragment>
     )
   }
