@@ -1,37 +1,36 @@
 import React, { Component } from 'react'
 import './historySection.css';
 
- class HistorySection extends Component {
-
-  render() {
-
+function HistorySection(props) {
+  var reviews = props.reviews;
+  const renderHistory = reviews.map((obj, index) => {    
+    return(
+        <tr key={reviews[index].review_id}>
+          <td>Left a Review</td>
+          <td>{reviews[index].review_text}</td>
+          <td>{reviews[index].timestamp}</td>
+        </tr>  
+    )
+  }
+);
     return (
       <div className="table table-striped border rounded">
       <div className="custom-thead">
         <table>
           <tbody>
             <tr>
-              <th>History</th>
+              <th>History</th>     
             </tr>
           </tbody>
         </table>
       </div>
      <table>
-      <tbody>
-            <tr>
-              <td style={{width: "10%"}}> Wrote a review...</td>
-            </tr>
-            <tr>
-              <td>Created a post...</td>
-            </tr>
-            <tr>
-              <td> Created a tag...</td>
-            </tr>    
+      <tbody style={{width:"100%"}}>
+        {renderHistory}  
       </tbody>
      </table> 
     </div>
     )
-  }
 }
 
 export default HistorySection;

@@ -1,9 +1,11 @@
 import React, { Component } from 'react'
 import './userDataSection.css';
 
- class userDataSection extends Component {
+function userDataSection(props){
 
-  render() {
+    console.log(props.reviews);
+    
+
 
     return (
       
@@ -20,19 +22,19 @@ import './userDataSection.css';
         <table>
           <tbody>
                 <tr>
-                  <td style={{width: "10%"}}>Posts: 5</td>
+                  <td style={{width: "10%"}}>Posts: {props.posts}</td>
                 </tr>
                 <tr>
-                  <td>Tags: 2</td>
+                  <td>Reviews: {props.reviews}</td>
                 </tr>
                 <tr>
-                  <td>Reviews: 7</td>
+                  <td>Tags: {props.tags}</td>
                 </tr>    
           </tbody>
         </table> 
         </div>
     )
-  }
+  
 }
 
 export default userDataSection;
