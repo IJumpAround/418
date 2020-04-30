@@ -3,6 +3,7 @@ import OpenMap from './OpenMap';
 import DynamicCards from './DynamicCards';
 import {Link, useLocation} from 'react-router-dom';
 
+
  class SearchPage extends Component {
 	constructor(props){
 		super(props);
@@ -51,8 +52,7 @@ import {Link, useLocation} from 'react-router-dom';
 
   render() {
 	const mystyle = {
-		display: "flex",
-		height:"90vh",
+		height:"85vh"
 	  };
 	const textstyle = {
 		color: "grey"
@@ -66,9 +66,18 @@ import {Link, useLocation} from 'react-router-dom';
 		<React.Fragment>
 		<div className="text-right"><div className = "h2" style = {textstyle}> ~Search on the map: The search-bar is in the top right. click to set a marker and find dorms nearby! ~ </div>
 		</div>
+
+		<div className="container-fluid">
+			<div className="row">
+				<div className="col-md-4" style={cardstyle} >
+
 		<div className="flex-container-fluid" style={mystyle}>
-			<div className="container-fluid" style = {cardstyle} >
+			<div className="container-fluid"  >
 				<DynamicCards passDataToDynamicCards = {this.state.cardData}/>
+			</div>
+	  	</div>	
+				</div>
+				<div className="col-lg-8 w-50">
 				<Link 
 					to={{
 					pathname: '/addDormForm',
@@ -84,11 +93,12 @@ import {Link, useLocation} from 'react-router-dom';
 					}>Don't see your dorm? ADD ONE!</button>
 				</Link>
 				<h6>Click on the approximate location of your residence then hit the above button!</h6>
-			</div>
 			<OpenMap passCardsFromOpenMap = {this.passedCardsFromMap} 
 					 passCoordFromOpenMap = {this.passedCoordFromMap}
 			/>
-	  	</div>	
+				</div>
+			</div>
+		</div>
 		</React.Fragment>
     )
   }
