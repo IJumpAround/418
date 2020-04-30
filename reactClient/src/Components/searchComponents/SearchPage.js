@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import OpenMap from './OpenMap';
 import DynamicCards from './DynamicCards';
 import {Link, useLocation} from 'react-router-dom';
+import './searchPage.css';
 
  class SearchPage extends Component {
 	constructor(props){
@@ -51,8 +52,7 @@ import {Link, useLocation} from 'react-router-dom';
 
   render() {
 	const mystyle = {
-		display: "flex",
-		height:"90vh",
+		height:"85vh"
 	  };
 	const textstyle = {
 		color: "grey"
@@ -74,6 +74,10 @@ import {Link, useLocation} from 'react-router-dom';
 		<div className="flex-container-fluid" style={mystyle}>
 			<div className="container-fluid"  >
 				<DynamicCards passDataToDynamicCards = {this.state.cardData}/>
+			</div>
+	  	</div>	
+				</div>
+				<div className="col-lg-8 w-50">
 				<Link 
 					to={{
 					pathname: '/addDormForm',
@@ -89,14 +93,9 @@ import {Link, useLocation} from 'react-router-dom';
 					}>Don't see your dorm? ADD ONE!</button>
 				</Link>
 				<h6>Click on the approximate location of your residence then hit the above button!</h6>
-			</div>
-	  	</div>	
-				</div>
-				<div className="col-md-8 w-50">
 			<OpenMap passCardsFromOpenMap = {this.passedCardsFromMap} 
 					 passCoordFromOpenMap = {this.passedCoordFromMap}
 			/>
-
 				</div>
 			</div>
 		</div>
