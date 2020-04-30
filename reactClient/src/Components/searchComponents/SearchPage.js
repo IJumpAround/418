@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import OpenMap from './OpenMap';
 import DynamicCards from './DynamicCards';
 import {Link, useLocation} from 'react-router-dom';
-import './searchPage.css';
+
 
  class SearchPage extends Component {
 	constructor(props){
