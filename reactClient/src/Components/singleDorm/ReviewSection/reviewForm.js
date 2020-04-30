@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import axios from 'axios';
 
 
  class reviewForm extends Component {
@@ -22,11 +23,29 @@ import React, { Component } from 'react'
     e.preventDefualt();
     // send review to server here
     // then send review to parent(singleDorm) to render on page
-    
+    axios.post('dorms/review', {
+      user_id: 18,
+      dorm_id: this.props.match.params.id,
+      rating: this.props.rating,
+      review_text: this.state.review
+
+    },
+    {headers: {'Content-Type': 'application/json',}
+    })
+    .then(function (response) {
+      console.log(response);
+      alert(JSON.stringify(response.data))
+  })
+  .catch(function (error) {
+      console.log(error);
+      alert(JSON.stringify(error.data))
+  })
+
   }
 
   render() {
-
+    console.log(this.props.rating);
+    
     return (
       <div>
         <form className="form-group" onSubmit={this.handleOnSubmit}>

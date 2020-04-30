@@ -55,6 +55,8 @@ class singleDorm extends Component {
   }
 
     dormLoadHandler = () =>  {
+      console.log(this.props.match.params.id);
+      
       axios.post('dorms/load_dorm', {
         dorm_id: this.props.match.params.id
         //Posts the dorm's ID to server to load it's info
@@ -63,6 +65,8 @@ class singleDorm extends Component {
             if (result) {
                 //console.log(Object.entries(result));
                 var manipResult = result.data
+
+                
                 this.setState({ loadedResult : manipResult})
             }
             
@@ -95,7 +99,9 @@ class singleDorm extends Component {
 
       handleStarClick(nextValue){
         this.setState({
-          rating: nextValue,
+          dorm_info: {
+            dorm_user_rating: nextValue,
+          }
         })
       }
 
@@ -129,7 +135,10 @@ class singleDorm extends Component {
       }
 
     render() {
-
+      console.log(this.state.dorm_info.dorm_user_rating);
+      
+      console.log(this.state.loadedResult);
+      
       const element = <div>Show Less</div>
       const element2 = <div>Show More</div>
       //console.log(this.state.showMoreBtn);
@@ -221,12 +230,12 @@ class singleDorm extends Component {
                         id = "dorm_user_rating"
                         name = "starRate"
                         starCount = {5}
-                        value = {this.state.user_dorm_rating}
+                        value = {this.state.dorm_info.dorm_user_rating}
                         onStarClick = {this.handleStarClick}
                         emptyStarColor = "#564D80"
                       />           
                   </div>
-                  <ReviewForm />            
+                  <ReviewForm rating={this.state.dorm_info.dorm_user_rating}/>            
                 </div>
               </div>
             </div>       
