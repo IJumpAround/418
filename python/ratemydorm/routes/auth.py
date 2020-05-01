@@ -74,7 +74,7 @@ def register():
 
                 connection.commit()
                 data = {'message': 'User registered'}
-                response = RateMyDormRedirectResponse(location='/dashboard', data=data).response
+                response = RateMyDormMessageResponse(200,None)
                 return response
             except IntegrityError as e:
                 logger.error(f'User exists: {e}')
@@ -122,7 +122,7 @@ def login():
             session.clear()
             session['user_id'] = user.user_id
             data_response['success'] = True
-            redirect_response = RateMyDormMessageResponse(200,data_response).response
+            redirect_response = RateMyDormMessageResponse(200, data_response).response
 
             return redirect_response
 
@@ -182,8 +182,8 @@ def load_logged_in_user():
 def logout():
     """Clear session cookie"""
     session.clear()
-    redirect_response = RateMyDormRedirectResponse(location='/', data="Logged Out").response
-    return redirect_response
+    response = RateMyDormMessageResponse(200, None).response
+    return response
 
 
 def login_required(view):
