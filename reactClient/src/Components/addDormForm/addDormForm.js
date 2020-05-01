@@ -1,10 +1,11 @@
 import React from 'react'
 import axios from '../../utils/axiosInstance'
 import {options as buildingOptions} from "./buildingOptions";
+let defaultAxios = require('axios')
 
 
-class addDormForm extends React.Component {
-    test = false // Disables querying geocode api when true
+class AddDormForm extends React.Component {
+    test = true // Disables querying geocode api when true
     constructor(props) {
         super(props);
 
@@ -183,7 +184,45 @@ class addDormForm extends React.Component {
         payload.features.kitchen = event.target.kitchen.value
 
         console.log(JSON.stringify(payload))
-        this.postToApi(payload)
+        if(event.target.dorm_image.files.length === 1) {
+            let file = event.target.dorm_image.files[0]
+            this.getSignedUrl(file)
+                .then(res => {
+                    console.log('upload success?' + res)
+                    // payload.url
+                })
+                .catch(err => {
+                    console.log('upload fail' + err)
+                })
+        }
+        else {
+
+            this.postToApi(payload, null)
+                .then(res => {
+                    window.location.pathname = `/singleDorm/${res.data.payload.dorm_id}`
+                })
+        }
+    }
+
+    async getSignedUrl(file) {
+        let newFilename = file.name + Math.floor(Math.random() * (1000000 - 1) ) + 1;
+        let urlResult = await axios.get('/s3Upload',{params: {filename: newFilename}})
+        let url = urlResult.data.url
+        let view_url = urlResult.data.view_url
+        let data = new FormData()
+
+        console.log('Got signed url ', urlResult)
+
+
+
+        Object.keys(urlResult.data.fields).forEach(key => {
+            data.append(key, urlResult.data.fields[key]);
+        });
+        data.append('file', file, newFilename)
+        console.log('fields ', urlResult.data.fields)
+        let uploadResult = await defaultAxios.post(url,data)
+
+        console.log('upload post resut ', uploadResult)
     }
 
     // add dorm to mysql database via flask backend
@@ -193,11 +232,14 @@ class addDormForm extends React.Component {
         if(result.status === 200){
             //success
             console.log(`Success! navigating to single dorm page ${result.data}`)
-            window.location.pathname = `/singleDorm/${result.data.payload.dorm_id}`
         }
         else{
             alert(`Error adding dorm: ${result.data.payload.message}`)
         }
+    }
+
+    async addDormImageToDb(url, dorm_id) {
+
     }
 
     render() {
@@ -449,4 +491,4 @@ class addDormForm extends React.Component {
     }
 }
 
-export default addDormForm
+export default AddDormForm

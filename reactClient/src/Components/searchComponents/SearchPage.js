@@ -2,6 +2,8 @@ import React, { Component } from 'react'
 import OpenMap from './OpenMap';
 import DynamicCards from './DynamicCards';
 import {Link, useLocation} from 'react-router-dom';
+import {is_user_logged_in} from "../../utils/auth";
+import $ from 'jquery'
 
 
  class SearchPage extends Component {
@@ -78,19 +80,30 @@ import {Link, useLocation} from 'react-router-dom';
 	  	</div>	
 				</div>
 				<div className="col-lg-8 w-50">
-				<Link 
+				<Link
 					to={{
-					pathname: '/addDormForm',
-					dormFormProps: {
-						coords: this.state.passedCoordsFromMap,
-					}
-					// This link sets the background in location state.
+						pathname: '/addDormForm',
+						dormFormProps: {
+							coords: this.state.passedCoordsFromMap,
+						}
+						// This link sets the background in location state.
 					}}>
-					<button className="btn btn-secondary" onClick = 
-					{(event) => {
-						this.passUpCoord()
-					}
-					}>Don't see your dorm? ADD ONE!</button>
+					<button className="btn btn-secondary" onClick=
+						{(event) => {
+							is_user_logged_in(isLoggedIn => {
+								if (isLoggedIn) {
+									this.passUpCoord()
+									console.log('should redirect to addDormForm')
+								} else {
+									console.log('not authed?')
+									event.preventDefault()
+									$('#loginNavButton').click()
+								}
+							})
+
+						}
+						}>Don't see your dorm? ADD ONE!
+					</button>
 				</Link>
 				<h6>Click on the approximate location of your residence then hit the above button!</h6>
 			<OpenMap passCardsFromOpenMap = {this.passedCardsFromMap} 

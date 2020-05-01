@@ -7,9 +7,9 @@ from botocore.exceptions import ClientError
 bp = Blueprint('s3', __name__, url_prefix='/s3Upload')
 
 
-@bp.route('', methods=['POST'])
+@bp.route('', methods=['GET'])
 def getS3Link():
-    params = request.get_json()
+    params = request.args
     filename = params.get('filename')
 
     response = create_presigned_post(filename)
@@ -30,6 +30,8 @@ def create_presigned_post(object_name,
         fields: Dictionary of form fields and values to submit with the POST
     :return: None if error.
     """
+    fields = {'acl': 'public-read'}
+    conditions = [{"acl": "public-read"}]
 
     bucket_name = config.get('aws_bucket')
     secret = config.get('aws_secret_access_key')
@@ -53,4 +55,6 @@ def create_presigned_post(object_name,
         return None
 
     # The response contains the presigned URL and required fields
+    view_url = "https://www.ratemydorm.amazon.s3/" + object_name
+    response['view_url'] = view_url
     return response
