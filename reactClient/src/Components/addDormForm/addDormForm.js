@@ -1,6 +1,7 @@
 import React from 'react'
 import axios from '../../utils/axiosInstance'
 import {options as buildingOptions} from "./buildingOptions";
+import {auth} from "../../utils/auth";
 let defaultAxios = require('axios')
 
 
@@ -8,7 +9,8 @@ class AddDormForm extends React.Component {
     test = true // Disables querying geocode api when true
     constructor(props) {
         super(props);
-
+        console.log('user_id ',auth.user_id)
+        console.log('admin ',auth.admin)
         try {
             this.state = {
                 coords: props.location.dormFormProps.coords,

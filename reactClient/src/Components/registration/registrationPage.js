@@ -116,6 +116,7 @@ class RegistrationPage extends React.Component {
             .then(function (response) {
                 console.log(response);
                 alert(JSON.stringify(response.data))
+                window.location.pathname='/dashboard'
             })
             .catch(function (error) {
                 console.log(error);

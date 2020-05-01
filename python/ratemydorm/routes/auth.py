@@ -4,7 +4,7 @@ from flask import Blueprint, request, session, g
 from werkzeug.security import check_password_hash, generate_password_hash
 from mysql.connector.errors import IntegrityError, InterfaceError
 
-from ratemydorm.utils.api_response import RateMyDormRedirectResponse, RateMyDormMessageResponse
+from ratemydorm.utils.api_response import RateMyDormRedirectResponse, RateMyDormMessageResponse, RateMyDormApiResponse
 from ratemydorm.sql.db_connect import get_connection
 
 bp = Blueprint('auth', __name__, url_prefix='/auth')
@@ -139,6 +139,10 @@ def get_user_id_and_role():
     user_id = session.get('user_id')
     admin = session.get('admin')
     admin = True if admin else False
+    payload = dict()
+    payload['admin'] = admin
+    payload['user_id'] = user_id
+    return RateMyDormApiResponse(payload,200).response
 
 
 @bp.route('/test_rendering', methods=['GET'])

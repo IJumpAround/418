@@ -10,14 +10,12 @@ import SearchPage from './Components/searchComponents/SearchPage';
 import Navbar from './Components/navComponents/navigation/Navbar';
 import SingleDorm from './Components/singleDorm/singleDorm';
 import config from 'react-global-configuration'
-import {is_user_logged_in} from "./utils/auth";
+import {auth, is_user_logged_in, showLoginModal} from "./utils/auth";
 import AddDormForm from './Components/addDormForm/addDormForm';
 import {combineReducers, createStore} from 'redux';
 import {reducer as formReducer} from 'redux-form'
 import {Provider} from 'react-redux';
 import DashBoard from './Components/dashboard/Dash/dashboard.js';
-import axios from "./utils/axiosInstance";
-import {Redirect} from "react-router";
 
 //Returns all reducing functions as an object into the store..in our case we just have one reducing function to handle state of our addDormForm 
 const reducers = combineReducers({form: formReducer});
@@ -45,7 +43,7 @@ class App extends React.Component {
     componentDidMount() {
         is_user_logged_in(this.setAppLoggedInState)
     }
-    
+
     passedCoordFromMap = (coordFromOpenMap) => {
         this.setState({passedCoordinates: coordFromOpenMap})
     }
@@ -99,27 +97,6 @@ class App extends React.Component {
 
 }
 
-export const auth = {
-    isAuthenticated: null,
-    user_id: -1,
-    authenticate(cb) {
-        auth.isAuthenticated = true;
-        if (cb) cb()
-    },
-
-    signout(cb) {
-        auth.isAuthenticated = false;
-        axios.get('/auth/logout')
-            .then((response) => {
-                console.log(response);
-                window.location.pathname = '/'
-            })
-            .catch((ex) => {
-                console.log(ex)
-            });
-    }
-};
-
 function PrivateRoute({ component: Component, ...rest }) {
     console.log('private route ', auth.isAuthenticated)
     return (
@@ -127,14 +104,7 @@ function PrivateRoute({ component: Component, ...rest }) {
             {...rest}
             render={({ location }) =>
                 auth.isAuthenticated ? (<Component {...rest}/>) :
-                    // (<Redirect
-                    //         to={{
-                    //             pathname: "/login",
-                    //             state: { from: location }
-                    //         }}
-                    //     />
-                    alert('You must be logged in to use this functionality')
-
+                    showLoginModal()
             }
         />
     );

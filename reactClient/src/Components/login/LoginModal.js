@@ -1,6 +1,6 @@
 import React from "react";
 import axios from '../../utils/axiosInstance';
-import {auth} from '../../App'
+import {auth} from "../../utils/auth";
 
 class LoginModal extends React.Component {
     constructor(props) {

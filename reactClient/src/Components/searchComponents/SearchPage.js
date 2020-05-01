@@ -3,10 +3,10 @@ import OpenMap from './OpenMap';
 import DynamicCards from './DynamicCards';
 import {Link, useLocation} from 'react-router-dom';
 import {is_user_logged_in} from "../../utils/auth";
-import $ from 'jquery'
+import {showLoginModal} from "../../utils/auth";
 
 
- class SearchPage extends Component {
+class SearchPage extends Component {
 	constructor(props){
 		super(props);
 		this.state = { 
@@ -97,7 +97,6 @@ import $ from 'jquery'
 								} else {
 									console.log('not authed?')
 									event.preventDefault()
-									$('#loginNavButton').click()
 								}
 							})
 

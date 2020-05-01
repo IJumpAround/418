@@ -1,5 +1,5 @@
 import React from "react";
-import {auth} from "../../App"
+import {auth} from "../../utils/auth";
 class LoginButton extends React.Component {
     constructor(props) {
         super(props);
