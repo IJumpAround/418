@@ -19,10 +19,10 @@ class singleDorm extends Component {
       showMoreBtn: false,
       tag: "",
       tag_List: [],
-      reviews: {
-        reviews: [],
-        timeStamp: ""
-      },
+  
+      reviews: [],
+      
+      
       user_info: {
         name: "",
         image: ""
@@ -32,10 +32,10 @@ class singleDorm extends Component {
         floor: "",
         room_type: "",
         quad: "",
-        dorm_user_raiting: 0,
-        overall_dorm_rating: 0,
         img: "",
       },
+      dorm_user_rating: 0,
+      overall_dorm_rating: 0,
       features: {
         bath: true,
         laundry: true,
@@ -51,8 +51,14 @@ class singleDorm extends Component {
     this.handleStarClick = this.handleStarClick.bind(this);
     this.handleAddTagClick = this.handleAddTagClick.bind(this);
     this.handleShowMoreClick = this.handleShowMoreClick.bind(this);
-
+    this.addReview = this.addReview.bind(this);
   }
+
+    addReview(review){
+      this.setState({
+        reviews: [review, ...this.state.reviews]
+      })
+    }
 
     dormLoadHandler = () =>  {
       axios.post('dorms/load_dorm', {
@@ -61,7 +67,7 @@ class singleDorm extends Component {
       })
         .then((result) => {
             if (result) {
-                //console.log(Object.entries(result));
+                console.log(Object.entries(result));
                 var manipResult = result.data
                 this.setState({ loadedResult : manipResult})
             }
@@ -95,7 +101,7 @@ class singleDorm extends Component {
 
       handleStarClick(nextValue){
         this.setState({
-          rating: nextValue,
+          dorm_user_rating: nextValue,
         })
       }
 
@@ -129,7 +135,9 @@ class singleDorm extends Component {
       }
 
     render() {
-
+     // console.log(this.state.loadedResult);
+      console.log(this.state.reviews);
+      
       const element = <div>Show Less</div>
       const element2 = <div>Show More</div>
       //console.log(this.state.showMoreBtn);
@@ -206,7 +214,7 @@ class singleDorm extends Component {
             
           </div>
         <div className="row ml-3">
-          <ReviewList reviews={this.state.reviews} rating={this.state.dorm_info.dorm_user_raiting}/>
+          <ReviewList reviews={this.state.reviews} rating={this.state.dorm_info.dorm_user_rating}/>
         </div>
         </div>
         <div className="input-section">
@@ -221,12 +229,12 @@ class singleDorm extends Component {
                         id = "dorm_user_rating"
                         name = "starRate"
                         starCount = {5}
-                        value = {this.state.user_dorm_rating}
+                        value = {this.state.dorm_user_rating}
                         onStarClick = {this.handleStarClick}
                         emptyStarColor = "#564D80"
                       />           
                   </div>
-                  <ReviewForm />            
+                  <ReviewForm reviews={this.state.reviews} rating={this.state.dorm_user_rating} addReview={this.addReview}/>            
                 </div>
               </div>
             </div>       
