@@ -1,10 +1,11 @@
 import axios from "./axiosInstance";
 import {axios as defaultAxios} from 'axios'
+
 /**
  * Add the provided url to the mysql db. Requires that the image has already been uploaded to an S3 bucket
  * and we have the public url
  * @param {string} url the publicly viewable url the image is hosted at
- * @param {any} dorm_id id of this dorm
+ * @param {number} dorm_id id of this dorm
  * @param {number} user_id user who added the dorm
  */
 export async function addDormImageToDb(url, dorm_id, user_id) {
@@ -28,12 +29,48 @@ export async function addDormImageToDb(url, dorm_id, user_id) {
 
 
 /**
+ * Retrieve image urls that have been uploaded for this dorm.
+ * @param {number} dorm_id - dorm whose images we are retrieving
+ * @returns {Promise<void>} resolves to a list of urls, or null if an error ocurred.
+ */
+export async function retrieveDormImage(dorm_id) {
+    axios.get('/images',{
+        params: {
+            image_type: 'dorm',
+            entity_id: dorm_id
+        }
+    })
+        .then(result => {
+            return result.data.payload.urls
+        })
+        .catch(err => {
+            return null
+        })
+}
+
+/**
+ * Retrieves the given user's profile image
+ * @param {number} user_id
+ * @returns {Promise<void>} Promise resolves to the url, or null if the retrieval failed
+ */
+export async function retrieveProfileImage(user_id) {
+    axios.get('/images', {
+        params: {
+            image_type: 'profile',
+            entity_id: user_id,
+        }
+    })
+        .then(result => result.data.payload.urls)
+        .catch(err => null)
+}
+
+
+/**
  * Get a signed url from the back end and use it to upload the passed file to the s3 bucket. Appends some random numbers to the file name to avoid filename collisions
  * @param {string | Blob} file - File from the file upload input element
  * @return {string} The public url at which the file is viewable
  */
 export async function uploadImage(file) {
-    const validFormats = ['jpg','bmp','png']
 
     // Partially randomize filename
     let file_parts = file.name.split('.')

@@ -6,6 +6,7 @@ import {addDormImageToDb, uploadImage} from '../../utils/images'
 
 class AddDormForm extends React.Component {
     test = false // Disables querying geocode api when true
+    validFormats = ['jpg','bmp','png'].join(',')
     constructor(props) {
         super(props);
         try {
@@ -308,6 +309,7 @@ class AddDormForm extends React.Component {
                                     <div className="col-sm-5">
                                         <label className="">Dorm Image:</label>
                                         <input type="file" className="mb-2 mt-2" id="dorm_image" name="dorm_image"
+                                               accept={this.validFormats}
                                         />
                                     </div>
                                 </div>
