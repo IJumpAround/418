@@ -1,16 +1,13 @@
 import React from 'react'
-import axios from '../../utils/axiosInstance'
 import {options as buildingOptions} from "./buildingOptions";
+import axios from '../../utils/axiosInstance'
 import {auth} from "../../utils/auth";
-let defaultAxios = require('axios')
-
+import {addDormImageToDb, uploadImage} from '../../utils/images'
 
 class AddDormForm extends React.Component {
-    test = true // Disables querying geocode api when true
+    test = false // Disables querying geocode api when true
     constructor(props) {
         super(props);
-        console.log('user_id ',auth.user_id)
-        console.log('admin ',auth.admin)
         try {
             this.state = {
                 coords: props.location.dormFormProps.coords,
@@ -100,8 +97,6 @@ class AddDormForm extends React.Component {
                 zip: address.postalCode || ''
             }
         })
-
-
     }
 
     // Compare geocoded address with values in the form. If they are different, then the user has modified the address
@@ -120,9 +115,7 @@ class AddDormForm extends React.Component {
 
     // Enable or disable room type and building selections if "off campus" is chosen.
     quadOnChange = (event) => {
-        let value = event.target.value
-
-        if(value === "Off Campus") {
+        if(event.target.value === "Off Campus") {
             this.setState({offCampus: true})
         }
         else {
@@ -134,15 +127,12 @@ class AddDormForm extends React.Component {
 
     onSubmit = (event) => {
         event.preventDefault()
-        console.log(event.target)
-
-        // TODO use regular geocode if address is not passed in.
-        // Disable address field if passed in from props.
-        // Alternatively, get coords from geocode if user changes address from what is passed.
         if(this.state.coords == null){
             alert("Error, coordinates are missing from state. Maybe you didn't reach this page via the search page?")
             return
         }
+
+        // Get address info from form
         let address, city, state, zip
         address = event.target.address.value
         city = event.target.city.value
@@ -175,7 +165,6 @@ class AddDormForm extends React.Component {
             features: {}
         }
 
-
         // Features & Room
         payload.features.room_type = this.state.offCampus ? "NA" : event.target.room_type.value
         payload.features.bathroom = event.target.bathroom.value
@@ -186,62 +175,52 @@ class AddDormForm extends React.Component {
         payload.features.kitchen = event.target.kitchen.value
 
         console.log(JSON.stringify(payload))
-        if(event.target.dorm_image.files.length === 1) {
-            let file = event.target.dorm_image.files[0]
-            this.getSignedUrl(file)
-                .then(res => {
-                    console.log('upload success?' + res)
-                    // payload.url
+
+        // If an image is supplied
+        if (event.target.dorm_image.files.length === 1) {
+            // Upload the image to s3
+            uploadImage(event.target.dorm_image.files[0])
+                .then(view_url => {
+                    // Add the dorm to mysql db
+                    this.addDorm(payload, null)
+                        .then(dorm_id => {
+                            if (dorm_id) {
+                                // Add dorm image to db
+                                addDormImageToDb(view_url, dorm_id, auth.user_id)
+                                window.location.pathname = `/singleDorm/${dorm_id}`
+                            } else {
+                                console.log('error during adding dorm')
+                            }
+                        })
+                        .catch(err => {
+                            console.log('Error creating dorm, aborting')
+                        })
                 })
                 .catch(err => {
                     console.log('upload fail' + err)
                 })
         }
+        // Only adding the dorm
         else {
-
-            this.postToApi(payload, null)
+            this.addDorm(payload, null)
                 .then(res => {
                     window.location.pathname = `/singleDorm/${res.data.payload.dorm_id}`
                 })
         }
     }
 
-    async getSignedUrl(file) {
-        let newFilename = file.name + Math.floor(Math.random() * (1000000 - 1) ) + 1;
-        let urlResult = await axios.get('/s3Upload',{params: {filename: newFilename}})
-        let url = urlResult.data.url
-        let view_url = urlResult.data.view_url
-        let data = new FormData()
-
-        console.log('Got signed url ', urlResult)
-
-
-
-        Object.keys(urlResult.data.fields).forEach(key => {
-            data.append(key, urlResult.data.fields[key]);
-        });
-        data.append('file', file, newFilename)
-        console.log('fields ', urlResult.data.fields)
-        let uploadResult = await defaultAxios.post(url,data)
-
-        console.log('upload post resut ', uploadResult)
-    }
-
     // add dorm to mysql database via flask backend
-    async postToApi(payload) {
+    async addDorm(payload) {
         let result = await axios.post('/dorms', payload)
-        let message
+
         if(result.status === 200){
             //success
-            console.log(`Success! navigating to single dorm page ${result.data}`)
+            return result.data.payload.dorm_id
         }
         else{
             alert(`Error adding dorm: ${result.data.payload.message}`)
+            return null
         }
-    }
-
-    async addDormImageToDb(url, dorm_id) {
-
     }
 
     render() {

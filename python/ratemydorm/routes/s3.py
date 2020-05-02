@@ -55,6 +55,6 @@ def create_presigned_post(object_name,
         return None
 
     # The response contains the presigned URL and required fields
-    view_url = "https://www.ratemydorm.amazon.s3/" + object_name
+    view_url = f'https://{bucket_name}.s3.{region}.amazonaws.com/{object_name}'
     response['view_url'] = view_url
     return response
