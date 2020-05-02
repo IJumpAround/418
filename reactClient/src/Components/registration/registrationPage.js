@@ -14,7 +14,8 @@ class RegistrationPage extends React.Component {
         this.state = {
             namePattern : '[a-zA-Z\\-]+',
             passwordPattern: '[a-zA-Z0-9!@#$%^&*()\\-]+',
-            usernamePattern: '[a-zA-Z0-9\\-_]+'
+            usernamePattern: '[a-zA-Z0-9\\-_]+',
+            alert_text: null,
         };
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -86,6 +87,13 @@ class RegistrationPage extends React.Component {
 
                                     </div>
                                 </div>
+                                <div className = "row mt-1" >
+                                    <div className='col-12'>
+                                        <div className="alert alert-danger" role="alert" hidden={this.state.alert_text === null}>
+                                            {this.state.alert_text}
+                                        </div>
+                                    </div>
+                                </div>
                                 <div className='row mt-1 text-right'>
                                     <div className='col-12'>
                                         <button type='submit'  className='btn btn-primary'>Register</button>
@@ -94,7 +102,7 @@ class RegistrationPage extends React.Component {
                             </form>
                         </div>
                     </div>
-                    <div className="col-2"/>
+                    <div className="col-4"/>
                 </div>
 
             </div>
@@ -102,6 +110,7 @@ class RegistrationPage extends React.Component {
     }
 
     handleSubmit(event) {
+        this.setState({alert_text: null})
         event.preventDefault();
         axios.post('/auth/register',
             {
@@ -118,9 +127,8 @@ class RegistrationPage extends React.Component {
                 alert(JSON.stringify(response.data))
                 window.location.pathname='/dashboard'
             })
-            .catch(function (error) {
-                console.log(error);
-                alert(JSON.stringify(error.data))
+            .catch(error => {
+                this.setState({alert_text:error.response.data.message})
             })
     }
 

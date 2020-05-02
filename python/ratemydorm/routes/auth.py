@@ -74,11 +74,15 @@ def register():
 
                 connection.commit()
                 data = {'message': 'User registered'}
-                response = RateMyDormMessageResponse(200,None)
+                response = RateMyDormMessageResponse(200,None).response
                 return response
             except IntegrityError as e:
                 logger.error(f'User exists: {e}')
-                return 'Username already exists!', 400
+                if 'users_email_uindex' in e.msg:
+                    message = "Email already in use"
+                else:
+                    message = "Username already exists"
+                return RateMyDormMessageResponse(400,message).response
         logger.error(f'Error in input data {error}')
         return error, 400
 
