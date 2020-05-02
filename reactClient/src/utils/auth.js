@@ -32,8 +32,11 @@ export const auth = {
         if (auth.isAuthenticated && auth.user_id === -1) {
             axios.get('/auth/user')
                 .then(res => {
-                    console.log('get_user_id callback', res)
+                    console.log('get_user_id callback', res.data)
                     cb(res.data.payload)
+                })
+                .catch(err => {
+                    logout('Error getting user id: ',err)
                 })
         }
     }

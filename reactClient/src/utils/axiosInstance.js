@@ -13,8 +13,6 @@ const instance = axios.create({
 
 // Interceptor handles flask redirects
 instance.interceptors.response.use( (response) => {
-    console.log('In interceptor: ' + response);
-    console.log(response.request);
     if(response.status === 200 && response.data && response.data.type === 'RMD_redirect') {
         window.location.pathname = response.data.location;
         return Promise.resolve(response)
