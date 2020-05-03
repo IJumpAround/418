@@ -39,10 +39,8 @@ class Navbar extends Component {
                                 <Link className="nav-link custom-color" to='/dashboard'>Dashboard  {this.props.isLoggedIn}</Link>
                             </li>
                             <li className="nav-item">
-                                <LoginButton isLoggedIn = {this.props.isLoggedIn} setLoginStateFn={this.props.setAppLoginState} />
-                            </li>
-                            <li className="nav-item">
-                                <Link className="nav-link custom-color" to='/debug'>Debug</Link>
+                                <LoginButton isLoggedIn = {this.props.isLoggedIn}
+                                            setLoggedIn = {this.props.setAppLoginState}/>
                             </li>
                         </ul>
                     </div>

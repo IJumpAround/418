@@ -1,13 +1,14 @@
 import React from 'react'
-import axios from '../../utils/axiosInstance'
 import {options as buildingOptions} from "./buildingOptions";
+import axios from '../../utils/axiosInstance'
+import {auth} from "../../utils/auth";
+import {addDormImageToDb, uploadImage} from '../../utils/images'
 
-
-class addDormForm extends React.Component {
+class AddDormForm extends React.Component {
     test = false // Disables querying geocode api when true
+    validFormats = ['jpg','bmp','png'].join(',')
     constructor(props) {
         super(props);
-
         try {
             this.state = {
                 coords: props.location.dormFormProps.coords,
@@ -97,8 +98,6 @@ class addDormForm extends React.Component {
                 zip: address.postalCode || ''
             }
         })
-
-
     }
 
     // Compare geocoded address with values in the form. If they are different, then the user has modified the address
@@ -117,9 +116,7 @@ class addDormForm extends React.Component {
 
     // Enable or disable room type and building selections if "off campus" is chosen.
     quadOnChange = (event) => {
-        let value = event.target.value
-
-        if(value === "Off Campus") {
+        if(event.target.value === "Off Campus") {
             this.setState({offCampus: true})
         }
         else {
@@ -131,15 +128,12 @@ class addDormForm extends React.Component {
 
     onSubmit = (event) => {
         event.preventDefault()
-        console.log(event.target)
-
-        // TODO use regular geocode if address is not passed in.
-        // Disable address field if passed in from props.
-        // Alternatively, get coords from geocode if user changes address from what is passed.
         if(this.state.coords == null){
             alert("Error, coordinates are missing from state. Maybe you didn't reach this page via the search page?")
             return
         }
+
+        // Get address info from form
         let address, city, state, zip
         address = event.target.address.value
         city = event.target.city.value
@@ -172,7 +166,6 @@ class addDormForm extends React.Component {
             features: {}
         }
 
-
         // Features & Room
         payload.features.room_type = this.state.offCampus ? "NA" : event.target.room_type.value
         payload.features.bathroom = event.target.bathroom.value
@@ -183,20 +176,51 @@ class addDormForm extends React.Component {
         payload.features.kitchen = event.target.kitchen.value
 
         console.log(JSON.stringify(payload))
-        this.postToApi(payload)
+
+        // If an image is supplied
+        if (event.target.dorm_image.files.length === 1) {
+            // Upload the image to s3
+            uploadImage(event.target.dorm_image.files[0])
+                .then(view_url => {
+                    // Add the dorm to mysql db
+                    this.addDorm(payload, null)
+                        .then(dorm_id => {
+                            if (dorm_id) {
+                                // Add dorm image to db
+                                addDormImageToDb(view_url, dorm_id, auth.user_id)
+                                window.location.pathname = `/singleDorm/${dorm_id}`
+                            } else {
+                                console.log('error during adding dorm')
+                            }
+                        })
+                        .catch(err => {
+                            console.log('Error creating dorm, aborting')
+                        })
+                })
+                .catch(err => {
+                    console.log('upload fail' + err)
+                })
+        }
+        // Only adding the dorm
+        else {
+            this.addDorm(payload, null)
+                .then(res => {
+                    window.location.pathname = `/singleDorm/${res.data.payload.dorm_id}`
+                })
+        }
     }
 
     // add dorm to mysql database via flask backend
-    async postToApi(payload) {
+    async addDorm(payload) {
         let result = await axios.post('/dorms', payload)
-        let message
+
         if(result.status === 200){
             //success
-            console.log(`Success! navigating to single dorm page ${result.data}`)
-            window.location.pathname = `/singleDorm/${result.data.payload.dorm_id}`
+            return result.data.payload.dorm_id
         }
         else{
             alert(`Error adding dorm: ${result.data.payload.message}`)
+            return null
         }
     }
 
@@ -285,6 +309,7 @@ class addDormForm extends React.Component {
                                     <div className="col-sm-5">
                                         <label className="">Dorm Image:</label>
                                         <input type="file" className="mb-2 mt-2" id="dorm_image" name="dorm_image"
+                                               accept={this.validFormats}
                                         />
                                     </div>
                                 </div>
@@ -449,4 +474,4 @@ class addDormForm extends React.Component {
     }
 }
 
-export default addDormForm
+export default AddDormForm

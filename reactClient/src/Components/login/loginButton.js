@@ -1,28 +1,28 @@
 import React from "react";
-import {logout} from "../../utils/auth";
-
+import {auth} from "../../utils/auth";
 class LoginButton extends React.Component {
     constructor(props) {
         super(props);
     }
 
     render() {
-        console.log('in render' + this.props.isLoggedIn);
+        console.log('in render' + auth.isLoggedIn);
         if (this.props.isLoggedIn) {
             return (
-                <a className="nav-link custom-color"  href='#' onClick={(e) => this.logout_wrapper(e)}>Logout</a>
+                <a className="nav-link custom-color"  href='#' onClick={(e) => this.logoutFunction()}>Logout</a>
             )
         } else {
             return (
                 <a className="nav-link custom-color" href="#" data-toggle="modal"
-                   data-target="#modalLogin">
+                   data-target="#modalLogin" id="loginNavButton">
                     Login</a>
             )
         }
     }
 
-    logout_wrapper(event) {
-        logout(this.props.setLoginStateFn);
+    logoutFunction() {
+        auth.signout()
+        this.props.setLoggedIn(false)
     }
 }
 

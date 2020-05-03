@@ -4,7 +4,7 @@ from flask import Blueprint, request, session, g
 from werkzeug.security import check_password_hash, generate_password_hash
 from mysql.connector.errors import IntegrityError, InterfaceError
 
-from ratemydorm.utils.api_response import RateMyDormRedirectResponse
+from ratemydorm.utils.api_response import RateMyDormRedirectResponse, RateMyDormMessageResponse, RateMyDormApiResponse
 from ratemydorm.sql.db_connect import get_connection
 
 bp = Blueprint('auth', __name__, url_prefix='/auth')
@@ -74,11 +74,15 @@ def register():
 
                 connection.commit()
                 data = {'message': 'User registered'}
-                response = RateMyDormRedirectResponse(location='/dashboard', data=data).response
+                response = RateMyDormMessageResponse(200,None).response
                 return response
             except IntegrityError as e:
                 logger.error(f'User exists: {e}')
-                return 'Username already exists!', 400
+                if 'users_email_uindex' in e.msg:
+                    message = "Email already in use"
+                else:
+                    message = "Username already exists"
+                return RateMyDormMessageResponse(400,message).response
         logger.error(f'Error in input data {error}')
         return error, 400
 
@@ -122,7 +126,7 @@ def login():
             session.clear()
             session['user_id'] = user.user_id
             data_response['success'] = True
-            redirect_response = RateMyDormRedirectResponse('/dashboard', data=data_response).response
+            redirect_response = RateMyDormMessageResponse(200, data_response).response
 
             return redirect_response
 
@@ -139,6 +143,10 @@ def get_user_id_and_role():
     user_id = session.get('user_id')
     admin = session.get('admin')
     admin = True if admin else False
+    payload = dict()
+    payload['admin'] = admin
+    payload['user_id'] = user_id
+    return RateMyDormApiResponse(payload,200).response
 
 
 @bp.route('/test_rendering', methods=['GET'])
@@ -182,8 +190,8 @@ def load_logged_in_user():
 def logout():
     """Clear session cookie"""
     session.clear()
-    redirect_response = RateMyDormRedirectResponse(location='/', data="Logged Out").response
-    return redirect_response
+    response = RateMyDormMessageResponse(200, None).response
+    return response
 
 
 def login_required(view):

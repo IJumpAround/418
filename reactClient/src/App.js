@@ -1,5 +1,6 @@
 import React from 'react';
-import 'bootstrap/dist/js/bootstrap.bundle';
+import 'bootstrap/dist/css/bootstrap.min.css'
+import 'bootstrap/dist/js/bootstrap.bundle.min'
 import './utils/config'
 import {BrowserRouter as Router, Route, Switch} from "react-router-dom";
 import DebugPage from './Components/debug/debug'
@@ -9,8 +10,8 @@ import SearchPage from './Components/searchComponents/SearchPage';
 import Navbar from './Components/navComponents/navigation/Navbar';
 import SingleDorm from './Components/singleDorm/singleDorm';
 import config from 'react-global-configuration'
-import {is_user_logged_in} from "./utils/auth";
-import addDormForm from './Components/addDormForm/addDormForm';
+import {auth, is_user_logged_in, showLoginModal} from "./utils/auth";
+import AddDormForm from './Components/addDormForm/addDormForm';
 import {combineReducers, createStore} from 'redux';
 import {reducer as formReducer} from 'redux-form'
 import {Provider} from 'react-redux';
@@ -42,11 +43,6 @@ class App extends React.Component {
     componentDidMount() {
         is_user_logged_in(this.setAppLoggedInState)
     }
-
-
-    getLoginWindowStatus = (loginWindowStatus) => {
-        this.setState({showLogin: !loginWindowStatus});
-    };
 
     passedCoordFromMap = (coordFromOpenMap) => {
         this.setState({passedCoordinates: coordFromOpenMap})
@@ -81,7 +77,7 @@ class App extends React.Component {
                     }/>
                     <Route path='/debug' component={DebugPage}/>
                     <Route path='/singleDorm/:id' component={SingleDorm}/>
-                    <Route path='/addDormForm' component={addDormForm}/>
+                    <PrivateRoute  path='/addDormForm' component={AddDormForm}/>
                     <Route component={DashBoard}/>{/*KEEP THIS AS THE LAST ROUTE*/}
                 </Switch>
             </Router>
@@ -89,11 +85,29 @@ class App extends React.Component {
         )
     }
 
-    setAppLoggedInState = (isLoggedIn) => {
+    setAppLoggedInState = (isLoggedIn, init=false) => {
         console.log('login state function called with: ' + isLoggedIn);
         this.setState({isLoggedIn: isLoggedIn})
+        if(init) {
+            if(isLoggedIn) {
+                auth.authenticate()
+            }
+        }
     }
 
-};
+}
+
+function PrivateRoute({ component: Component, ...rest }) {
+    console.log('private route ', auth.isAuthenticated)
+    return (
+        <Route
+            {...rest}
+            render={({ location }) =>
+                auth.isAuthenticated ? (<Component {...rest}/>) :
+                    showLoginModal()
+            }
+        />
+    );
+}
 
 export default App;
