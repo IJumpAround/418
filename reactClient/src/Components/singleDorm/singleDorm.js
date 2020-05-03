@@ -67,8 +67,10 @@ class singleDorm extends Component {
       })
         .then((result) => {
             if (result) {
-                console.log(Object.entries(result));
+             //   console.log(Object.entries(result));
                 var manipResult = result.data
+                console.log(manipResult);
+                
                 this.setState({ loadedResult : manipResult})
             }
             
@@ -115,6 +117,26 @@ class singleDorm extends Component {
 
       componentDidMount(){   
         this.dormLoadHandler()
+
+
+       //THIS IS TEMPORARY, just tested rendering reviews by getting all of user 18's reviews
+       /*
+       axios.get('/user/profile', 
+       {params: {'user_id': 18}},
+       {headers: {'Content-Type': 'application/json',}
+      })
+        .then(result => {
+          console.log(result);
+          let review = result.data.payload.reviews;
+          this.setState({
+            reviews: review,    
+        })   
+        })
+        .catch(error => {
+          console.log(error);
+          
+        })
+ 
         this.setState({
           //Dorm info
           quad: "Dutch",
@@ -132,6 +154,8 @@ class singleDorm extends Component {
           }         
           
         })    
+        
+        */
       }
 
     render() {
@@ -205,8 +229,8 @@ class singleDorm extends Component {
         
      
         <div className="row">
-          <div className="col-6">
-            <h3>Overall Dorm Rating: {this.state.overall_dorm_rating}</h3>
+          <div className="col-md-3">
+            <h3>Reviews</h3>
           </div>
         </div>
         <div className="review_section shadow-sm">

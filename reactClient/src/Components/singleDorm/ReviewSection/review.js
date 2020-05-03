@@ -11,20 +11,21 @@ import Trump from '../../../img/trump.jpg';
         <div className="row justify-content-end">
           <div className="col-sm-8">
           <div className="media-body text-left ">
-            <h5 className="mb-0">Donald Trump</h5>
-            <p>April 2020</p>
+            <h5 className="mb-0"></h5>
+            <p>{props.review.timestamp}</p>
           </div>
 
           </div>
           <div className="col-sm-4">
-            <p>Rating: 4</p>
+          <p>Rating: {props.review.rating}</p>
           </div>
         </div> 
             <hr />
         </div>
       <div className="row text-left ml-3">
-      {props.review}
+          {props.review.review_text}
       </div>
+      <hr></hr>
     </div>
   )
 }

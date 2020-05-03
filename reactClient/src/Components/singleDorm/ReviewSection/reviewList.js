@@ -7,10 +7,12 @@ import Review from './review'
 
   return (
     <div>
+      
       {props.reviews.map((review, index)=> (
-        <Review  key={index} review={review}/>
+        <Review  key={review} review={review}/>
 
       ))}
+      
     </div>
   )
 }
