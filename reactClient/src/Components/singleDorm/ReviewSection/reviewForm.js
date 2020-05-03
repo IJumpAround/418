@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
-
+import axios from '../../../utils/axiosInstance'
 
  class reviewForm extends Component {
+
   constructor(props){
     super(props);
     this.state = {
@@ -19,14 +20,36 @@ import React, { Component } from 'react'
   }
 
   handleOnSubmit(e){
-    e.preventDefualt();
-    // send review to server here
-    // then send review to parent(singleDorm) to render on page
+    e.preventDefault();
+
+    const params = {
+      'user_id': 18,
+      'dorm_id': 10,
+      'rating': this.props.rating,
+      'review_text': this.state.review
+    }
+    axios.post('dorms/review', (params)
+
+    ,{headers: {'Content-Type': 'application/json',
+  }})
+  
+.then(result  => {
+  if(result){
+    this.props.addReview(this.state.review);
     
+  }
+}) 
+
+
+.catch(function (error) {
+
+})
   }
 
   render() {
-
+    console.log(this.state.review);
+    console.log(this.props.rating);
+    
     return (
       <div>
         <form className="form-group" onSubmit={this.handleOnSubmit}>
@@ -35,10 +58,10 @@ import React, { Component } from 'react'
                     name="review"
                     value={this.state.review}
                     onChange={this.handleOnChange}/>
-        </form>
         <div className="row justify-content-end mr-1">
           <button className="btn btn-dark" type="submit">Submit</button>               
         </div>    
+        </form>
       </div>
     )
   }
