@@ -3,7 +3,10 @@ import {Link, useLocation} from 'react-router-dom';
 import ProfileImgPlaceholder from '../../../img/placeholder-profile-male-500x500.png';
 import './sidebar.css';
 
-function Sidebar() {
+function Sidebar(props) {
+  console.log(props);
+  var firstName = props.userInfo.firstName;
+  var lastName = props.userInfo.lastName;
 
   //useLocation hook, returns location object that represents current url
   let location = useLocation();
@@ -22,7 +25,7 @@ function Sidebar() {
           </div>         
             {/*Student Information Section*/}
             <div className="text-light text-left px-3 py-2">
-              <h6 className="text-center">Donald Trump</h6>
+                <h6 className="text-center">{firstName} {lastName}</h6>
                 <hr />
                   <p className="mb-0">Senior</p>
                   <p className="mb-0">Dutch Quad</p>
