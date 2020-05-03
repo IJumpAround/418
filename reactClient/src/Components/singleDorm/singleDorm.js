@@ -28,6 +28,7 @@ class singleDorm extends Component {
         image: ""
       },
       dorm_info: {
+        dorm_id: "",
         room: "",
         floor: "",
         room_type: "",
@@ -55,6 +56,8 @@ class singleDorm extends Component {
   }
 
     addReview(review){
+      console.log(review);
+      
       this.setState({
         reviews: [review, ...this.state.reviews]
       })
@@ -70,8 +73,11 @@ class singleDorm extends Component {
              //   console.log(Object.entries(result));
                 var manipResult = result.data
                 console.log(manipResult);
-                
-                this.setState({ loadedResult : manipResult})
+                             
+                this.setState({ loadedResult : manipResult,
+                                dorm_id : this.props.match.params.id,
+                                reviews : manipResult.payload.dorm_reviews
+                })
             }
             
         })
@@ -122,14 +128,15 @@ class singleDorm extends Component {
        //THIS IS TEMPORARY, just tested rendering reviews by getting all of user 18's reviews
        /*
        axios.get('/user/profile', 
-       {params: {'user_id': 18}},
+       {params: {'user_id': 16}},
        {headers: {'Content-Type': 'application/json',}
       })
         .then(result => {
           console.log(result);
           let review = result.data.payload.reviews;
           this.setState({
-            reviews: review,    
+            reviews: review,
+    
         })   
         })
         .catch(error => {
@@ -152,15 +159,17 @@ class singleDorm extends Component {
             dining: false,
             fitness: false,
           }         
-          
+         
         })    
-        
         */
+        
       }
 
     render() {
      // console.log(this.state.loadedResult);
       console.log(this.state.reviews);
+      console.log(this.state.dorm_id);
+      
       
       const element = <div>Show Less</div>
       const element2 = <div>Show More</div>
@@ -237,8 +246,8 @@ class singleDorm extends Component {
           <div className="row ml-3">
             
           </div>
-        <div className="row ml-3">
-          <ReviewList reviews={this.state.reviews} rating={this.state.dorm_info.dorm_user_rating}/>
+        <div className="row ml-3 mr-3">
+          <ReviewList reviews={this.state.reviews} rating={this.state.dorm_info.dorm_user_rating}/> 
         </div>
         </div>
         <div className="input-section">
@@ -258,7 +267,7 @@ class singleDorm extends Component {
                         emptyStarColor = "#564D80"
                       />           
                   </div>
-                  <ReviewForm reviews={this.state.reviews} rating={this.state.dorm_user_rating} addReview={this.addReview}/>            
+                  <ReviewForm reviews={this.state.reviews} rating={this.state.dorm_user_rating} addReview={this.addReview} dorm_id={this.state.dorm_id}/>            
                 </div>
               </div>
             </div>       
