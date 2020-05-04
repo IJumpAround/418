@@ -204,8 +204,8 @@ class AddDormForm extends React.Component {
         // Only adding the dorm
         else {
             this.addDorm(payload, null)
-                .then(res => {
-                    window.location.pathname = `/singleDorm/${res.data.payload.dorm_id}`
+                .then(res_dorm_id => {
+                    window.location.pathname = `/singleDorm/${res_dorm_id}`
                 })
         }
     }
