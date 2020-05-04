@@ -3,6 +3,7 @@ import {options as buildingOptions} from "./buildingOptions";
 import axios from '../../utils/axiosInstance'
 import {auth} from "../../utils/auth";
 import {addDormImageToDb, uploadImage} from '../../utils/images'
+import config from 'react-global-configuration'
 
 class AddDormForm extends React.Component {
     test = false // Disables querying geocode api when true
@@ -37,7 +38,7 @@ class AddDormForm extends React.Component {
 
     // Use an address to get coordinates from bing's api.
     bingGeo = (address, callback) => {
-        fetch(`http://dev.virtualearth.net/REST/v1/Locations/${address}&maxResults=1&key=AtVpew29wF6vGwfKIVd-IfeNta0fA4gmM9Kuz_hoGNIl25-oNfo3jML_zaPTTZfF`)
+        fetch(`https://dev.virtualearth.net/REST/v1/Locations/${address}&maxResults=1&key=${config.get('bingKey')}`)
             .then((response) => {
                 response.json()
                     .then((res) => {
@@ -68,7 +69,7 @@ class AddDormForm extends React.Component {
         }
 
         // Otherwise, query Bing's api
-        fetch(`http://dev.virtualearth.net/REST/v1/Locations/${latlng.lat},${latlng.lng}?o=json&key=AtVpew29wF6vGwfKIVd-IfeNta0fA4gmM9Kuz_hoGNIl25-oNfo3jML_zaPTTZfF`)
+        fetch(`https://dev.virtualearth.net/REST/v1/Locations/${latlng.lat},${latlng.lng}?o=json&key=${config.get('bingKey')}`)
             .then((response) => {
                 response.json()
                     .then((res) => {
