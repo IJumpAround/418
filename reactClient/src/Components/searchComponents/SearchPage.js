@@ -36,6 +36,21 @@ class SearchPage extends Component {
 	passedCardsFromMap = (dataFromOpenMap) => {
 		var loadedCards = []
 		for(var i=0; i<dataFromOpenMap.data.length; i++){
+			
+			var avgRating =0
+			for(var j=0; j<dataFromOpenMap.data[i][15].length; j++){
+				avgRating = avgRating + dataFromOpenMap.data[i][15][j]
+			}
+			avgRating = avgRating/(dataFromOpenMap.data[i][15].length)
+			if(isNaN(avgRating)){
+				avgRating = 'No Ratings'
+			}
+
+			var image_urls = dataFromOpenMap.data[i][16]
+			if(image_urls.length<1){
+				image_urls = 'No Images'
+			}
+
 			loadedCards.push(
 				{Dorm_id: dataFromOpenMap.data[i][0],
 				 Room: dataFromOpenMap.data[i][3],
@@ -43,8 +58,9 @@ class SearchPage extends Component {
 				 Building: dataFromOpenMap.data[i][5],
 				 Quad: dataFromOpenMap.data[i][6],
 				 Address: dataFromOpenMap.data[i][7],
+				 Rating: avgRating,
 				 Tags: "Tag",
-				 Image: ''
+				 Image: image_urls
 				}
 			)		
 		}	

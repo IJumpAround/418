@@ -164,15 +164,49 @@ def load_cards():
                             dorm_dict.pop(i)
 
                             continue
-
                 else:
                     #print('pop malformat:', dorm_dict[i][0] ,  'iter:', i)
                     dorm_dict.pop(i)
-
                     continue
                 i += 1
-            return {'data' : dorm_dict}, 200
 
+            for j in range(len(dorm_dict)):
+                temp_param = {
+                    'dorm_id': dorm_dict[j][0]
+                }
+                cursor.execute(
+                    'SELECT rating '
+                    'FROM review '
+                    'LEFT JOIN users '
+                    'ON review.user_id = users.user_id '
+                    'WHERE review.dorm_id = %(dorm_id)s', temp_param
+                )
+                reviews = cursor.fetchall()
+                if reviews is None:
+                    error = 'No dorms match your query'
+                if error is None:
+                    review_arr = []
+                    for k in range(len(reviews)):
+                        review_arr.append(reviews[k][0])
+                    dorm_dict[j].append(review_arr)
+
+
+            j=0
+            for j in range(len(dorm_dict)):
+                temp_param = {
+                    'dorm_id': dorm_dict[j][0]
+                }
+                cursor.execute(
+                    'SELECT url '
+                    'FROM dorm_image '
+                    'WHERE dorm_id = %(dorm_id)s '
+                    'LIMIT 1', temp_param
+                )
+                dorm_image = cursor.fetchall()
+                dorm_dict[j].append(dorm_image)
+
+
+            return {'data': dorm_dict}, 200
         data_response['message'] = error
         return data_response, 401
 
