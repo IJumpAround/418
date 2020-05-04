@@ -194,6 +194,7 @@ class SearchPage extends Component {
 				<div className="col-md-4" style={cardstyle} >
 		<div className="flex-container-fluid" style={mystyle}>
 			<div className="container-fluid"  >
+				<h3>Top 30 Results</h3>
 				<DynamicCards passDataToDynamicCards = {this.state.cardData}/>
 			</div>
 	  	</div>	

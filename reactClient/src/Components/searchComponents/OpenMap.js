@@ -40,7 +40,16 @@ cardLoadHandler = () =>  {
   //Changing cards begins
   axios.post('search/load_cards', {
     latitude: this.state.latlng.lat,
-    longitude: this.state.latlng.lng
+    longitude: this.state.latlng.lng,
+    radius: this.props.radius,
+    room_type: this.props.room_type,
+    bathroom: this.props.bathroom,
+    dining: this.props.dining,
+    internet: this.props.internet,
+    laundry: this.props.laundry,
+    fitness: this.props.fitness,
+    airConditioning: this.props.airConditioning
+
     //Posts the coordinates of the current marker for filtering
 })
     .then((result) => {
