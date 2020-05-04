@@ -3,14 +3,14 @@ import Review from './review'
 
  //list all of the reviews into an array
  function ReviewList(props) {
- console.log(props);
+ //console.log(props);
 
+ 
   return (
-    <div>
+    <div className="col-lg-12">
       
       {props.reviews.map((review, index)=> (
         <Review  key={review} review={review}/>
-
       ))}
       
     </div>
@@ -19,3 +19,4 @@ import Review from './review'
 
 
 export default ReviewList;
+

@@ -41,7 +41,7 @@ export async function retrieveDormImage(dorm_id) {
         }
     })
         .then(result => {
-            return result.data.payload.urls
+            return result.data.payload.urlResult     
         })
         .catch(err => {
             return null

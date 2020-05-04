@@ -4,6 +4,7 @@ import UserDataSection from '../UserDataSection/userDataSection';
 import HistorySection from '../HistorySection/historySection';
 import './dashboardWrapper.css'
 import axios from '../../../utils/axiosInstance';
+import {auth} from '../../../utils/auth';
 
 //Holds all the components of the dashboard
 class DashboardWrapper extends React.Component{
@@ -27,10 +28,11 @@ class DashboardWrapper extends React.Component{
     }
    
   }
+  
 
 fetchData = () => {
   axios.get('/user/profile', 
-   {params: {'user_id': 18}},
+   {params: {'user_id': auth.user_id}},
    {headers: {'Content-Type': 'application/json',}
   })
     .then(result => {
@@ -65,6 +67,7 @@ componentDidMount(){
 }
 
   render(){
+     console.log(auth.user_id);
      
     return (
       <div className="wrapper">

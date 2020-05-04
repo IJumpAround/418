@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import axios from '../../../utils/axiosInstance'
-
+import {auth} from '../../../utils/auth';
  class reviewForm extends Component {
 
   constructor(props){
@@ -23,8 +23,8 @@ import axios from '../../../utils/axiosInstance'
     e.preventDefault();
 
     const params = {
-      'user_id': 18,
-      'dorm_id': 10,
+      'user_id': auth.user_id,
+      'dorm_id': this.props.dorm_id,
       'rating': this.props.rating,
       'review_text': this.state.review
     }
@@ -47,8 +47,11 @@ import axios from '../../../utils/axiosInstance'
   }
 
   render() {
-    console.log(this.state.review);
-    console.log(this.props.rating);
+  //  console.log(this.state.review);
+  //  console.log(this.props.rating);
+  //  console.log(auth.user_id);
+  //  console.log(this.props.dorm_id);
+    
     
     return (
       <div>

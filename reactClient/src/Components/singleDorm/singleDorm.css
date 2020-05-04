@@ -53,7 +53,7 @@ ul.carousel-indicators li.active {
   width: 100%;
   overflow-Y: scroll;
   z-index: '10';	
-  height: 200px;
+  height: 300px;
 
 }
 

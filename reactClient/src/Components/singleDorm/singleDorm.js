@@ -1,4 +1,4 @@
-import React, { Component, useState} from 'react'
+import React, { Component} from 'react'
 import './singleDorm.css';
 import StarRatingComponent from 'react-star-rating-component';
 import ReviewList from './ReviewSection/reviewList';
@@ -6,6 +6,8 @@ import ReviewForm from './ReviewSection/reviewForm';
 import Features from './FeatureSection/features';
 import Carousel from './Carousel/carousel';
 import axios from '../../utils/axiosInstance';
+import {retrieveDormImage} from '../../utils/images';
+import { faImages } from '@fortawesome/free-solid-svg-icons';
 
 class singleDorm extends Component {
 
@@ -19,30 +21,29 @@ class singleDorm extends Component {
       showMoreBtn: false,
       tag: "",
       tag_List: [],
-  
-      reviews: [],
-      
-      
+      reviews: [],    
       user_info: {
         name: "",
         image: ""
       },
       dorm_info: {
+        dorm_id: "",
         room: "",
         floor: "",
         room_type: "",
+        building: "",
         quad: "",
         img: "",
       },
       dorm_user_rating: 0,
       overall_dorm_rating: 0,
       features: {
-        bath: true,
-        laundry: true,
-        AC: true,
-        internet: true,
-        dining: true,
-        fitness: true
+        bath: "",
+        laundry: "",
+        AC: null,
+        internet: "",
+        dining: "",
+        fitness: null
       }
 
     }
@@ -55,11 +56,27 @@ class singleDorm extends Component {
   }
 
     addReview(review){
+      console.log(review);
+      
       this.setState({
         reviews: [review, ...this.state.reviews]
       })
     }
 
+    getDormImage = () =>{
+      axios.get('/images',{
+        params: {
+          image_type: 'dorm',
+          entity_id: this.props.match.params.id
+      }
+      } 
+      ).then((response)=> console.log(response)
+      
+       
+        
+      )
+
+    }
     dormLoadHandler = () =>  {
       axios.post('dorms/load_dorm', {
         dorm_id: this.props.match.params.id
@@ -69,9 +86,32 @@ class singleDorm extends Component {
             if (result) {
              //   console.log(Object.entries(result));
                 var manipResult = result.data
-                console.log(manipResult);
-                
-                this.setState({ loadedResult : manipResult})
+                var dorm_info = result.data.payload.dorm_info;
+                var dorm_features = result.data.payload.dorm_features;
+                var dorm_images = result.data.payload.dorm_images;
+              //  console.log(manipResult);
+                             
+                this.setState({ loadedResult : manipResult,
+                                dorm_id : this.props.match.params.id,
+                                reviews : manipResult.payload.dorm_reviews,
+                                dorm_info: {                                  
+                                  room: dorm_info[2],
+                                  floor: dorm_info[3],
+                                  room_type: dorm_features[0][1],
+                                  building: dorm_info[4],                        
+                                  quad: dorm_info[5],
+                                  img: dorm_images[0]
+                                  
+                                },
+                                features: {
+                                  bath: dorm_features[1][1],
+                                  laundry: dorm_features[4][1],
+                                  AC: dorm_features[2][1],
+                                  internet: dorm_features[5][1],
+                                  dining: dorm_features[6][1],
+                                  fitness: dorm_features[3][1]
+                                }
+                })
             }
             
         })
@@ -91,14 +131,14 @@ class singleDorm extends Component {
 
       handleAddTagClick(e){
         e.preventDefault();
-        console.log(this.state.tag);
+        //console.log(this.state.tag);
         
         const tag = this.state.tag;
         this.setState({
           tag_List: [...this.state.tag_List, tag]
           
         })       
-        console.log(this.state.tag_List);
+        //console.log(this.state.tag_List);
       }
 
       handleStarClick(nextValue){
@@ -117,50 +157,22 @@ class singleDorm extends Component {
 
       componentDidMount(){   
         this.dormLoadHandler()
-
-
-       //THIS IS TEMPORARY, just tested rendering reviews by getting all of user 18's reviews
-       /*
-       axios.get('/user/profile', 
-       {params: {'user_id': 18}},
-       {headers: {'Content-Type': 'application/json',}
-      })
-        .then(result => {
-          console.log(result);
-          let review = result.data.payload.reviews;
-          this.setState({
-            reviews: review,    
-        })   
-        })
-        .catch(error => {
-          console.log(error);
-          
-        })
- 
-        this.setState({
-          //Dorm info
-          quad: "Dutch",
-          room: "403",
-          floor: "4",
-          room_type: "Single",
-          //Features
-          features: {
-            bath: false,
-            laundry: true,
-            AC: false,
-            internet: true,
-            dining: false,
-            fitness: false,
-          }         
-          
-        })    
+        //console.log( this.getDormImage());
         
-        */
+        // this.getDormImage()
+        
+        
+        
       }
-
-    render() {
-     // console.log(this.state.loadedResult);
-      console.log(this.state.reviews);
+      
+      render() {
+    //    console.log(   retrieveDormImage(20));
+        
+     
+      console.log(this.state.loadedResult);
+      //console.log(this.state.reviews);
+      // console.log(this.state.dorm_id);
+      
       
       const element = <div>Show Less</div>
       const element2 = <div>Show More</div>
@@ -171,10 +183,13 @@ class singleDorm extends Component {
         <Carousel img={this.state.dorm_info.img}/>
         <div className="row mr-2">
           <div className="col-md-4 mt-2 description border-right" style={{color: "#564D80"} }>
-            <h3 className="text-center">{this.state.quad + ' Quad'}</h3>
-            <h6>Room: {this.state.room}</h6>
-            <h6>Floor: {this.state.floor}</h6>
-            <h6>Type: {this.state.room_type}</h6>
+            <h3 className="text-center">{this.state.dorm_info.quad+ ' Quad'}</h3>
+            <div className=" ml-5 text-left">
+                <h6>Room: {this.state.dorm_info.room}</h6>
+                <h6>Floor: {this.state.dorm_info.floor}</h6>
+                <h6>Building: {this.state.dorm_info.building}</h6>
+                <h6>Type: {this.state.dorm_info.room_type}</h6>
+            </div>
             <Features features={this.state.features}/>
           </div>
           <div className="col-md-8 mt-2 description">
@@ -227,7 +242,7 @@ class singleDorm extends Component {
            
           </div>
         
-     
+        <hr></hr>
         <div className="row">
           <div className="col-md-3">
             <h3>Reviews</h3>
@@ -237,8 +252,8 @@ class singleDorm extends Component {
           <div className="row ml-3">
             
           </div>
-        <div className="row ml-3">
-          <ReviewList reviews={this.state.reviews} rating={this.state.dorm_info.dorm_user_rating}/>
+        <div className="row ml-3 mr-3">
+          <ReviewList reviews={this.state.reviews} rating={this.state.dorm_info.dorm_user_rating}/> 
         </div>
         </div>
         <div className="input-section">
@@ -258,7 +273,7 @@ class singleDorm extends Component {
                         emptyStarColor = "#564D80"
                       />           
                   </div>
-                  <ReviewForm reviews={this.state.reviews} rating={this.state.dorm_user_rating} addReview={this.addReview}/>            
+                  <ReviewForm reviews={this.state.reviews} rating={this.state.dorm_user_rating} addReview={this.addReview} dorm_id={this.state.dorm_id}/>            
                 </div>
               </div>
             </div>       
