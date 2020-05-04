@@ -16,7 +16,17 @@ class SearchPage extends Component {
 				lng: -73.824688,
 				},
 
-			passedAddress: ''
+			passedAddress: '',
+			
+			radius: '1',
+			room_type: 'Any',
+			bathroom: 'Any',
+			internet: 'Any',
+			dining: 'Any',
+			fitness: 'Any',
+			airConditioning: 'Any',
+			laundry: 'Any'
+			
 
 		};
 
@@ -46,6 +56,41 @@ class SearchPage extends Component {
 		this.setState({passedCoordsFromMap: passedCoord})
 	}
 
+
+	distanceFilter = e => {
+		var distanceSelected = e.target.value
+		this.setState({radius : distanceSelected})
+	}
+	roomFilter= e => {
+		var roomSelected = e.target.value
+		this.setState({room_type : roomSelected})
+	}
+	bathroomFilter= e => {
+		var bathSelected = e.target.value
+		this.setState({bathroom : bathSelected})
+	}
+	diningFilter= e => {
+		var diningSelected = e.target.value
+		this.setState({dining : diningSelected})
+	}
+	internetFilter= e => {
+		var internetSelected = e.target.value
+		this.setState({internet : internetSelected})
+	}
+	fitnessFilter= e => {
+		var fitnessSelected = e.target.value
+		this.setState({fitness : fitnessSelected})
+	}
+	airConFilter= e => {
+		var airSelected = e.target.value
+		this.setState({airConditioning : airSelected})
+	}
+	laundryFilter= e => {
+		var laundrySelected = e.target.value
+		this.setState({laundry : laundrySelected})
+	}
+
+
 	passUpCoord = () => {
 		this.props.coordinates(this.state.passedCoordsFromMap);
 	  }
@@ -68,11 +113,85 @@ class SearchPage extends Component {
 		<React.Fragment>
 		<div className="text-right"><div className = "h2" style = {textstyle}> ~Search on the map: The search-bar is in the top right. click to set a marker and find dorms nearby! ~ </div>
 		</div>
-
+		<div className = "container-fluid">
+			<div className="row">
+			<div className="col-sm-1">
+				<label>Radius:</label>
+				<select required name="radius" className="custom-select mb-2" onChange={this.distanceFilter}>
+					<option defaultValue="1">1 mile</option>
+					<option value="2">2 miles</option>
+					<option value="3">3 miles</option>
+					<option value="4">4 miles</option>
+					<option value="5">5 miles</option>
+					<option value="10">10 miles</option>
+					></select>
+			</div>
+		</div>
+		<div className="row">
+			<div className="col-sm-2">
+				<label>Room Type:</label>
+				<select required name="room_type" className="custom-select mb-2" onChange={this.roomFilter}>
+					<option defaultValue="Any">Any</option>
+					<option value="Single">Single</option>
+					<option value="Double">Double</option>
+					<option value="Triple">Triple</option>
+					<option value="Quad">Quad</option>
+					></select>
+			</div>
+			<div className="col-sm-2">
+				<label>Bathroom:</label>
+				<select required name="bathroom" className="custom-select mb-2" onChange={this.bathroomFilter}>
+					<option defaultValue="Any">Any</option>
+					<option value="In Dorm">In Dorm</option>
+					<option value="On Floor">On Floor</option>
+					></select>
+			</div>
+			<div className="col-sm-2">
+				<label>Dining:</label>
+				<select required name="dining" className="custom-select mb-2" onChange={this.diningFilter}>
+					<option defaultValue="Any">Any</option>
+					<option value="Dining Hall">Dining Hall</option>
+					<option value="In Dorm Kitchen">In Dorm Kitchen</option>
+					></select>
+			</div>
+			<div className="col-sm-2">
+				<label>Internet:</label>
+				<select required name="internet" className="custom-select mb-2" onChange={this.internetFilter}>
+					<option defaultValue="Any">Any</option>
+					<option value="Wifi">Wifi</option>
+					<option value="Ethernet">Ethernet</option>
+					<option value="Both">Both</option>
+					></select>
+			</div>
+			<div className="col-sm-1">
+				<label>Gym?:</label>
+				<select required name="fitness" className="custom-select mb-2" onChange={this.fitnessFilter}>
+					<option defaultValue="Any">Any</option>
+					<option value="Yes">Yes</option>
+					<option value="No">No</option>
+					></select>
+			</div>
+			<div className="col-sm-2">
+				<label>Laundry:</label>
+				<select required name="laundry" className="custom-select mb-2" onChange={this.laundryFilter}>
+					<option defaultValue="Any">Any</option>
+					<option value="In Dorm">In Dorm</option>
+					<option value="On Floor">On Floor</option>
+					></select>
+			</div>
+			<div className="col-sm-1">
+				<label>A/C?:</label>
+				<select required name="airConditioning" className="custom-select mb-2" onChange={this.airConFilter}>
+					<option defaultValue="Any">Any</option>
+					<option value="Yes">Yes</option>
+					<option value="No">No</option>
+					></select>
+			</div>
+		</div>
+	</div>
 		<div className="container-fluid">
 			<div className="row">
 				<div className="col-md-4" style={cardstyle} >
-
 		<div className="flex-container-fluid" style={mystyle}>
 			<div className="container-fluid"  >
 				<DynamicCards passDataToDynamicCards = {this.state.cardData}/>
@@ -107,6 +226,14 @@ class SearchPage extends Component {
 				<h6>Click on the approximate location of your residence then hit the above button!</h6>
 			<OpenMap passCardsFromOpenMap = {this.passedCardsFromMap} 
 					 passCoordFromOpenMap = {this.passedCoordFromMap}
+					 radius={this.state.radius}
+					 room_type={this.state.room_type}
+					 bathroom={this.state.bathroom}
+					 internet={this.state.internet}
+					 dining={this.state.dining}
+					 fitness={this.state.fitness}
+					 airConditioning={this.state.airConditioning}
+					 laundry={this.state.laundry}
 			/>
 				</div>
 			</div>
