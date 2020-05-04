@@ -47,11 +47,10 @@ import {auth} from '../../../utils/auth';
   }
 
   render() {
-    console.log(this.state.review);
-    console.log(this.props.rating);
-    console.log(auth.user_id);
-  
-    console.log(this.props.dorm_id);
+  //  console.log(this.state.review);
+  //  console.log(this.props.rating);
+  //  console.log(auth.user_id);
+  //  console.log(this.props.dorm_id);
     
     
     return (

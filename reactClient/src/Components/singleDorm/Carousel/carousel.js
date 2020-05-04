@@ -18,7 +18,7 @@ function Carousel(props) {
     </ul>
     <div className="carousel-inner text-center">
       <div className="carousel-item active">
-        <img src={Image1} alt="image1" width="300" height="300"/>
+        <img src={props.img} alt="image1" width="300" height="300"/>
       </div>
       <div className="carousel-item">
         <img src={Image2} alt="image2" width="300" height="300"/>

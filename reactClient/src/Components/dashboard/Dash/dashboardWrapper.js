@@ -28,6 +28,7 @@ class DashboardWrapper extends React.Component{
     }
    
   }
+  
 
 fetchData = () => {
   axios.get('/user/profile', 

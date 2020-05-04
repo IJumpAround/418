@@ -3,7 +3,7 @@ import Review from './review'
 
  //list all of the reviews into an array
  function ReviewList(props) {
- console.log(props);
+ //console.log(props);
 
  
   return (

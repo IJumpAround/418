@@ -1,12 +1,10 @@
 import React from "react";
 import {auth} from "../../utils/auth";
 class LoginButton extends React.Component {
-    constructor(props) {
-        super(props);
-    }
+
 
     render() {
-        console.log('in render' + auth.isLoggedIn);
+      //  console.log('in render' + auth.isLoggedIn);
         if (this.props.isLoggedIn) {
             return (
                 <a className="nav-link custom-color"  href='#' onClick={(e) => this.logoutFunction()}>Logout</a>
