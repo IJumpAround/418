@@ -108,27 +108,27 @@ def load_cards():
                 [13] = internet
                 [14] = kitchen
                 '''
-            print('starting length' , len(dorm_dict))
+            #print('starting length' , len(dorm_dict))
             i=0
             while (i < len(dorm_dict)):
-                print(len(dorm_dict[i]), ':ID:', dorm_dict[i][0], ':Iteration:' ,i)
+                #print(len(dorm_dict[i]), ':ID:', dorm_dict[i][0], ':Iteration:' ,i)
                 if len(dorm_dict[i]) > 14:
                     if(room_type!='Any'):
                         if dorm_dict[i][8][1] != room_type:
-                            print('pop room:', dorm_dict[i][0], 'iter:', i)
+                            #print('pop room:', dorm_dict[i][0], 'iter:', i)
                             dorm_dict.pop(i)
                             continue
 
                     if (bathroom != 'Any'):
                         if dorm_dict[i][9][1] != bathroom:
-                            print('pop br:', dorm_dict[i][0], 'iter:', i)
+                            #print('pop br:', dorm_dict[i][0], 'iter:', i)
                             dorm_dict.pop(i)
 
                             continue
 
                     if (airConditioning != 'Any'):
                         if dorm_dict[i][10][1] != airConditioning:
-                            print('pop air:', dorm_dict[i][0], 'iter:', i)
+                            #print('pop air:', dorm_dict[i][0], 'iter:', i)
                             dorm_dict.pop(i)
 
                             continue
@@ -136,7 +136,7 @@ def load_cards():
 
                     if (fitness != 'Any'):
                         if dorm_dict[i][11][1] != fitness:
-                            print('pop fit:', dorm_dict[i][0], 'iter:', i)
+                            #print('pop fit:', dorm_dict[i][0], 'iter:', i)
                             dorm_dict.pop(i)
 
                             continue
@@ -144,7 +144,7 @@ def load_cards():
 
                     if (laundry != 'Any'):
                         if dorm_dict[i][12][1] != laundry:
-                            print('pop laund:', dorm_dict[i][0], 'iter:', i)
+                            #print('pop laund:', dorm_dict[i][0], 'iter:', i)
                             dorm_dict.pop(i)
 
                             continue
@@ -152,7 +152,7 @@ def load_cards():
 
                     if (internet != 'Any'):
                         if dorm_dict[i][13][1] != internet:
-                            print('pop internet:', dorm_dict[i][0], 'iter:', i)
+                            #print('pop internet:', dorm_dict[i][0], 'iter:', i)
                             dorm_dict.pop(i)
 
                             continue
@@ -160,13 +160,13 @@ def load_cards():
 
                     if (dining != 'Any'):
                         if dorm_dict[i][14][1] != dining:
-                            print('pop din:', dorm_dict[i][0], 'iter:', i)
+                            #print('pop din:', dorm_dict[i][0], 'iter:', i)
                             dorm_dict.pop(i)
 
                             continue
 
                 else:
-                    print('pop malformat:', dorm_dict[i][0] ,  'iter:', i)
+                    #print('pop malformat:', dorm_dict[i][0] ,  'iter:', i)
                     dorm_dict.pop(i)
 
                     continue
