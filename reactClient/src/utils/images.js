@@ -1,6 +1,7 @@
 import axios from "./axiosInstance";
 const defaultAxios = require('axios')
 
+
 /**
  * Add the provided url to the mysql db. Requires that the image has already been uploaded to an S3 bucket
  * and we have the public url
