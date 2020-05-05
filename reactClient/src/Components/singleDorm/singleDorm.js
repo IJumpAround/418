@@ -8,6 +8,8 @@ import Carousel from './Carousel/carousel';
 import axios from '../../utils/axiosInstance';
 import {retrieveDormImage} from '../../utils/images';
 import { faImages } from '@fortawesome/free-solid-svg-icons';
+import {retrieveProfileImage} from '../../utils/images';
+import {auth} from '../../utils/auth';
 
 class singleDorm extends Component {
 
@@ -15,7 +17,7 @@ class singleDorm extends Component {
     super(props);
 
     this.state = {
-
+      user_id: '',
       loadedResult: '',
 
       showMoreBtn: false,
@@ -77,6 +79,22 @@ class singleDorm extends Component {
       )
 
     }
+    /*
+    setImage = () => {
+
+      var user_id = auth.user_id;
+      var userImage = retrieveProfileImage(user_id);
+     
+      userImage.then((list) => {
+        const image = list[0];
+        this.setState({
+          user_id: {
+            image: image
+          }
+        })
+      })
+    }
+*/
     dormLoadHandler = () =>  {
       axios.post('dorms/load_dorm', {
         dorm_id: this.props.match.params.id
@@ -89,11 +107,13 @@ class singleDorm extends Component {
                 var dorm_info = result.data.payload.dorm_info;
                 var dorm_features = result.data.payload.dorm_features;
                 var dorm_images = result.data.payload.dorm_images;
-              //  console.log(manipResult);
+                var dorm_reviews = result.data.payload.dorm_reviews;
+                console.log(manipResult);
                              
                 this.setState({ loadedResult : manipResult,
                                 dorm_id : this.props.match.params.id,
                                 reviews : manipResult.payload.dorm_reviews,
+                                user_id : dorm_reviews[0][5],
                                 dorm_info: {                                  
                                   room: dorm_info[2],
                                   floor: dorm_info[3],
@@ -157,6 +177,7 @@ class singleDorm extends Component {
 
       componentDidMount(){   
         this.dormLoadHandler()
+       // this.setImage();
         //console.log( this.getDormImage());
         
         // this.getDormImage()
@@ -166,10 +187,12 @@ class singleDorm extends Component {
       }
       
       render() {
-    //    console.log(   retrieveDormImage(20));
+      // console.log(   retrieveDormImage(20));
+        console.log(this.state.user_id);
         
+      // console.log(this.state.user_info.image);
      
-      console.log(this.state.loadedResult);
+      // console.log(this.state.loadedResult);
       //console.log(this.state.reviews);
       // console.log(this.state.dorm_id);
       
@@ -253,7 +276,7 @@ class singleDorm extends Component {
             
           </div>
         <div className="row ml-3 mr-3">
-          <ReviewList reviews={this.state.reviews} rating={this.state.dorm_info.dorm_user_rating}/> 
+          <ReviewList reviews={this.state.reviews} rating={this.state.dorm_info.dorm_user_rating} user_id={this.state.user_id}/> 
         </div>
         </div>
         <div className="input-section">
@@ -273,7 +296,7 @@ class singleDorm extends Component {
                         emptyStarColor = "#564D80"
                       />           
                   </div>
-                  <ReviewForm reviews={this.state.reviews} rating={this.state.dorm_user_rating} addReview={this.addReview} dorm_id={this.state.dorm_id}/>            
+                  <ReviewForm reviews={this.state.reviews} rating={this.state.dorm_user_rating} addReview={this.addReview} dorm_id={this.state.dorm_id} user_id={this.state.user_id}/>            
                 </div>
               </div>
             </div>       

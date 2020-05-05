@@ -189,10 +189,9 @@ class AddDormForm extends React.Component {
                             if (dorm_id) {
                                 // Add dorm image to db
                                 addDormImageToDb(view_url, dorm_id, auth.user_id)
-				.then((result) => {
+				                           .then((result) => {
                                         window.location.pathname = `/singleDorm/${dorm_id}`
                                     })
-                                //window.location.pathname = `/singleDorm/${dorm_id}`
                             } else {
                                 console.log('error during adding dorm')
                             }
