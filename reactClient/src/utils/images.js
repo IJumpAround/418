@@ -27,6 +27,22 @@ export async function addDormImageToDb(url, dorm_id, user_id) {
     }
 }
 
+export async function addProfileImageToDb(url, user_id) {
+    let result = await axios.post('/images', {
+        entity_id: user_id,
+        url: url,
+        image_type: 'profile'
+    })
+
+    if(result.status === 200) {
+        console.log('Profile image added')
+        return true
+    }
+    else {
+        console.log('Profile image was not added')
+        return false
+    }
+}
 
 /**
  * Retrieve image urls that have been uploaded for this dorm.
@@ -82,8 +98,8 @@ export async function uploadImage(file) {
 
     // Partially randomize filename
     let file_parts = file.name.split('.')
-    let name = file_parts[0]
-    let extension = file_parts[0]
+    let name = file_parts[0].substring(0,15)
+    let extension = file_parts[1]
     let newFilename = name + (Math.floor(Math.random() * (1000000 - 1) ) + 1).toString() + '.' + extension;
 
     // Get signed url

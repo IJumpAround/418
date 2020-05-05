@@ -1,5 +1,7 @@
 import React from 'react';
 import axios from 'axios';
+import {auth} from '../../../../utils/auth'
+import {uploadImage, addProfileImageToDb} from "../../../../utils/images";
 
 class UploadImage extends React.Component{
 
@@ -24,58 +26,26 @@ class UploadImage extends React.Component{
 
  // Perform the upload
  handleUpload = (ev) => {
-  let file = this.uploadInput.files[0]; //files is a blob?
+  let file = this.uploadInput.files[0]; 
   console.log(file);
-  
-  // Split the filename to get the name and type
-  let fileParts = this.uploadInput.files[0].name.split('.');
-  console.log(fileParts);
-  
-  let fileName = fileParts[0];
-  let fileType = fileParts[1];
-  console.log("Preparing the upload");
-  //Need endpoint for s3 upload
-  axios.post("",{
-    fileName : fileName,
-    fileType : fileType
-  })
-  .then(response => {
-    var returnData = response.data.data.returnData;
-    console.log(returnData);
-    
-    var signedRequest = returnData.signedRequest;
-    console.log(signedRequest);
-    
-    var url = returnData.url;
-    console.log(url);
-    
-    this.setState({url: url})
-    console.log("Recieved a signed request " + signedRequest);
-    //need endpoint to store image in database
-    axios.post("", {                      
-      url : url
-    }).then(() => console.log("Sent url to db"))
-      .catch((err) => console.log(err));
-   // Put the fileType in the headers for the upload
-    var options = {
-      headers: {
-        'Content-Type': fileType
+  if (file) {
+      if(auth.isAuthenticated) {
+          uploadImage(file)
+              .then((url) => {
+                  console.log('url for profile imag eupload', url)
+                  let result = addProfileImageToDb(url, auth.user_id)
+              })
+              .catch(err => {
+                  console.log('error during upload')
+              })
+
       }
-    };
-    axios.put(signedRequest,file,options)
-    .then(result => {
-      console.log("Response from s3")
-      console.log(options);
-      
-      this.setState({success: true});
-    })
-    .catch(error => {
-      alert("ERROR " + JSON.stringify(error));
-    })
-  })
-  .catch(error => {
-    alert(JSON.stringify(error));
-  })
+      else {
+          alert('You must be logged in to do that!')
+      }
+
+  }
+
 }
 
   render(){
