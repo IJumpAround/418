@@ -37,6 +37,10 @@ import {auth} from '../../../utils/auth';
   if(result){
       let review = [this.state.review, this.props.rating, auth.username, result.data.timestamp, null]
     this.props.addReview(review);
+
+    this.setState({
+      review: ""
+    })
   }
 }) 
 
