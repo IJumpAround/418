@@ -8,7 +8,7 @@ bp = Blueprint('searchpage', __name__, url_prefix='/search')
 
 logger = logging.getLogger('main')
 
-
+#Written by Philip Smith
 @bp.route('/load_cards', methods=('GET', 'POST'))
 def load_cards():
     #logger.debug(request.json)

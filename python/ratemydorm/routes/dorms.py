@@ -113,7 +113,7 @@ def retrieve_dorm() -> ApiResponse:
     logger.debug('Inside Dorm GET endpoint')
     return RateMyDormMessageResponse(404, 'Not implemented').response
 
-
+#Written by Philip Smith
 @bp.route('/load_dorm', methods=['POST'])
 def load_dorm() -> ApiResponse:
     logger.debug('Inside Dorm GET endpoint')
@@ -209,7 +209,7 @@ def load_dorm() -> ApiResponse:
         '''
 
         cursor.execute(
-            'SELECT review_text, rating, username, timestamp, review_id '
+            'SELECT review_text, rating, username, timestamp, review_id, review.user_id '
             'FROM review '
             'LEFT JOIN users '
             'ON review.user_id = users.user_id '
