@@ -127,7 +127,7 @@ class SearchPage extends Component {
 	}
     return (
 		<React.Fragment>
-		<div className="text-right"><div className = "h2" style = {textstyle}> ~Search on the map: The search-bar is in the top right. click to set a marker and find dorms nearby! ~ </div>
+		<div className="text-center"><div className = "h2" style = {textstyle}> ~Search on the map: The search-bar is in the top right. click to set a marker and find dorms nearby! ~ </div>
 		</div>
 		<div className = "container-fluid">
 			<div className="row">
