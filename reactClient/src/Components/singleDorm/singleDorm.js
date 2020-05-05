@@ -104,34 +104,35 @@ class singleDorm extends Component {
             if (result) {
              //   console.log(Object.entries(result));
                 var manipResult = result.data
-                var dorm_info = result.data.payload.dorm_info;
-                var dorm_features = result.data.payload.dorm_features;
-                var dorm_images = result.data.payload.dorm_images;
-                var dorm_reviews = result.data.payload.dorm_reviews;
+                var dorm_info = manipResult.payload.dorm_info;
+                var dorm_features = manipResult.payload.dorm_features;
+                var dorm_images = manipResult.payload.dorm_images;
+
+                var dorm_reviews = manipResult.payload.dorm_reviews; 
                 console.log(manipResult);
-                             
-                this.setState({ loadedResult : manipResult,
-                                dorm_id : this.props.match.params.id,
-                                reviews : manipResult.payload.dorm_reviews,
-                                user_id : dorm_reviews[0][5],
-                                dorm_info: {                                  
+                this.setState({loadedResult: manipResult})
+                this.setState({dorm_id : this.props.match.params.id})
+                this.setState({reviews : dorm_reviews})
+                if(dorm_reviews[0]){
+                this.setState({user_id : dorm_reviews[0][5]})
+                }
+                this.setState({dorm_info: {                                  
                                   room: dorm_info[2],
                                   floor: dorm_info[3],
                                   room_type: dorm_features[0][1],
                                   building: dorm_info[4],                        
                                   quad: dorm_info[5],
                                   img: dorm_images[0]
-                                  
-                                },
-                                features: {
+                                }})
+                this.setState({ features: {
                                   bath: dorm_features[1][1],
                                   laundry: dorm_features[4][1],
                                   AC: dorm_features[2][1],
                                   internet: dorm_features[5][1],
                                   dining: dorm_features[6][1],
                                   fitness: dorm_features[3][1]
-                                }
-                })
+                                }})
+                
             }
             
         })
