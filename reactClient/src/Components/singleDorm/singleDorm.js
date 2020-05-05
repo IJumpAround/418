@@ -276,7 +276,7 @@ class singleDorm extends Component {
             
           </div>
         <div className="row ml-3 mr-3">
-          <ReviewList reviews={this.state.reviews} rating={this.state.dorm_info.dorm_user_rating} user_id={this.state.user_id}/> 
+          <ReviewList reviews={this.state.reviews} rating={this.state.dorm_info.dorm_user_rating} /> 
         </div>
         </div>
         <div className="input-section">
