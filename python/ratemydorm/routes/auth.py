@@ -125,6 +125,7 @@ def login():
         if error is None:
             session.clear()
             session['user_id'] = user.user_id
+            session['username'] = user.username
             data_response['success'] = True
             redirect_response = RateMyDormMessageResponse(200, data_response).response
 
@@ -146,6 +147,7 @@ def get_user_id_and_role():
     payload = dict()
     payload['admin'] = admin
     payload['user_id'] = user_id
+    payload['username'] = session.get('username')
     return RateMyDormApiResponse(payload,200).response
 
 
