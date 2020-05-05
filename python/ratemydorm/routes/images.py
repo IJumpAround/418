@@ -20,6 +20,8 @@ def image_endpoint():
 
     image_type = str(params.get('image_type')).lower()
     id = params.get('entity_id')
+    logger.info('calling a function')
+    logger.info(request)
     return fn(params, image_type, id)
 
 
