@@ -80,6 +80,7 @@ componentDidMount(){
                                post = {this.state.num_of_posts}
                                tags = {this.state.num_of_tags} 
               />
+              <br />
               <HistorySection reviews={this.state.reviews}/>
             </div>
           </div>
