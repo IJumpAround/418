@@ -113,7 +113,7 @@ def login():
                   'email': email}
         error = None
         cursor.execute(
-            'SELECT user_id, password FROM users WHERE email = %(email)s', params
+            'SELECT user_id, password, username FROM users WHERE email = %(email)s', params
         )
         user = cursor.fetchone()
 
@@ -125,6 +125,7 @@ def login():
         if error is None:
             session.clear()
             session['user_id'] = user.user_id
+            session['username'] = user.username
             data_response['success'] = True
             redirect_response = RateMyDormMessageResponse(200, data_response).response
 
@@ -146,6 +147,7 @@ def get_user_id_and_role():
     payload = dict()
     payload['admin'] = admin
     payload['user_id'] = user_id
+    payload['username'] = session.get('username')
     return RateMyDormApiResponse(payload,200).response
 
 
@@ -181,7 +183,7 @@ def load_logged_in_user():
 
         cursor = connection.cursor(buffered=True)
         cursor.execute(
-            'SELECT user_id FROM users WHERE user_id = %(user_id)s', {'user_id': user_id}
+            'SELECT user_id, username FROM users WHERE user_id = %(user_id)s', {'user_id': user_id}
         )
         g.user = cursor.fetchone()
 
