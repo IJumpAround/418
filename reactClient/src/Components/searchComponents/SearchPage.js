@@ -135,6 +135,7 @@ class SearchPage extends Component {
 				<label>Radius:</label>
 				<select required name="radius" className="custom-select mb-2" onChange={this.distanceFilter}>
 					<option defaultValue="1">1 mile</option>
+					<option value="0.5">1/2 mile</option>
 					<option value="2">2 miles</option>
 					<option value="3">3 miles</option>
 					<option value="4">4 miles</option>

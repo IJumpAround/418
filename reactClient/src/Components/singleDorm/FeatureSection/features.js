@@ -93,15 +93,15 @@ function Features(props) {
               {(() => {
                   switch (dining) {
                     case "Dining Hall":       return <React.Fragment>
-                                                <div>Dinning Hall</div> 
+                                                <div>Dining Hall</div> 
                                                 <del>In Dorm Kitchen</del>
                                               </React.Fragment>
                     case "In Dorm Kitchen":   return <React.Fragment>
-                                                <del>Dinning Hall</del> 
-                                                <del>In-Dorm Kitchen</del>
+                                                <del>Dining Hall</del> 
+                                                <div>In-Dorm Kitchen</div>
                                               </React.Fragment>                                                             
                     default:                   return <React.Fragment>
-                                                <div>Dinning Hall</div> 
+                                                <div>Dining Hall</div> 
                                                 <div>In-Dorm Kitchen</div>
                                               </React.Fragment>                                
                   }
