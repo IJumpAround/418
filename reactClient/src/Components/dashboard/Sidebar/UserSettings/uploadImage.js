@@ -1,6 +1,7 @@
 import React from 'react';
-import { uploadImage } from '../../../../utils/images';
-
+import axios from 'axios';
+import {auth} from '../../../../utils/auth'
+import {uploadImage, addProfileImageToDb} from "../../../../utils/images";
 
 class UploadImage extends React.Component{
 
@@ -24,15 +25,31 @@ class UploadImage extends React.Component{
   }
 
  // Perform the upload
- handleUpload = (e) => {
-  // e.preventDefault();
- // let file = this.uploadInput.files[0];
- // uploadImage(file);
-  
+ handleUpload = (ev) => {
+  let file = this.uploadInput.files[0];
+  console.log(file);
+  if (file) {
+      if(auth.isAuthenticated) {
+          uploadImage(file)
+              .then((url) => {
+                  console.log('url for profile imag eupload', url)
+                  let result = addProfileImageToDb(url, auth.user_id)
+              })
+              .catch(err => {
+                  console.log('error during upload')
+              })
+
+      }
+      else {
+          alert('You must be logged in to do that!')
+      }
+
+  }
+
 }
 
   render(){
-    
+
     return(
       <div className="row justify-content-center">
        <div className="col-sm-12">

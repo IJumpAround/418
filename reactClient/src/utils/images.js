@@ -27,6 +27,22 @@ export async function addDormImageToDb(url, dorm_id, user_id) {
     }
 }
 
+export async function addProfileImageToDb(url, user_id) {
+    let result = await axios.post('/images', {
+        entity_id: user_id,
+        url: url,
+        image_type: 'profile'
+    })
+
+    if(result.status === 200) {
+        console.log('Profile image added')
+        return true
+    }
+    else {
+        console.log('Profile image was not added')
+        return false
+    }
+}
 
 /**
  * Retrieve image urls that have been uploaded for this dorm.
@@ -34,34 +50,42 @@ export async function addDormImageToDb(url, dorm_id, user_id) {
  * @returns {Promise<void>} resolves to a list of urls, or null if an error ocurred.
  */
 export async function retrieveDormImage(dorm_id) {
-    axios.get('/images',{
+    let result = await axios.get('/images',{
         params: {
             image_type: 'dorm',
             entity_id: dorm_id
         }
     })
-        .then(result => {
-            return result.data.payload.urlResult     
-        })
-        .catch(err => {
-            return null
-        })
+    if (result.status === 200)
+    {
+        return result.data.payload.urls
+    }
+    else{
+        return -1
+    }
 }
 
 /**
  * Retrieves the given user's profile image
  * @param {number} user_id
- * @returns {Promise<void>} Promise resolves to the url, or null if the retrieval failed
+ * @param {function} callback
+ * @returns {Array<string>} Promise resolves to the url, or null if the retrieval failed
  */
-export async function retrieveProfileImage(user_id) {
-    axios.get('/images', {
+export async function retrieveProfileImage(user_id, callback) {
+    let result = await axios.get('/images', {
         params: {
             image_type: 'profile',
             entity_id: user_id,
         }
     })
-        .then(result => result.data.payload.urls)
-        .catch(err => null)
+
+    if(result.status === 200) {
+        return result.data.payload.urls
+    }
+    else {
+        return -1
+    }
+
 }
 
 
@@ -74,8 +98,8 @@ export async function uploadImage(file) {
 
     // Partially randomize filename
     let file_parts = file.name.split('.')
-    let name = file_parts[0]
-    let extension = file_parts[0]
+    let name = file_parts[0].substring(0,15)
+    let extension = file_parts[1]
     let newFilename = name + (Math.floor(Math.random() * (1000000 - 1) ) + 1).toString() + '.' + extension;
 
     // Get signed url
