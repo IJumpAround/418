@@ -9,7 +9,8 @@ class LoginModal extends React.Component {
             fields: {
                 email: '',
                 password: ''
-            }
+            },
+            alert_text: null
         }
     }
 
@@ -23,6 +24,7 @@ class LoginModal extends React.Component {
     };
 
     handleLogIn = (e) => {
+        this.setState({alert_text: null})
         let modalClose = e.target.children.loginModalHeader.children.loginModalClose
         e.preventDefault();
         console.log("Login was clicked");
@@ -38,17 +40,15 @@ class LoginModal extends React.Component {
                 }
                 auth.authenticate()
                 this.props.loginResultFn(true)
-
+                modalClose.click()
                 // this.props.loginResultFn(result.status === 200);
             })
             .catch((error) => {
                 console.log('error');
                 if (error) {
+                    this.setState({alert_text: 'Invalid Credentials'})
                     console.log(Object.entries(error))
                 }
-            })
-            .finally(done => {
-                modalClose.click()
             })
     };
 
@@ -82,8 +82,11 @@ class LoginModal extends React.Component {
                                     <input type="password" id="defaultForm-pass" className="form-control validate"
                                            placeholder="Password" name="password" minLength={1} required={true}
                                     autoComplete="current-password"/>
-                                    <label data-error="wrong" data-success="right" htmlFor="defaultForm-pass"/>
                                 </div>
+                                    <div className="alert alert-danger" role="alert" hidden={this.state.alert_text === null}>
+                                        {this.state.alert_text}
+                                    </div>
+
 
                             </div>
                             <div className="modal-footer d-flex justify-content-center">
