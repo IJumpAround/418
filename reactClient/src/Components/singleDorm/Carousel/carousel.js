@@ -8,7 +8,7 @@ import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 
 function Carousel(props) {
   console.log(props);
-  //props holds the img 
+  let dorm_img = (props.img !== "" && typeof(props.img) !== 'undefined') ? props.img : Image1
   return (
     <div id="singledorm" className="carousel bg-light mt-2" data-ride="carousel" data-interval="false" >
     <ul className="carousel-indicators">
@@ -18,7 +18,7 @@ function Carousel(props) {
     </ul>
     <div className="carousel-inner text-center">
       <div className="carousel-item active">
-        <img src={props.img} alt="image1" width="300" height="300"/>
+        <img src={dorm_img} alt="image1" width="300" height="300"/>
       </div>
       <div className="carousel-item">
         <img src={Image2} alt="image2" width="300" height="300"/>
