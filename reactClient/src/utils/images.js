@@ -34,34 +34,42 @@ export async function addDormImageToDb(url, dorm_id, user_id) {
  * @returns {Promise<void>} resolves to a list of urls, or null if an error ocurred.
  */
 export async function retrieveDormImage(dorm_id) {
-    axios.get('/images',{
+    let result = await axios.get('/images',{
         params: {
             image_type: 'dorm',
             entity_id: dorm_id
         }
     })
-        .then(result => {
-            return result.data.payload.urls
-        })
-        .catch(err => {
-            return null
-        })
+    if (result.status === 200)
+    {
+        return result.data.payload.urls
+    }
+    else{
+        return -1
+    }
 }
 
 /**
  * Retrieves the given user's profile image
  * @param {number} user_id
- * @returns {Promise<void>} Promise resolves to the url, or null if the retrieval failed
+ * @param {function} callback
+ * @returns {Array<string>} Promise resolves to the url, or null if the retrieval failed
  */
-export async function retrieveProfileImage(user_id) {
-    axios.get('/images', {
+export async function retrieveProfileImage(user_id, callback) {
+    let result = await axios.get('/images', {
         params: {
             image_type: 'profile',
             entity_id: user_id,
         }
     })
-        .then(result => result.data.payload.urls)
-        .catch(err => null)
+
+    if(result.status === 200) {
+        return result.data.payload.urls
+    }
+    else {
+        return -1
+    }
+
 }
 
 
