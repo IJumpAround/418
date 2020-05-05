@@ -27,12 +27,12 @@ import {Link} from 'react-router-dom';
 									<Card className="shadow">
 										<CardHeader
 											title = {<div><Link to={`/singleDorm/${elem.Dorm_id}`}> {`${elem.Building} ${elem.Room}`} </Link></div>}
-											subheader={` ${elem.Quad} Quad, ${elem.Address}` }	
+											subheader={` ${elem.Quad} Quad, ${elem.Address} Rating:${elem.Rating}/5 `}	
 										/>
 										<CardContent>
 											<Typography  component={'span'}>
 												<div className="container-fluid" >
-													<img src={require('../../img/stockdormimage.jpg')} width = "245px" height = "144px" alt=""/>
+													<img src={`${elem.Image}`} width = "245px" height = "144px" alt=""/>
 												</div>
 											</Typography>
 										</CardContent>
