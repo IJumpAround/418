@@ -8,7 +8,19 @@ function userDataSection(props){
 
 
     return (
-      
+      <div className="list-group">
+        <div className="list-group-item">
+          <h4>User Data</h4>
+        </div>
+        <div className="list-group-item">
+          <p>Reviews: {props.reviews}</p>
+        </div>
+        <div className="list-group-item">
+          <p>Tags: {props.tags}</p>
+        </div>
+
+      </div>
+      /*
       <div className="table table-striped border rounded">
           <div className="custom-thead">
            <table>
@@ -33,6 +45,7 @@ function userDataSection(props){
           </tbody>
         </table> 
         </div>
+        */
     )
   
 }

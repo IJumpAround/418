@@ -25,9 +25,14 @@ function HistorySection(props) {
 );
     return (
       <div>
-        <h3>User History</h3>
-        <div className="list-group scroll">
-          {renderHistory}
+        
+        <div className="list-group">
+          <div className="list-group-item">
+            <h4>User History</h4>
+          </div>
+          <div className="scroll">
+           {renderHistory}
+          </div>
        </div>
       </div> 
     )
