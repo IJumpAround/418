@@ -282,4 +282,5 @@ def add_review():
         connection.commit()
     finally:
         connection.close()
-        return {'message': response[0]}, response[1]
+        return {'message': response[0],
+                'timestamp': params.get('timestamp')}, response[1]

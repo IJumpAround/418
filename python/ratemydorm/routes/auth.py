@@ -113,7 +113,7 @@ def login():
                   'email': email}
         error = None
         cursor.execute(
-            'SELECT user_id, password FROM users WHERE email = %(email)s', params
+            'SELECT user_id, password, username FROM users WHERE email = %(email)s', params
         )
         user = cursor.fetchone()
 
@@ -183,7 +183,7 @@ def load_logged_in_user():
 
         cursor = connection.cursor(buffered=True)
         cursor.execute(
-            'SELECT user_id FROM users WHERE user_id = %(user_id)s', {'user_id': user_id}
+            'SELECT user_id, username FROM users WHERE user_id = %(user_id)s', {'user_id': user_id}
         )
         g.user = cursor.fetchone()
 

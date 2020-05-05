@@ -35,8 +35,8 @@ import {auth} from '../../../utils/auth';
   
 .then(result  => {
   if(result){
-    this.props.addReview(this.state.review);
-    
+      let review = [this.state.review, this.props.rating, auth.username, result.data.timestamp, null]
+    this.props.addReview(review);
   }
 }) 
 

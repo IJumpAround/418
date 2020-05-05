@@ -27,7 +27,9 @@ def user_logged_in():
 @bp.route('/session_info', methods=['GET'])
 def session_info():
     data = {
-        'user_id': session.get('user_id')
+        'user_id': session.get('user_id'),
+        'username': session.get('username'),
+        'admin': session.get('admin'),
     }
     code = 200 if data.get('user_id') else 401
 

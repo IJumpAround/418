@@ -14,7 +14,7 @@ class singleDorm extends Component {
   constructor(props){
     super(props);
 
-    this.state = { 
+    this.state = {
 
       loadedResult: '',
 
@@ -59,7 +59,7 @@ class singleDorm extends Component {
       console.log(review);
       
       this.setState({
-        reviews: [review, ...this.state.reviews]
+        reviews: [...this.state.reviews, review]
       })
     }
 

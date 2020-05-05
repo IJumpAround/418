@@ -5,11 +5,14 @@ export const auth = {
     isAuthenticated: null,
     user_id: -1,
     admin: null,
+    username: null,
+
     authenticate(cb) {
         auth.isAuthenticated = true;
         this.get_user_id(user => {
             this.admin = user.admin
             this.user_id = user.user_id
+            this.username = user.username
         })
         if (cb) cb()
     },
@@ -18,6 +21,7 @@ export const auth = {
         auth.isAuthenticated = false;
         auth.user_id = -1;
         auth.admin = null
+        auth.username = null
         axios.get('/auth/logout')
             .then((response) => {
                 console.log(response);
