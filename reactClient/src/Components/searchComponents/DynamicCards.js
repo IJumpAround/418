@@ -6,6 +6,7 @@ import {
 		Typography,
 		CardHeader
 	} from '@material-ui/core/'
+import StarRatingComponent from 'react-star-rating-component';
 import {Link} from 'react-router-dom';	
 	
 	class DynamicCards extends React.Component{ 
@@ -27,10 +28,21 @@ import {Link} from 'react-router-dom';
 									<Card className="shadow">
 										<CardHeader
 											title = {<div><Link to={`/singleDorm/${elem.Dorm_id}`}> {`${elem.Building} ${elem.Room}`} </Link></div>}
-											subheader={` ${elem.Quad} Quad, ${elem.Address} Rating:${elem.Rating}/5 `}	
-										/>
+											subheader={<div className="row">
+											<div className = 'col-sm-8'>{` ${elem.Quad} Quad, ${elem.Address} `}</div>
+											<div className = 'col-sm-4'>
+											<StarRatingComponent
+												id = "dorm_user_rating"
+												name = "starRate"
+												starCount = {5}
+												value = {elem.Rating}
+												emptyStarColor = "#564D80"
+												/></div>
+												</div>}
+										></CardHeader>
 										<CardContent>
 											<Typography  component={'span'}>
+												 
 												<div className="container-fluid" >
 													<img src={`${elem.Image}`} width = "245px" height = "144px" alt=""/>
 												</div>

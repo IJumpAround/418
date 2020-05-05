@@ -127,7 +127,7 @@ class SearchPage extends Component {
 	}
     return (
 		<React.Fragment>
-		<div className="text-right"><div className = "h2" style = {textstyle}> ~Search on the map: The search-bar is in the top right. click to set a marker and find dorms nearby! ~ </div>
+		<div className="text-center"><div className = "h2" style = {textstyle}> ~Search on the map: The search-bar is in the top right. click to set a marker and find dorms nearby! ~ </div>
 		</div>
 		<div className = "container-fluid">
 			<div className="row">
@@ -210,7 +210,7 @@ class SearchPage extends Component {
 				<div className="col-md-4" style={cardstyle} >
 		<div className="flex-container-fluid" style={mystyle}>
 			<div className="container-fluid"  >
-				<h3>Top 30 Results</h3>
+				<h3>Top 30 Results (0 stars means no ratings)</h3>
 				<DynamicCards passDataToDynamicCards = {this.state.cardData}/>
 			</div>
 	  	</div>	
