@@ -1,7 +1,6 @@
 import React from "react";
-import 'bootstrap/dist/js/bootstrap.bundle.min.js'
-import 'bootstrap/dist/css/bootstrap.min.css'
 import axios from '../../utils/axiosInstance';
+import {auth} from "../../utils/auth";
 
 class LoginModal extends React.Component {
     constructor(props) {
@@ -24,6 +23,7 @@ class LoginModal extends React.Component {
     };
 
     handleLogIn = (e) => {
+        let modalClose = e.target.children.loginModalHeader.children.loginModalClose
         e.preventDefault();
         console.log("Login was clicked");
         //Get route
@@ -36,15 +36,19 @@ class LoginModal extends React.Component {
                 if (result) {
                     console.log(Object.entries(result));
                 }
-                this.props.loginResultFn(result.status === 200);
-                window.location.pathname='/dashboard'
+                auth.authenticate()
+                this.props.loginResultFn(true)
+
+                // this.props.loginResultFn(result.status === 200);
             })
             .catch((error) => {
                 console.log('error');
                 if (error) {
                     console.log(Object.entries(error))
                 }
-                this.props.loginResultFn(false);
+            })
+            .finally(done => {
+                modalClose.click()
             })
     };
 
@@ -58,24 +62,26 @@ class LoginModal extends React.Component {
                      aria-hidden="true">
                     <div className="modal-dialog" role="document" show={{String: "true"}}>
                         <form className="modal-content" onChange={this.handleInputChange} onSubmit={this.handleLogIn}>
-                            <div className="modal-header text-center">
+                            <div className="modal-header text-center" id="loginModalHeader">
                                 <h4 className="modal-title w-100 font-weight-bold">Sign in</h4>
-                                <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                                <button type="button" className="close" data-dismiss="modal" aria-label="Close" id="loginModalClose">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
                             </div>
                             <div className="modal-body mx-3">
-                                <div className="md-form mb-5">
+                                 <div className="md-form mb-5">
                                     <i className="fas fa-envelope prefix grey-text"/>
                                     <input type="email" id="defaultForm-email" className="form-control validate"
-                                           placeholder="Email address" name="email" minLength={1} required={true}/>
+                                           placeholder="Email address" name="email" minLength={1} required={true}
+                                    autoComplete="email"/>
                                     <label data-error="wrong" data-success="right" htmlFor="defaultForm-email"/>
                                 </div>
 
                                 <div className="md-form mb-4">
                                     <i className="fas fa-lock prefix grey-text"/>
                                     <input type="password" id="defaultForm-pass" className="form-control validate"
-                                           placeholder="Password" name="password" minLength={1} required={true}/>
+                                           placeholder="Password" name="password" minLength={1} required={true}
+                                    autoComplete="current-password"/>
                                     <label data-error="wrong" data-success="right" htmlFor="defaultForm-pass"/>
                                 </div>
 

@@ -1,13 +1,15 @@
 import functools
+import logging
 from flask import Blueprint, request, session, g
-
 from werkzeug.security import check_password_hash, generate_password_hash
-from ratemydorm.sql.db_connect import get_connection
 from mysql.connector.errors import IntegrityError, InterfaceError
 
-import logging
+from ratemydorm.utils.api_response import RateMyDormRedirectResponse, RateMyDormMessageResponse, RateMyDormApiResponse
+from ratemydorm.sql.db_connect import get_connection
 
 bp = Blueprint('auth', __name__, url_prefix='/auth')
+
+logger = logging.getLogger('main')
 
 
 def exclude_from_before_request(func):
@@ -29,7 +31,7 @@ def register():
     :return: 200 status if registration was successful
              400 status plus error message if registration failed
     """
-    logging.info('Register route')
+    logger.info('Register route')
 
     connection = get_connection()
     cursor = connection.cursor()
@@ -71,11 +73,17 @@ def register():
                 )
 
                 connection.commit()
-                return 'user registered'
+                data = {'message': 'User registered'}
+                response = RateMyDormMessageResponse(200,None).response
+                return response
             except IntegrityError as e:
-                logging.error(f'User exists: {e}')
-                return 'Username already exists!', 400
-        logging.error(f'Error in input data {error}')
+                logger.error(f'User exists: {e}')
+                if 'users_email_uindex' in e.msg:
+                    message = "Email already in use"
+                else:
+                    message = "Username already exists"
+                return RateMyDormMessageResponse(400,message).response
+        logger.error(f'Error in input data {error}')
         return error, 400
 
     return 400
@@ -93,7 +101,7 @@ def login():
     :return: 200 status if successfully logged in
              401 if login failed
     """
-    logging.debug(request.json)
+    logger.debug(request.json)
     data_response = {'success': False}
     connection = get_connection()
     cursor = connection.cursor(named_tuple=True)
@@ -105,7 +113,7 @@ def login():
                   'email': email}
         error = None
         cursor.execute(
-            'SELECT user_id, password FROM users WHERE email = %(email)s', params
+            'SELECT user_id, password, username FROM users WHERE email = %(email)s', params
         )
         user = cursor.fetchone()
 
@@ -117,8 +125,11 @@ def login():
         if error is None:
             session.clear()
             session['user_id'] = user.user_id
+            session['username'] = user.username
             data_response['success'] = True
-            return data_response, 200
+            redirect_response = RateMyDormMessageResponse(200, data_response).response
+
+            return redirect_response
 
         data_response['message'] = error
         return data_response, 401
@@ -128,17 +139,22 @@ def login():
 
 @bp.route('/user', methods=['GET'])
 def get_user_id_and_role():
-    logging.debug(request.json)
+    logger.debug(request.json)
 
     user_id = session.get('user_id')
     admin = session.get('admin')
     admin = True if admin else False
+    payload = dict()
+    payload['admin'] = admin
+    payload['user_id'] = user_id
+    payload['username'] = session.get('username')
+    return RateMyDormApiResponse(payload,200).response
 
 
 @bp.route('/test_rendering', methods=['GET'])
 def test():
-    logging.debug(f'session value in test route: {session}')
-    logging.debug(f'g value in test route {g.get("user")}')
+    logger.debug(f'session value in test route: {session}')
+    logger.debug(f'g value in test route {g.get("user")}')
     user = {
         'user_id': session.get('user_id'),
         'role': session.get('role'),
@@ -154,7 +170,7 @@ def load_logged_in_user():
     request
     :return:
     """
-    logging.debug(request.json)
+    logger.debug(request.json)
     user_id = session.get('user_id')
 
     if user_id is None:
@@ -167,7 +183,7 @@ def load_logged_in_user():
 
         cursor = connection.cursor(buffered=True)
         cursor.execute(
-            'SELECT user_id FROM users WHERE user_id = %(user_id)s', {'user_id': user_id}
+            'SELECT user_id, username FROM users WHERE user_id = %(user_id)s', {'user_id': user_id}
         )
         g.user = cursor.fetchone()
 
@@ -176,7 +192,8 @@ def load_logged_in_user():
 def logout():
     """Clear session cookie"""
     session.clear()
-    return "Logged Out", 200
+    response = RateMyDormMessageResponse(200, None).response
+    return response
 
 
 def login_required(view):
@@ -186,4 +203,5 @@ def login_required(view):
             return "not authorized", 401
 
         return view(**kwargs)
+
     return wrapped_view

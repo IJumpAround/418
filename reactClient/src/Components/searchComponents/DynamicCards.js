@@ -1,6 +1,4 @@
 import React from 'react'
-import 'bootstrap/dist/js/bootstrap.bundle.min.js'
-import 'bootstrap/dist/css/bootstrap.min.css'
 import {
 		Grid,
 		Card,
@@ -8,62 +6,53 @@ import {
 		Typography,
 		CardHeader
 	} from '@material-ui/core/'
+import StarRatingComponent from 'react-star-rating-component';
 import {Link} from 'react-router-dom';	
 	
+	//Written by: Philip Smith
 	class DynamicCards extends React.Component{ 
-		constructor(props) {
-			super(props);
-			this.state = {
-				imagedesc: {
-					display: "flex"
-				},
-				useStyles : {
-					
-						padding: 5,
-						width: "100vh",
-						overflowY: "scroll",
-						zindex: '10'
-					
-				}
-		   }
-		}
-
-		
 
 		render(){
 			return (
 				<React.Fragment>
-					<div className='Cards' style={this.state.useStyles}>
+					<div className='Cards' >
 						<Grid
-							container
+							containerFluid
 							spacing={0}
 							direction="column"
-							justify="end"
-							alignItems="end"	
+							justifyContent="flex-start"
+							alignItems="flex-start"
+								
 						>
 							{this.props.passDataToDynamicCards.map(elem => (
-								<Grid item xs={6} sm={6} md={12} key={this.props.passDataToDynamicCards.indexOf(elem)}>
-									<Card>
+								<Grid item xs={12} sm={12} md={12} key={this.props.passDataToDynamicCards.indexOf(elem)}>
+									<Card className="shadow">
 										<CardHeader
-											title = <div>
-														<Link to={`/dashboard/${elem.Dorm_id}`}> 
-															{`${elem.Building} ${elem.Room}`} 
-														</Link>	
-													</div>
-											subheader={` ${elem.Quad} Quad, ${elem.Address}` }	
-										
-										/>
+											title = {<div><Link to={`/singleDorm/${elem.Dorm_id}`}> {`${elem.Building} ${elem.Room}`} </Link></div>}
+											subheader={<div className="row">
+											<div className = 'col-sm-8'>{` ${elem.Quad} Quad, ${elem.Address} `}</div>
+											<div className = 'col-sm-4'>
+											<StarRatingComponent
+												id = "dorm_user_rating"
+												name = "starRate"
+												starCount = {5}
+												value = {elem.Rating}
+												emptyStarColor = "#564D80"
+												/></div>
+												</div>}
+										></CardHeader>
 										<CardContent>
 											<Typography  component={'span'}>
-												<div className="flex-container" style={this.state.imagedesc}>
-												<img src={require('../../img/stockdormimage.jpg')} width="50%%" height="180px" alt=""/>
+												 
+												<div className="container-fluid" >
+													<img src={`${elem.Image}`} width = "245px" height = "144px" alt=""/>
 												</div>
 											</Typography>
 										</CardContent>
 									</Card>
 								</Grid>
 							
-							) ) } 
+							 ) ) } 
 							<p>If this is empty, no logged dorms are within the specified range from your marker</p>	
 						</Grid> 
 					</div>

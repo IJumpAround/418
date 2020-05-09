@@ -3,6 +3,7 @@ import { Map, Marker, Popup, TileLayer } from 'react-leaflet'
 import ReactLeafletSearch from "react-leaflet-search";
 import axios from '../../utils/axiosInstance';
 
+
 class OpenMap extends React.Component {
     constructor(props) {
        super(props);
@@ -12,21 +13,43 @@ class OpenMap extends React.Component {
           lat: 42.686063,
           lng: -73.824688,
           },
-          cardData:[]
+
+          searchCoord:{
+            lat: 42.686063,
+            lng: -73.824688,
+            },
+          cardData:[], 
+          
       }
+    
   
 }
 
 passUpCardData = () => {
-  this.props.passCardsToOpenMap(this.state.cardData);
+  this.props.passCardsFromOpenMap(this.state.cardData);
 }
 
- cardLoadHandler = () =>  {
+passUpCoord = () => {
+    console.log('calling passCoordprop in openmap.js')
+  this.props.passCoordFromOpenMap(this.state.latlng);
+}
+
+
+cardLoadHandler = () =>  {
   console.log("marker location changed");
   //Changing cards begins
   axios.post('search/load_cards', {
     latitude: this.state.latlng.lat,
-    longitude: this.state.latlng.lng
+    longitude: this.state.latlng.lng,
+    radius: this.props.radius,
+    room_type: this.props.room_type,
+    bathroom: this.props.bathroom,
+    dining: this.props.dining,
+    internet: this.props.internet,
+    laundry: this.props.laundry,
+    fitness: this.props.fitness,
+    airConditioning: this.props.airConditioning
+
     //Posts the coordinates of the current marker for filtering
 })
     .then((result) => {
@@ -51,41 +74,61 @@ setMarker = (event) => {
   this.setState({latlng: event.latlng})
   this.setState({proxPosition: [event.latlng.lat, event.latlng.lng]})
   };
+
+handleSearchEnd = (event) => {
+    var searchedCoord = event.target.getCenter()
+    this.setState({searchCoord: searchedCoord})
+    //this.setState({proxPosition: [searchedCoord.lat, searchedCoord.lng]})
+    };
     
   componentDidMount(){
     this.cardLoadHandler()
+    this.passUpCoord()
   }
+
 render(){
-     
+  
   var proxMarker =  <Marker position = {this.state.latlng}>
                     {/* <popup></popup> */}
                      
                     </Marker>
-               
-      const mystyle = {
-        position: "relative",
-        height: "100%-44px",
-        width: "100%",
-        zindex: '1'
-      }
-
+  
 
         return(
-           
-            <Map id="mymap" center={this.state.proxPosition} zoom={17} style={mystyle}
+       
+              <div className="row h-100">
+                  <div className="col-sm-12" >
+
+            <Map className=" h-75" id="mymap" center={this.state.proxPosition} zoom={17}  
             onClick={(event) =>
               {
               this.setMarker(event)
+              this.passUpCoord()
               this.cardLoadHandler()
-              
+              }
+            }
+            onMoveEnd={ (event) =>
+              {
+                this.handleSearchEnd(event)
               }
             }
             >
+            
             <ReactLeafletSearch 
               inputPlaceholder="input desired location"
               zoom={15} 
               showMarker={false}
               showPopup={false}
+
+            /* Search coordinates found in this path within reactleafletsearch component
+              ReactLeafletSearch ->
+                Leaflet ->
+                  Map ->
+                      Handlers - >
+                        1 ->
+                          Map ->
+                            _LastCenter - >
+                          */
             />
                 <TileLayer
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -93,6 +136,12 @@ render(){
                 />
                 {proxMarker}
             </Map>
+                  </div>
+ 
+              </div>
+         
+
+       
            
         )
     }

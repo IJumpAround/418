@@ -8,6 +8,20 @@ const instance = axios.create({
     baseURL: config.get('baseUrl') + ':' + config.get('port') + '/',
     timeout: 10000,
     withCredentials: true
+
+});
+
+// Interceptor handles flask redirects
+instance.interceptors.response.use( (response) => {
+    if(response.status === 200 && response.data && response.data.type === 'RMD_redirect') {
+        window.location.pathname = response.data.location;
+        return Promise.resolve(response)
+    }
+    else {
+        return Promise.resolve(response)
+    }
+}, (error) => {
+    return Promise.reject(error)
 });
 
 export default instance

@@ -45,3 +45,19 @@ ul.carousel-indicators li.active {
   font-family: 'Comic Neue', cursive;
   text-align: center;
 }
+
+
+.review_section{
+ 
+
+  width: 100%;
+  overflow-Y: scroll;
+  z-index: '10';	
+  height: 300px;
+
+}
+
+.input-section-label {
+  font-size: 30px;
+}
+

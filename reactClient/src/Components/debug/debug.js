@@ -67,6 +67,9 @@ class DebugPage extends React.Component {
                             <p>{this.state.sessionInfo}</p>
                             <button onClick={this.login_test}>Is User logged in?</button>
                         </div>
+                        <div className={'col-4'}>
+                            <button onClick={this.redirect_test}>Redirect to home from backend</button>
+                        </div>
                     </div>
                     <div className='row'>
                         <div className='col-4'/>
@@ -79,7 +82,7 @@ class DebugPage extends React.Component {
     }
 
     login_test = () => {
-        axios.get('/auth/user_logged_in')
+        axios.get('/user/user_logged_in')
             .then((result) => {
                 this.setState({sessionInfo:true})
             })

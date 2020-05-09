@@ -7,6 +7,8 @@ import logging
 # Used to register the route in the main app
 bp = Blueprint('example', __name__, url_prefix='/example')
 
+logger = logging.getLogger('main')
+
 
 # Creates endpoint at baseurl/example/
 @bp.route('/', methods=['GET', 'POST'])
@@ -17,7 +19,7 @@ def hello_world():
     using return. https://flask.palletsprojects.com/en/1.1.x/quickstart/#about-responses POST: data stored in
     request.form GET: data stored in request.args :return:
     """
-    logging.info('Test logging statement')
+    logger.info('Test logging statement')
     if request.method == 'GET':
         args = request.args
         print(f'get params content: {args}')
@@ -85,7 +87,7 @@ def example_rollback():
     try:
         cursor.execute(stmt, params)
     except Error as e:
-        logging.error(f"Shouldn't see this {e}")
+        logger.error(f"Shouldn't see this {e}")
         return e
 
     # Imagine we've already run this insert, and now we decide we shouldn't have performed the insert. Since we are
@@ -97,16 +99,16 @@ def example_rollback():
     stmt = "SELECT * FROM example_table WHERE data='This will not be inserted'"
     cursor.execute(stmt)
 
-    logging.info('The following line should show result=None')
-    logging.info(f'Result of cursor.fetchone(): {cursor.fetchone()}')
+    logger.info('The following line should show result=None')
+    logger.info(f'Result of cursor.fetchone(): {cursor.fetchone()}')
 
     # Be careful to verify the cursor has returned anything from the query before performing operations on the data
     try:
         expected_string = cursor.fetchone()
         substring = expected_string[:5]
     except TypeError as e:
-        logging.error(e)
-        logging.info('This causes an error because the query returned nothing.')
-        logging.info('normally it would be fine to slice a string like this.')
+        logger.error(e)
+        logger.info('This causes an error because the query returned nothing.')
+        logger.info('normally it would be fine to slice a string like this.')
 
     return {}

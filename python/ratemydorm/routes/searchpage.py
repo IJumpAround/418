@@ -6,21 +6,40 @@ from ratemydorm.sql.db_connect import get_connection
 import logging
 bp = Blueprint('searchpage', __name__, url_prefix='/search')
 
+logger = logging.getLogger('main')
+
+#Written by Philip Smith
 @bp.route('/load_cards', methods=('GET', 'POST'))
 def load_cards():
-    logging.debug(request.json)
+    #logger.debug(request.json)
     data_response = {'success': False}
     connection = get_connection()
 
     if request.method == 'POST':
         latitude = request.json['latitude']
         longitude = request.json['longitude']
+        radius = request.json['radius']
+        room_type = request.json['room_type']
+        bathroom = request.json['bathroom']
+        dining = request.json['dining']
+        internet = request.json['internet']
+        laundry = request.json['laundry']
+        fitness = request.json['fitness']
+        airConditioning = request.json['airConditioning']
         error = None
         params = {
             'latitude': latitude,
-            'longitude': longitude
+            'longitude': longitude,
+            'radius': radius,
+            'room_type': room_type,
+            'bathroom': bathroom,
+            'dining': dining,
+            'internet': internet,
+            'laundry': laundry,
+            'fitness': fitness,
+            'airConditioning': airConditioning
         }
-        print(params)
+        logger.info(params)
         cursor = connection.cursor(buffered=True)
         cursor.execute(
             #formula taken from gis.stackexchange.com/questions/31628/find-points-within-a-distance-using-mysql  courtesy of users: Mapperz and sachleen
@@ -34,8 +53,9 @@ def load_cards():
             ')'
             ') AS distance '
             'FROM Dorm '
-            'HAVING distance < 1 '
-            'ORDER BY distance', params
+            'HAVING distance < %(radius)s'
+            'ORDER BY distance '
+            'LIMIT 30', params
         )
 
         dormRows = cursor.fetchall()
@@ -57,9 +77,136 @@ def load_cards():
                     str(dormRows[i][6]), #quad
                     str(dormRows[i][7]), #address
                     ])
-            print(dorm_dict)
-            return {'data' : dorm_dict}, 200
+            logger.debug(dorm_dict)
+            for i in range(len(dorm_dict)):
+                temp_param = {
+                    'dorm_id': dorm_dict[i][0]
+                }
+                #print(dorm_dict[i][0])
+                cursor.execute(
+                    'SELECT feature, feature_value '
+                    'FROM feature_lut '
+                    'LEFT JOIN features '
+                    'ON feature_lut.feature_id = features.feature_id '
+                    'WHERE feature_lut.dorm_id = %(dorm_id)s', temp_param
+                )
+                features = cursor.fetchall()
+                if features is None:
+                    error = 'No dorms match your query'
+                if error is None:
+                    for j in range(len(features)):
+                        dorm_dict[i].append(
+                            features[j]
+                        )
+                '''
+                Features are added into dorm_dict of this layout:
+                [8] = room_type
+                [9] = bathroom
+                [10] = ac
+                [11] = gym
+                [12] = laundry
+                [13] = internet
+                [14] = kitchen
+                '''
+            #print('starting length' , len(dorm_dict))
+            i=0
+            while (i < len(dorm_dict)):
+                #print(len(dorm_dict[i]), ':ID:', dorm_dict[i][0], ':Iteration:' ,i)
+                if len(dorm_dict[i]) > 14:
+                    if(room_type!='Any'):
+                        if dorm_dict[i][8][1] != room_type:
+                            #print('pop room:', dorm_dict[i][0], 'iter:', i)
+                            dorm_dict.pop(i)
+                            continue
 
+                    if (bathroom != 'Any'):
+                        if dorm_dict[i][9][1] != bathroom:
+                            #print('pop br:', dorm_dict[i][0], 'iter:', i)
+                            dorm_dict.pop(i)
+
+                            continue
+
+                    if (airConditioning != 'Any'):
+                        if dorm_dict[i][10][1] != airConditioning:
+                            #print('pop air:', dorm_dict[i][0], 'iter:', i)
+                            dorm_dict.pop(i)
+
+                            continue
+
+
+                    if (fitness != 'Any'):
+                        if dorm_dict[i][11][1] != fitness:
+                            #print('pop fit:', dorm_dict[i][0], 'iter:', i)
+                            dorm_dict.pop(i)
+
+                            continue
+
+
+                    if (laundry != 'Any'):
+                        if dorm_dict[i][12][1] != laundry:
+                            #print('pop laund:', dorm_dict[i][0], 'iter:', i)
+                            dorm_dict.pop(i)
+
+                            continue
+
+
+                    if (internet != 'Any'):
+                        if dorm_dict[i][13][1] != internet:
+                            #print('pop internet:', dorm_dict[i][0], 'iter:', i)
+                            dorm_dict.pop(i)
+
+                            continue
+
+
+                    if (dining != 'Any'):
+                        if dorm_dict[i][14][1] != dining:
+                            #print('pop din:', dorm_dict[i][0], 'iter:', i)
+                            dorm_dict.pop(i)
+
+                            continue
+                else:
+                    #print('pop malformat:', dorm_dict[i][0] ,  'iter:', i)
+                    dorm_dict.pop(i)
+                    continue
+                i += 1
+
+            for j in range(len(dorm_dict)):
+                temp_param = {
+                    'dorm_id': dorm_dict[j][0]
+                }
+                cursor.execute(
+                    'SELECT rating '
+                    'FROM review '
+                    'LEFT JOIN users '
+                    'ON review.user_id = users.user_id '
+                    'WHERE review.dorm_id = %(dorm_id)s', temp_param
+                )
+                reviews = cursor.fetchall()
+                if reviews is None:
+                    error = 'No dorms match your query'
+                if error is None:
+                    review_arr = []
+                    for k in range(len(reviews)):
+                        review_arr.append(reviews[k][0])
+                    dorm_dict[j].append(review_arr)
+
+
+            j=0
+            for j in range(len(dorm_dict)):
+                temp_param = {
+                    'dorm_id': dorm_dict[j][0]
+                }
+                cursor.execute(
+                    'SELECT url '
+                    'FROM dorm_image '
+                    'WHERE dorm_id = %(dorm_id)s '
+                    'LIMIT 1', temp_param
+                )
+                dorm_image = cursor.fetchall()
+                dorm_dict[j].append(dorm_image)
+
+
+            return {'data': dorm_dict}, 200
         data_response['message'] = error
         return data_response, 401
 
